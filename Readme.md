@@ -11,3 +11,20 @@
 
 Emoji Icons and more.
 ![Emoji Icons](http://amourspirit.github.io/TinyMce-for-Evernote/images/screenshots/emoji.png "Use Emoji Icons")
+
+Uses:
+* [jQuery](https://jquery.com/)
+* [Foundation Icons](http://zurb.com/playground/foundation-icon-fonts-3)
+* [tinyMCE](http://www.tinymce.com/)
+
+If you find that you need to post Code into Evernote then checkout
+[Syntax-Highlight-Style](http://amourspirit.github.io/Syntax-Highlight-Style/)
+
+## Authors
+Paul Moss
+
+
+## Donate
+**Making a donation is an act of generosity. Your support, however modest it might be, is necessary.
+
+![Paypal](http://amourspirit.github.io/TinyMce-for-Evernote/images/paypal.png) [donate](http://bit.ly/1QIN2Cs)
