@@ -11,8 +11,8 @@
 // @noframes
 // @license			MIT
 // @homepageURL     http://amourspirit.github.io/TinyMce-for-Evernote/
-// @update			https://raw.githubusercontent.com/Amourspirit/master/TinyMce-for-Evernote/TinyMce_for_Evernote.user.js
-// @downloadURL		https://raw.githubusercontent.com/Amourspirit/master/TinyMce-for-Evernote/TinyMce_for_Evernote.user.js
+// @update			https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
+// @downloadURL		https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
 // @contributionURL http://amourspirit.github.io/TinyMce-for-Evernote/#donate
 // ==/UserScript==
 'use strict';
