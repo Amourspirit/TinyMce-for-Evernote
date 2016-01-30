@@ -1,3 +1,7 @@
+# TinyMCE-for-Evernote
+
+TinyMCE-for-Evernote is a userscript for use with [Greasemonkey](http://www.greasespot.net/)/[TamperMonkey](http://tampermonkey.net/).
+
 **Add new Edit button to Evernote notes in the web browser.**
 ![New button image](http://amourspirit.github.io/TinyMce-for-Evernote/images/screenshots/new_button.png "new Button")
 
