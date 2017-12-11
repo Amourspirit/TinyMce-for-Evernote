@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         1.2.0
+// @version         1.2.1
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
@@ -52,12 +52,12 @@ if (typeof(BIGBYTE.isjquery) == 'undefined') {
         if (data instanceof jQuery) {
             // Do nothing different
             data = data;
-            // Otherwise            
+            // Otherwise
         } else {
             // Convert to jQuery object
             data = jQuery(data);
         }
-        // Return jQuery object     
+        // Return jQuery object
         return data;
     };
 }
@@ -162,8 +162,6 @@ if (typeof(bbDoc.loadScript) == 'undefined') {
                 // statements_def
                 break;
         }
-
-
     }
 }
 
@@ -319,12 +317,12 @@ enus.init = function() {
 
     this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
     //this.addScript('code-css','shi/css/shi_default.min.css','csslink');
-    // tiny mce 
+    // tiny mce
     if (typeof(tinyMCE) == 'undefined') {
         this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
     }
     this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
-   
+
     this.addScript('lightboxcss', this.lightBoxCss, 'css',null, {tag:'body'});
 
     //this.addScript('tinymce_advanced_theme', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/themes/advanced/theme.min.js','linkedjs') // no checking required
@@ -368,8 +366,8 @@ enus.addScript = function(name, src, type, testMethod, args) {
         var extended = BIGBYTE.USERSCRIPT.UTIL.extend(newItm, args);
         this.scripts[name] = extended;
     }
-    
-    
+
+
 };
 
 /*
@@ -380,7 +378,7 @@ enus.isScriptsLoaded = function() {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     for (var key in lib.scripts) {
         if (!lib.scripts[key].loaded) {
-            return false
+            return false;
         }
     }
     return true;
@@ -419,35 +417,46 @@ enus.onBbScriptLoaded = function(e) {
  * this is main loading point for the script.
  */
 enus.onAllScriptsLoaded = function(e) {
-    console.log('all scripts have been loaded.');
-    jQuery(function($, undefined) {
-        var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
-        lib.btnSelector = '.GJDCG5CEMB';
-        lib.iframeSelector = '#en-common-editor-iframe';
-        lib.sidebarSelector = '#gwt-debug-sidebar';
-        lib.noteSelector = 'body > div.en-note > #en-note';
-        lib.ensurePlugins();
-        lib.addToolbarButton();
+	console.log('all scripts have been loaded.');
+	jQuery(function($, undefined) {
+		var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
+		lib.btnSelector = '.GJDCG5CEMB';
+		// #en-common-editor-iframe is chrome selector, firefox is different
+		//if ($.browser.chrome) {
+		if(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
+			// setup for Chrome
+			lib.iframeSelector = '#en-common-editor-iframe';
+			lib.noteSelector = 'body > div.en-note > #en-note';
+		} else {
+			// setup for Firefox
+			lib.iframeSelector = '#entinymce_486_ifr';
+			lib.noteSelector = 'body';
+		}
 
-        $(document).on('editBtnAdded', lib.onEditBtnAdded);
-        $(document).on("tinymceInit", lib.onTinymceInit);
-        $(document).on("tinymceSave", lib.onTinymceSave);
-        $(document).on("tinymceCancel", lib.onTinymceCancel);
-        $(document).on('tinymceFullScreen', lib.onTinyMceFulllscreen);
+		lib.sidebarSelector = '#gwt-debug-sidebar';
+
+		lib.ensurePlugins();
+		lib.addToolbarButton();
+
+		$(document).on('editBtnAdded', lib.onEditBtnAdded);
+		$(document).on("tinymceInit", lib.onTinymceInit);
+		$(document).on("tinymceSave", lib.onTinymceSave);
+		$(document).on("tinymceCancel", lib.onTinymceCancel);
+		$(document).on('tinymceFullScreen', lib.onTinyMceFulllscreen);
 
 
-        lib.lightBoxAddCss();
-        lib.writeLightBox();
-        lib.TMCE.init();
+		lib.lightBoxAddCss();
+		lib.writeLightBox();
+		lib.TMCE.init();
 
-        $('.gmclose').click(function() {
-            $.event.trigger({
-                type: "tinymceCancel",
-                message: 'cancel',
-                time: new Date(),
-                tinyMceId: 'gminput'
-            });
-        });
+		$('.gmclose').click(function() {
+			$.event.trigger({
+			type: "tinymceCancel",
+			message: 'cancel',
+			time: new Date(),
+			tinyMceId: 'gminput'
+			});
+		});
 
 
     });
@@ -610,8 +619,8 @@ enus.save = function() {
     $(".gmbackdrop, .gmbox").animate({
         opacity: "0"
     }, 300, "linear", function() {
-        $(".gmbackdrop, .gmbox").css("display", "none")
-    })
+        $(".gmbackdrop, .gmbox").css("display", "none");
+    });
     var content = $(this.iframeSelector).contents().find(lib.noteSelector);
     content.html(e);
     $("textarea#gminput").val(""), tinyMCE.get("gminput").setContent("");
