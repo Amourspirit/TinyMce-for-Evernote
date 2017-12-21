@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         1.2.1
+// @version         1.2.2
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
@@ -429,7 +429,8 @@ enus.onAllScriptsLoaded = function(e) {
 			lib.noteSelector = 'body > div.en-note > #en-note';
 		} else {
 			// setup for Firefox
-			lib.iframeSelector = '#entinymce_486_ifr';
+			// lib.iframeSelector = '#entinymce_489_ifr';
+			lib.iframeSelector = '.RichTextArea-entinymce';
 			lib.noteSelector = 'body';
 		}
 
