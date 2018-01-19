@@ -5,8 +5,11 @@
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
+// @include         /^https?:\/\/app\.yinxiang\.com\/Home\.action.*n=.*$/
 // @match           http://www.evernote.com/Home.action*
 // @match           https://www.evernote.com/Home.action*
+// @match           http://app.yinxiang.com/Home.action*
+// @match           https://app.yinxiang.com/Home.action*
 // @grant           none
 // @noframes
 // @license         MIT
