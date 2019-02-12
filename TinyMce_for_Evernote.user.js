@@ -425,8 +425,8 @@ enus.onAllScriptsLoaded = function(e) {
 		//if ($.browser.chrome) {
 		if(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
 			// setup for Chrome
-			lib.iframeSelector = '#en-common-editor-iframe';
-			lib.noteSelector = 'body > div.en-note > #en-note';
+            lib.iframeSelector = '#entinymce_491_ifr';
+            lib.noteSelector = 'body';
 		} else {
 			// setup for Firefox
 			// lib.iframeSelector = '#entinymce_489_ifr';
