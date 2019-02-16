@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         1.3.0
+// @version         1.3.1
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
@@ -426,7 +426,7 @@ enus.onAllScriptsLoaded = function(e) {
 	jQuery(function($, undefined) {
 		var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
         // lib.btnSelector = '.GJDCG5CEMB';
-        lib.btnSelector = 'div[4]/div[2]/div/div[2]/div[2]/div[3]/div/div[2]/div/div[2]/div[1]/div[1]';
+        lib.btnSelector = '//*[@id="gwt-debug-NoteAttributesView-root"]/div[1]/div[1]';
 		// #en-common-editor-iframe is chrome selector, firefox is different
 		//if ($.browser.chrome) {
 		if(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
