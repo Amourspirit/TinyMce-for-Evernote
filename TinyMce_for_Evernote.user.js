@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         1.2.5
+// @version         1.3.0
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
@@ -296,6 +296,8 @@ enus.init = function() {
     console.log('tinyMCE Version', tinyMceVer);
     // var pluginSrc = '//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery-1.8.0.min.js';
     var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
+    // https://github.com/ilinsky/jquery-xpath/
+    var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
 
     // no jquery at this point use pure javascript events
     if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
@@ -313,6 +315,9 @@ enus.init = function() {
     // only add jquery if we need it.
     if (typeof(jQuery) == 'undefined') {
         this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
+    }
+    if (typeof(jQuery().xpath) == 'undefined') {
+        this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
     }
 
     this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
@@ -332,7 +337,7 @@ enus.init = function() {
  * Load scripts will load one script only at a time.
  * When the script is loaded the next if any script will be
  * load via the onScripLoadeEvent
- * the onScriptLoaded Event calle this function over and over untll all the scripts are loaded
+ * the onScriptLoaded Event called this function over and over untll all the scripts are loaded
  */
 enus.loadScripts = function() {
 
@@ -420,7 +425,8 @@ enus.onAllScriptsLoaded = function(e) {
 	console.log('all scripts have been loaded.');
 	jQuery(function($, undefined) {
 		var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
-        lib.btnSelector = '.GJDCG5CEMB';
+        // lib.btnSelector = '.GJDCG5CEMB';
+        lib.btnSelector = 'div[4]/div[2]/div/div[2]/div[2]/div[3]/div/div[2]/div/div[2]/div[1]/div[1]';
 		// #en-common-editor-iframe is chrome selector, firefox is different
 		//if ($.browser.chrome) {
 		if(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
@@ -429,7 +435,6 @@ enus.onAllScriptsLoaded = function(e) {
             lib.noteSelector = 'body';
 		} else {
 			// setup for Firefox
-			// lib.iframeSelector = '#entinymce_489_ifr';
 			lib.iframeSelector = '.RichTextArea-entinymce';
 			lib.noteSelector = 'body';
 		}
@@ -531,19 +536,20 @@ enus.addToolbarButton = function() {
     var gmTimer = setInterval(function() {
         gmCounter++;
         console.log("turn no. " + gmCounter);
-        var objLen = $(lib.btnSelector).length;
+        var objElement = $(document.body).xpath(lib.btnSelector);
+        var objLen = objElement.length;
         if (objLen) {
-            console.log('found class ', lib.btnSelector);
+            console.log('Found element for button placement');
             // add my own toolbar button
             clearInterval(gmTimer);
-            $(lib.btnSelector).append(lib.createToolbarHtml());
+            objElement.append(lib.createToolbarHtml());
             $.event.trigger({
                 type: "editBtnAdded",
                 message: 'Button Added',
                 time: new Date()
             });
         } else {
-            console.log('unable to find class ', lib.btnSelector);
+            console.log('Unable to find element for button placement');
         }
 
         if (gmCounter >= 20 || objLen > 0) {
