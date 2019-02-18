@@ -15,7 +15,6 @@
 // @contributionURL https://amourspirit.github.io/TinyMce-for-Evernote/#donate
 // @require         https://openuserjs.org/src/libs/sizzle/GM_config.min.js
 // @grant           GM_registerMenuCommand
-// @grant           GM_xmlhttpRequest
 // @grant           GM_addStyle
 // @grant           GM_setValue
 // @grant           GM_getValue
@@ -244,98 +243,6 @@ if (typeof (bbDoc.addHtml_Node) == 'undefined') {
     };
 }
 // #endregion BIGBYTE.USERSCRIPT.DOCUMENT Methods
-// #region Storage Methods
-if (typeof (bbDoc.createCookie) == 'undefined') {
-    bbDoc.createCookie = function (name, value, days) {
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            var expires = '; expires=' + date.toGMTString();
-        } else var expires = '';
-        document.cookie = name + '=' + value + expires + '; path=/';
-    };
-}
-
-if (typeof (bbDoc.readCookie) == 'undefined') {
-    bbDoc.readCookie = function (name) {
-        var nameEQ = name + '=';
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    };
-}
-
-if (typeof (bbDoc.eraseCookie) == 'undefined') {
-    bbDoc.eraseCookie = function (name) {
-        bbDoc.createCookie(name, '', -1);
-    };
-}
-
-if (typeof (bbDoc.gmGetResource) == 'undefined') {
-    bbDoc.gmGetResource = function (key) {
-        var res = bbDoc.getStorage('resource_' + key, true),
-            config = GM_config.get(key);
-        if ((!res || !res.base64) && config) {
-            bbDoc.updateResource(key, config);
-            return config;
-        } else if (!config) {
-            console.log(bbDoc.shortName + ': No resource nor config for:' + key);
-            return null;
-        }
-        return res.base64;
-    };
-}
-
-if (typeof (bbDoc.updateResource) == 'undefined') {
-    bbDoc.updateResource = function (key, url) {
-        var res = bbDoc.getStorage('resource_' + key, true);
-        if (GM_xmlhttpRequest && (!res || !res.base64 || res.url !== url)) {
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: url,
-                overrideMimeType: 'text/plain; charset=x-user-defined',
-                onload: function (response) {
-                    res = {
-                        url: url,
-                        base64: 'data:image/png;base64,' + btoa(response.responseText.replace(/[\u0100-\uffff]/g, function (c) {
-                            return String.fromCharCode(c.charCodeAt(0) & 0xff);
-                        }))
-                    };
-                    bbDoc.setStorage('resource_' + key, res, true);
-                },
-                onfail: function (response) {
-                    console.log(bbDoc.shortName + ': Could not update resource:', key, url, response);
-                }
-            });
-        }
-    };
-}
-
-if (typeof (bbDoc.getStorage) == 'undefined') {
-    bbDoc.getStorage = function (key, GM) {
-        var value = GM ? GM_getValue(bbDoc.preKey + key) : localStorage.getItem(bbDoc.preKey + key);
-        if (value !== undefined && value !== null) {
-            value = JSON.parse(value);
-        }
-        return value;
-    };
-}
-
-if (typeof (bbDoc.setStorage) == 'undefined') {
-    bbDoc.setStorage = function (key, value, GM) {
-        if (GM) {
-            GM_setValue(bbDoc.preKey + key, JSON.stringify(value));
-        } else {
-            localStorage.setItem(bbDoc.preKey + key, JSON.stringify(value));
-        }
-    };
-}
-// #endregion Storage Methods
-
 // #nsregion BIGBYTE.USERSCRIPT.UTIL
 var bbusu = BIGBYTE.createNS("BIGBYTE.USERSCRIPT.UTIL");
 bbusu.ns = 'BIGBYTE.USERSCRIPT.UTIL';
