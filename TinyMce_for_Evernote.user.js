@@ -433,6 +433,7 @@ enus.onBbScriptLoaded = function (e) {
  */
 enus.onAllScriptsLoaded = function (e) {
     console.log(bbDoc.shortName + ': all scripts have been loaded.');
+    // console.log(bbDoc.shortName + ': TinyMce Selector :' + tinyMCE.settings.selector);
     jQuery(function ($, undefined) {
         var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
         // lib.btnSelector = '.GJDCG5CEMB';
@@ -697,6 +698,7 @@ if (typeof (entn.init) == 'undefined') {
             if (typeof (tinyMCE) !== undefined) {
                 console.log(bbDoc.shortName + ': found tinymce library');
                 clearInterval(gmTinyMceTimer);
+                // tinyMCE.PluginManager.load('codesample', 'https://cdn.tinymce.com/4/plugins/codesample/plugin.min.js');
 
                 tinyMCE.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
 
@@ -752,6 +754,10 @@ if (typeof (entn.init) == 'undefined') {
                 if (loadBbcode) {
                     tinyMCE.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
                 }
+                var loadVisualblocks = GM_config.get('tinymcePluginVisualblocks');
+                if (loadVisualblocks) {
+                    tinyMCE.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
+                }
 
                 var tinyMceExternalPlugins = {
                     'textcolor': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
@@ -785,7 +791,7 @@ if (typeof (entn.init) == 'undefined') {
                     plugins: '',
                     menubar: 'edit insert format view tools' + (loadTable ? ' table':''),
                     toolbar1: 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-                    toolbar2: (loadFullscreen ? 'fullscreen ' : '') + (loadPrint ? 'print ' : '') + (loadPreview ? 'preview ' : '') + '| forecolor backcolor | ' + (loadPreview ? 'insertdatetime ' : '') + (loadTable ? 'table ' : '') + (loadSearchreplace ? 'searchreplace ' : '') + '| link ' + (loadImage ? 'image ' : '') + (loadEmoticons ? ' emoticons' : '') + (loadCharmap ? ' | charmap' : '') + (loadCode ? ' | code' : ''),
+                    toolbar2: (loadFullscreen ? 'fullscreen ' : '') + (loadPrint ? 'print ' : '') + (loadPreview ? 'preview ' : '') + '| forecolor backcolor | ' + (loadPreview ? 'insertdatetime ' : '') + (loadTable ? 'table ' : '') + (loadSearchreplace ? 'searchreplace ' : '') + '| link ' + (loadImage ? 'image ' : '') + (loadEmoticons ? ' emoticons' : '') + (loadCharmap ? ' | charmap' : '') + (loadCode ? ' | code' : '') + (loadVisualblocks ? ' | visualblocks' : ''),
                     external_plugins: null,
                     content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
                     content_style: 'a,blockquote,body,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,iframe,img,li,ol,p,pre,q,ul{border:0;padding:0;margin:0}a,abbr,acronym,address,area,b,bdo,big,blockquote,caption,center,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,font,h3,h4,h5,h6,hr,i,ins,kbd,li,map,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,u,ul{line-height:1.57143em}a,body{margin:0}body,h1,h2{font-family:gotham,helvetica,arial,sans-serif}a,img[name=en-crypt]{cursor:pointer}h3,p{margin-bottom:.714285em}del{text-decoration:line-through}dfn{font-style:italic}body{box-sizing:border-box;color:#383838;font-size:14px;padding-right:1px;word-wrap:break-word}a:link,a:visited{color:#047ac6}a:active,a:hover{color:#2596de}h1{font-size:1.5em;font-weight:700;line-height:1.04762em;margin-bottom:.4761em;margin-top:.9523em}h2{font-size:1.286em;font-weight:700;line-height:1.22222em;margin-bottom:.5556em;margin-top:1.111em}h3,h4,h5,h6{font-size:1em;font-weight:700;font-family:gotham,helvetica,arial,sans-serif}h3{margin-top:1.4285em}div{font-family:gotham,helvetica,arial,sans-serif;font-size:14px}img.en-media{height:auto;margin-bottom:1.286em;max-width:100%}img.en-media[height="1"]{height:1px}p+div img,p+img{margin-top:.714285em}div+div img,div+img{margin-top:.857412em}div+div img+img,img+img,li ol,li ul{margin-top:0}ol,ul{list-style-position:outside;margin-bottom:.714285em;margin-left:2em;margin-top:.2857em;padding-left:0}li ol,li ul{margin-bottom:0}h1+ol,h1+ul,h2+ol,h2+ul,p+ol,p+ul{margin-top:-.428571em}blockquote{border-left:2px solid #bfbfbf;margin-bottom:1.4285em;margin-left:1.4285em;margin-top:1.4285em;padding-left:.714285em}code,pre{font-family:Monaco,Courier,monospace}cite{font-style:italic}table{font-size:1em}td,th{padding:.2em 2em .2em 0;text-align:left;vertical-align:top}button.en-ignore{margin-bottom:1em}.highlight{background:#c9f2d0;border:1px solid #62eb92}.Decrypted{background-color:#f7f7f7;padding:5px}.Decrypted .Header{color:#404040;font-family:gotham,helvetica,arial,sans-serif;font-size:11px;padding-bottom:5px}.Decrypted .Body{background-color:#fff;padding:5px}.canvas-container{background:url(/redesign/global/img/loading-spinner.gif) center center no-repeat #fff;border:1px solid #cacaca;margin-bottom:10px}',
@@ -872,6 +878,9 @@ if (typeof (entn.init) == 'undefined') {
                 }
                 if (loadBbcode) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -bbcode').trim();
+                }
+                if (loadVisualblocks) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -visualblocks').trim();
                 }
 
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
@@ -975,6 +984,12 @@ GM_config.init(
             'type': 'checkbox',
             'label': 'Load Plugin Advanced List?',
             'default': false
+        },
+        'tinymcePluginVisualblocks':
+        {
+            'type': 'checkbox',
+            'label': 'Load Plugin Visual Blocks?',
+            'default': true
         },
         'tinymcePluginBbcode':
         {
