@@ -508,11 +508,20 @@ enus.onTinymceSave = function (e) {
  */
 enus.onTinymceCancel = function (e) {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
+    var confirm = GM_config.get('tinymceConfirmNoSaveExit');
+   
     if (e.tinyMceId == 'gminput') {
-        if (lib.confirmExit()) {
+        var confirm = GM_config.get('tinymceConfirmNoSaveExit');
+        if (confirm) {
+            if (lib.confirmExit()) {
+                lib.lightBoxReset();
+                tinyMCE.get(e.tinyMceId).setContent(''); // clean up tinyMCE
+            }
+        } else {
             lib.lightBoxReset();
             tinyMCE.get(e.tinyMceId).setContent(''); // clean up tinyMCE
         }
+        
     }
 };
 enus.onTinyMceFulllscreen = function (e) {
@@ -862,67 +871,73 @@ GM_config.init(
         'tinymcePluginFullscreen':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Full Screen.',
+            'label': 'Load Plugin Full Screen?',
             'default': true
         },
         'tinymcePluginTable':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Table.',
+            'label': 'Load Plugin Table?',
             'default': true
         },
         'tinymcePluginCharmap':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Special Characters.',
+            'label': 'Load Plugin Special Characters?',
             'default': true
         },
         'tinymcePluginCode':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Html Code.',
+            'label': 'Load Plugin Html Code?',
             'default': true
         },
         'tinymcePluginPreview':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Preview.',
+            'label': 'Load Plugin Preview?',
             'default': true
         },
         'tinymcePluginPrint':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Print.',
+            'label': 'Load Plugin Print?',
             'default': true
         },
         'tinymcePluginInsertdatetime':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Insert Date Time.',
+            'label': 'Load Plugin Insert Date Time?',
             'default': true
         },
         'tinymcePluginImage':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Image.',
+            'label': 'Load Plugin Image?',
             'default': true
         },
         'tinymcePluginSearchreplace':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Find & Replace.',
+            'label': 'Load Plugin Find & Replace?',
             'default': true
         },
         'tinymcePluginEmoticons':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Emoticons.',
+            'label': 'Load Plugin Emoticons?',
             'default': true
         },
         'tinymcePluginWordcount':
         {
             'type': 'checkbox',
-            'label': 'Load Plugin Word Count.',
+            'label': 'Load Plugin Word Count?',
+            'default': true
+        },
+        'tinymceConfirmNoSaveExit':
+        {
+            'type': 'checkbox',
+            'label': 'Ask for confirmation before closing without saving?',
             'default': true
         }
     },
