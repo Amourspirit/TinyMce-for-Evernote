@@ -284,7 +284,7 @@ enus.lightBoxCss += 'box-shadow:0 0 5px #444}.gmclose{float:right;margin-right:6
 enus.lightBoxCss += ' 0 solid rgba(0,0,0,.2)}div.mce-tinymce.mce-container.mce-panel{margin-top:2em}div.mce-tinymce.mce-container.mce-panel.mce-fullscreen';
 enus.lightBoxCss += '{margin-top:0}#gm-edit-btn{font-size:1.6em;color:#ABABAB;cursor:pointer;}#gm-edit-btn:hover{color:#2DBE60}';
 enus.lightBoxCss += '.gmbox-window{top:50%;left:50%;transform: translate(-50%, -50%);position: absolute;';
-enus.lightBoxCss += 'width:650px;height:450px;}#gm-tb{display:inline-block;position:absolute;}';
+enus.lightBoxCss += 'width:700px;height:450px;}#gm-tb{display:inline-block;position:absolute;}';
 // #endregion Properties
 // #region Init
 /**
@@ -683,6 +683,8 @@ if (typeof (entn.init) == 'undefined') {
                 console.log(bbDoc.shortName + ': found tinymce library');
                 clearInterval(gmTinyMceTimer);
 
+                tinyMCE.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
+
                 var loadTable = GM_config.get('tinymcePluginTable');
                 if (loadTable) {
                     tinyMCE.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js')
@@ -727,7 +729,10 @@ if (typeof (entn.init) == 'undefined') {
                 if (loadSearchreplace) {
                     tinyMCE.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
                 }
-                
+                var loadAdvlist = GM_config.get('tinymcePluginAdvlist');
+                if (loadAdvlist) {
+                    tinyMCE.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
+                }
                 var tinyMceExternalPlugins = {
                     'textcolor': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
                     'colorpicker': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
@@ -735,7 +740,7 @@ if (typeof (entn.init) == 'undefined') {
                     'hr': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
                     'link': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
                 };
-                
+               
 
                 var tinyMceInit = {
                     selector: 'textarea#' + id,
@@ -806,6 +811,7 @@ if (typeof (entn.init) == 'undefined') {
 
                     }
                 };
+                tinyMceInit.plugins = (tinyMceInit.plugins + ' -lists').trim();
                 if (loadTable) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -table').trim();
                 }
@@ -839,7 +845,10 @@ if (typeof (entn.init) == 'undefined') {
                 if (loadSearchreplace) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -searchreplace').trim();
                 }
-                
+                if (loadAdvlist) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -advlist').trim();
+                }
+
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
                 tinyMCE.init(tinyMceInit);
             }
@@ -919,6 +928,12 @@ GM_config.init(
             'type': 'checkbox',
             'label': 'Load Plugin Emoticons?',
             'default': true
+        },
+        'tinymcePluginAdvlist':
+        {
+            'type': 'checkbox',
+            'label': 'Load Plugin Advanced List?',
+            'default': false
         },
         'tinymcePluginWordcount':
         {
