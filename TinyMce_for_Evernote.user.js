@@ -7,20 +7,26 @@
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
 // @match           http://www.evernote.com/Home.action*
 // @match           https://www.evernote.com/Home.action*
-// @grant           none
 // @noframes
 // @license         MIT
 // @homepageURL     https://amourspirit.github.io/TinyMce-for-Evernote/
 // @update          https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
 // @downloadURL     https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
 // @contributionURL https://amourspirit.github.io/TinyMce-for-Evernote/#donate
+// @require         https://openuserjs.org/src/libs/sizzle/GM_config.min.js
+// @grant           GM_registerMenuCommand
+// @grant           GM_xmlhttpRequest
+// @grant           GM_addStyle
+// @grant           GM_setValue
+// @grant           GM_getValue
+
 // ==/UserScript==
 'use strict';
 // #nsregion BIGBYTE
 // #region Methods
 var BIGBYTE = BIGBYTE || {};
-if (typeof(BIGBYTE.createNS) == 'undefined') {
-    BIGBYTE.createNS = function(namespace) {
+if (typeof (BIGBYTE.createNS) == 'undefined') {
+    BIGBYTE.createNS = function (namespace) {
         var nsparts = namespace.split(".");
         var parent = BIGBYTE;
 
@@ -46,8 +52,8 @@ if (typeof(BIGBYTE.createNS) == 'undefined') {
         return parent;
     };
 }
-if (typeof(BIGBYTE.isjquery) == 'undefined') {
-    BIGBYTE.isjquery = function(data) {
+if (typeof (BIGBYTE.isjquery) == 'undefined') {
+    BIGBYTE.isjquery = function (data) {
         // If data is already a jQuery object
         if (data instanceof jQuery) {
             // Do nothing different
@@ -72,20 +78,23 @@ if (window.top != window.self) {
 
 var bbDoc = BIGBYTE.createNS("BIGBYTE.USERSCRIPT.DOCUMENT");
 bbDoc.ns = 'BIGBYTE.USERSCRIPT.DOCUMENT';
+bbDoc.preKey = 'tmceen_'; // key prefix used for storage
+bbDoc.shortName = 'TMCEE';
+bbDoc.MenuName = 'TinyMce Options';
 // #region LoadScripts
-if (typeof(bbDoc.loadScript) == 'undefined') {
-    bbDoc.loadScript = function(scriptItm) {
+if (typeof (bbDoc.loadScript) == 'undefined') {
+    bbDoc.loadScript = function (scriptItm) {
         var lib = this;
-        if (typeof(scriptItm.count) == 'undefined') {
+        if (typeof (scriptItm.count) == 'undefined') {
             scriptItm.count = 0;
         }
-        if (typeof(scriptItm.loaded) == 'undefined') {
+        if (typeof (scriptItm.loaded) == 'undefined') {
             scriptItm.loaded = false;
         }
-        if (typeof(scriptItm.text) == 'undefined') {
+        if (typeof (scriptItm.text) == 'undefined') {
             scriptItm.text = ''; // timeout in seconds
         }
-        if (typeof(scriptItm.timeout) == 'undefined') {
+        if (typeof (scriptItm.timeout) == 'undefined') {
             scriptItm.timeout = 30; // timeout in seconds
         }
 
@@ -104,7 +113,7 @@ if (typeof(bbDoc.loadScript) == 'undefined') {
         switch (scriptItm.type) {
             case 'linkedjs':
                 var skipTest = false;
-                if (typeof(scriptItm.testMethod) == 'undefined' || (scriptItm.testMethod.length == 0)) {
+                if (typeof (scriptItm.testMethod) == 'undefined' || (scriptItm.testMethod.length == 0)) {
                     skipTest = true;
                 }
                 if (skipTest) {
@@ -131,12 +140,12 @@ if (typeof(bbDoc.loadScript) == 'undefined') {
                 } catch (e) {
                     testmethod = undefined;
                 }
-                if (typeof(testmethod) == 'undefined') {
+                if (typeof (testmethod) == 'undefined') {
                     if (!scriptItm.loaded) {
                         scriptItm.loaded = true;
                         lib.addJS_Node(scriptItm.text, scriptItm.src);
                     }
-                    setTimeout(function() {
+                    setTimeout(function () {
                         lib.loadScript(scriptItm);
                     }, 100);
                 } else {
@@ -146,7 +155,7 @@ if (typeof(bbDoc.loadScript) == 'undefined') {
                 }
                 break;
             case 'css':
-                if (typeof(scriptItm.tag) == 'undefined') {
+                if (typeof (scriptItm.tag) == 'undefined') {
                     scriptItm.tag = 'body'; // timeout in seconds
                 }
                 lib.addCss_Node(scriptItm.src, scriptItm.tag);
@@ -168,8 +177,8 @@ if (typeof(bbDoc.loadScript) == 'undefined') {
 // #endregion LoadScripts
 // #region BIGBYTE.USERSCRIPT.DOCUMENT Methods
 // gneric document related
-if (typeof(bbDoc.addJS_Node) == 'undefined') {
-    bbDoc.addJS_Node = function(text, s_URL, funcToRun, runOnLoad) {
+if (typeof (bbDoc.addJS_Node) == 'undefined') {
+    bbDoc.addJS_Node = function (text, s_URL, funcToRun, runOnLoad) {
         var D = document;
         var scriptNode = D.createElement('script');
         if (runOnLoad) {
@@ -184,8 +193,8 @@ if (typeof(bbDoc.addJS_Node) == 'undefined') {
         targ.appendChild(scriptNode);
     };
 }
-if (typeof(bbDoc.addJS_NodeToBody) == 'undefined') {
-    bbDoc.addJS_NodeToBody = function(text, s_URL, funcToRun, runOnLoad) {
+if (typeof (bbDoc.addJS_NodeToBody) == 'undefined') {
+    bbDoc.addJS_NodeToBody = function (text, s_URL, funcToRun, runOnLoad) {
         var D = document;
         var scriptNode = D.createElement('script');
         if (runOnLoad) {
@@ -200,8 +209,8 @@ if (typeof(bbDoc.addJS_NodeToBody) == 'undefined') {
         targ.appendChild(scriptNode);
     };
 }
-if (typeof(bbDoc.addCss_Node) == 'undefined') {
-    bbDoc.addCss_Node = function(text, element) {
+if (typeof (bbDoc.addCss_Node) == 'undefined') {
+    bbDoc.addCss_Node = function (text, element) {
         element = typeof element !== 'undefined' ? element : 'head';
         var D = document;
         var scriptNode = D.createElement('style');
@@ -212,8 +221,8 @@ if (typeof(bbDoc.addCss_Node) == 'undefined') {
         targ.appendChild(scriptNode);
     };
 }
-if (typeof(bbDoc.addLink_Node) == 'undefined') {
-    bbDoc.addLink_Node = function(href, type, rel) {
+if (typeof (bbDoc.addLink_Node) == 'undefined') {
+    bbDoc.addLink_Node = function (href, type, rel) {
         type = typeof type !== 'undefined' ? type : "text/css";
         rel = typeof rel !== 'undefined' ? rel : "stylesheet";
         var D = document;
@@ -227,20 +236,111 @@ if (typeof(bbDoc.addLink_Node) == 'undefined') {
     };
 }
 
-if (typeof(bbDoc.addHtml_Node) == 'undefined') {
-    bbDoc.addHtml_Node = function(html) {
+if (typeof (bbDoc.addHtml_Node) == 'undefined') {
+    bbDoc.addHtml_Node = function (html) {
         var D = document;
         var targ = D.getElementsByTagName('body')[0] || D.body || D.documentElement;
         targ.insertAdjacentHTML('beforeend', html);
     };
 }
 // #endregion BIGBYTE.USERSCRIPT.DOCUMENT Methods
+// #region Storage Methods
+if (typeof (bbDoc.createCookie) == 'undefined') {
+    bbDoc.createCookie = function (name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = '; expires=' + date.toGMTString();
+        } else var expires = '';
+        document.cookie = name + '=' + value + expires + '; path=/';
+    };
+}
+
+if (typeof (bbDoc.readCookie) == 'undefined') {
+    bbDoc.readCookie = function (name) {
+        var nameEQ = name + '=';
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    };
+}
+
+if (typeof (bbDoc.eraseCookie) == 'undefined') {
+    bbDoc.eraseCookie = function (name) {
+        bbDoc.createCookie(name, '', -1);
+    };
+}
+
+if (typeof (bbDoc.gmGetResource) == 'undefined') {
+    bbDoc.gmGetResource = function (key) {
+        var res = bbDoc.getStorage('resource_' + key, true),
+            config = GM_config.get(key);
+        if ((!res || !res.base64) && config) {
+            bbDoc.updateResource(key, config);
+            return config;
+        } else if (!config) {
+            console.log(bbDoc.shortName + ': No resource nor config for:' + key);
+            return null;
+        }
+        return res.base64;
+    };
+}
+
+if (typeof (bbDoc.updateResource) == 'undefined') {
+    bbDoc.updateResource = function (key, url) {
+        var res = bbDoc.getStorage('resource_' + key, true);
+        if (GM_xmlhttpRequest && (!res || !res.base64 || res.url !== url)) {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                overrideMimeType: 'text/plain; charset=x-user-defined',
+                onload: function (response) {
+                    res = {
+                        url: url,
+                        base64: 'data:image/png;base64,' + btoa(response.responseText.replace(/[\u0100-\uffff]/g, function (c) {
+                            return String.fromCharCode(c.charCodeAt(0) & 0xff);
+                        }))
+                    };
+                    bbDoc.setStorage('resource_' + key, res, true);
+                },
+                onfail: function (response) {
+                    console.log(bbDoc.shortName + ': Could not update resource:', key, url, response);
+                }
+            });
+        }
+    };
+}
+
+if (typeof (bbDoc.getStorage) == 'undefined') {
+    bbDoc.getStorage = function (key, GM) {
+        var value = GM ? GM_getValue(bbDoc.preKey + key) : localStorage.getItem(bbDoc.preKey + key);
+        if (value !== undefined && value !== null) {
+            value = JSON.parse(value);
+        }
+        return value;
+    };
+}
+
+if (typeof (bbDoc.setStorage) == 'undefined') {
+    bbDoc.setStorage = function (key, value, GM) {
+        if (GM) {
+            GM_setValue(bbDoc.preKey + key, JSON.stringify(value));
+        } else {
+            localStorage.setItem(bbDoc.preKey + key, JSON.stringify(value));
+        }
+    };
+}
+// #endregion Storage Methods
 
 // #nsregion BIGBYTE.USERSCRIPT.UTIL
 var bbusu = BIGBYTE.createNS("BIGBYTE.USERSCRIPT.UTIL");
 bbusu.ns = 'BIGBYTE.USERSCRIPT.UTIL';
 // #region Methods
-if(typeof(bbusu.extend) == 'undefined') {
+if (typeof (bbusu.extend) == 'undefined') {
     /**
      * Extends an object to contain new Properties
      * @return {[Object]} the new merged oject
@@ -283,13 +383,13 @@ enus.lightBoxCss += 'width:650px;height:450px;}#gm-tb{display:inline-block;posit
 /**
  * Init for the main script
  */
-enus.init = function() {
+enus.init = function () {
     if (window.top != window.self) {
         // if this is an iframe then return
         return;
     }
     BIGBYTE.USERSCRIPT.EVERNOTE.TMCE.version = '4.1.0';
-    if(typeof(tinyMCE) != 'undefined') {
+    if (typeof (tinyMCE) != 'undefined') {
         BIGBYTE.USERSCRIPT.EVERNOTE.TMCE.version = tinyMCE.majorVersion + '.' + tinyMCE.minorVersion;
     }
     var tinyMceVer = BIGBYTE.USERSCRIPT.EVERNOTE.TMCE.version;
@@ -299,7 +399,7 @@ enus.init = function() {
     // https://github.com/ilinsky/jquery-xpath/
     var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
 
-    // no jquery at this point use pure javascript events
+        // no jquery at this point use pure javascript events
     if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
         document.addEventListener("bbScriptLoaded", BIGBYTE.USERSCRIPT.EVERNOTE.onBbScriptLoaded);
     } else if (document.attachEvent) { // For IE 8 and earlier versions
@@ -313,22 +413,22 @@ enus.init = function() {
     }
 
     // only add jquery if we need it.
-    if (typeof(jQuery) == 'undefined') {
+    if (typeof (jQuery) == 'undefined') {
         this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
     }
-    if (typeof(jQuery().xpath) == 'undefined') {
+    if (typeof (jQuery().xpath) == 'undefined') {
         this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
     }
 
     this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
     //this.addScript('code-css','shi/css/shi_default.min.css','csslink');
     // tiny mce
-    if (typeof(tinyMCE) == 'undefined') {
+    if (typeof (tinyMCE) == 'undefined') {
         this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
     }
     this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
 
-    this.addScript('lightboxcss', this.lightBoxCss, 'css',null, {tag:'body'});
+    this.addScript('lightboxcss', this.lightBoxCss, 'css', null, { tag: 'body' });
 
     //this.addScript('tinymce_advanced_theme', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/themes/advanced/theme.min.js','linkedjs') // no checking required
     this.loadScripts();
@@ -339,7 +439,7 @@ enus.init = function() {
  * load via the onScripLoadeEvent
  * the onScriptLoaded Event called this function over and over untll all the scripts are loaded
  */
-enus.loadScripts = function() {
+enus.loadScripts = function () {
 
     var count = 0;
     for (var key in this.scripts) {
@@ -358,14 +458,14 @@ enus.scripts = [];
  * Adds script item to the BIGBYTE.USERSCRIPT.EVERNOTE.scripts array
  * these are scripts tha will be loaded when the BIGBYTE.USERSCRIPT.EVERNOTE.init() is fired
  */
-enus.addScript = function(name, src, type, testMethod, args) {
+enus.addScript = function (name, src, type, testMethod, args) {
     var newItm = {
         name: name,
         src: src,
         type: type,
         testMethod: testMethod
     };
-    if(typeof(args) === undefined) {
+    if (typeof (args) === undefined) {
         this.scripts[name] = newItm;
     } else {
         var extended = BIGBYTE.USERSCRIPT.UTIL.extend(newItm, args);
@@ -379,7 +479,7 @@ enus.addScript = function(name, src, type, testMethod, args) {
  * Function to check and see if there are any scripts left to be loaded
  * @returns boolean, true if all the scripts are loaded; Otherwise false
  */
-enus.isScriptsLoaded = function() {
+enus.isScriptsLoaded = function () {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     for (var key in lib.scripts) {
         if (!lib.scripts[key].loaded) {
@@ -392,7 +492,7 @@ enus.isScriptsLoaded = function() {
 // #endregion init
 
 // #region events
-enus.onBbScriptLoaded = function(e) {
+enus.onBbScriptLoaded = function (e) {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     // delete the added script
 
@@ -421,54 +521,54 @@ enus.onBbScriptLoaded = function(e) {
  * Event Handler that fires when all scripts are loaded
  * this is main loading point for the script.
  */
-enus.onAllScriptsLoaded = function(e) {
-	console.log('all scripts have been loaded.');
-	jQuery(function($, undefined) {
-		var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
+enus.onAllScriptsLoaded = function (e) {
+    console.log('all scripts have been loaded.');
+    jQuery(function ($, undefined) {
+        var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
         // lib.btnSelector = '.GJDCG5CEMB';
         lib.btnSelector = '//*[@id="gwt-debug-NoteAttributesView-root"]/div[1]/div[1]';
-		// #en-common-editor-iframe is chrome selector, firefox is different
-		//if ($.browser.chrome) {
-		if(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
-			// setup for Chrome
+        // #en-common-editor-iframe is chrome selector, firefox is different
+        //if ($.browser.chrome) {
+        if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
+            // setup for Chrome
             lib.iframeSelector = '.RichTextArea-entinymce';
             lib.noteSelector = 'body';
-		} else {
-			// setup for Firefox
-			lib.iframeSelector = '.RichTextArea-entinymce';
-			lib.noteSelector = 'body';
-		}
+        } else {
+            // setup for Firefox
+            lib.iframeSelector = '.RichTextArea-entinymce';
+            lib.noteSelector = 'body';
+        }
 
-		lib.sidebarSelector = '#gwt-debug-sidebar';
+        lib.sidebarSelector = '#gwt-debug-sidebar';
 
-		lib.ensurePlugins();
-		lib.addToolbarButton();
+        lib.ensurePlugins();
+        lib.addToolbarButton();
 
-		$(document).on('editBtnAdded', lib.onEditBtnAdded);
-		$(document).on("tinymceInit", lib.onTinymceInit);
-		$(document).on("tinymceSave", lib.onTinymceSave);
-		$(document).on("tinymceCancel", lib.onTinymceCancel);
-		$(document).on('tinymceFullScreen', lib.onTinyMceFulllscreen);
+        $(document).on('editBtnAdded', lib.onEditBtnAdded);
+        $(document).on("tinymceInit", lib.onTinymceInit);
+        $(document).on("tinymceSave", lib.onTinymceSave);
+        $(document).on("tinymceCancel", lib.onTinymceCancel);
+        $(document).on('tinymceFullScreen', lib.onTinyMceFulllscreen);
 
 
-		lib.lightBoxAddCss();
-		lib.writeLightBox();
-		lib.TMCE.init();
+        lib.lightBoxAddCss();
+        lib.writeLightBox();
+        lib.TMCE.init();
 
-		$('.gmclose').click(function() {
-			$.event.trigger({
-			type: "tinymceCancel",
-			message: 'cancel',
-			time: new Date(),
-			tinyMceId: 'gminput'
-			});
-		});
+        $('.gmclose').click(function () {
+            $.event.trigger({
+                type: "tinymceCancel",
+                message: 'cancel',
+                time: new Date(),
+                tinyMceId: 'gminput'
+            });
+        });
 
 
     });
 };
 
-enus.onEditBtnAdded = function(e) {
+enus.onEditBtnAdded = function (e) {
     console.log('onEditBtnAdded event fired');
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     var $ = jQuery;
@@ -480,13 +580,13 @@ enus.onEditBtnAdded = function(e) {
 /**
  * Event that fire when TinyMce is initiated
  */
-enus.onTinymceInit = function(e) {
+enus.onTinymceInit = function (e) {
     console.log('Tiny Mce Init was triggered');
 };
 /**
  * Event that fire when TinyMce save is clicked
  */
-enus.onTinymceSave = function(e) {
+enus.onTinymceSave = function (e) {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     if (e.tinyMceId == 'gminput') {
         //console.log('Tiny Mce save was triggered');
@@ -499,7 +599,7 @@ enus.onTinymceSave = function(e) {
 /**
  * Event that fire when TinyMce close is clicked
  */
-enus.onTinymceCancel = function(e) {
+enus.onTinymceCancel = function (e) {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     if (e.tinyMceId == 'gminput') {
         if (lib.confirmExit()) {
@@ -508,7 +608,7 @@ enus.onTinymceCancel = function(e) {
         }
     }
 };
-enus.onTinyMceFulllscreen = function(e) {
+enus.onTinyMceFulllscreen = function (e) {
     var $ = jQuery;
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
 
@@ -529,11 +629,11 @@ enus.onTinyMceFulllscreen = function(e) {
 };
 // #endregion events
 // #region methods
-enus.addToolbarButton = function() {
+enus.addToolbarButton = function () {
     var $ = jQuery;
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     var gmCounter = 0;
-    var gmTimer = setInterval(function() {
+    var gmTimer = setInterval(function () {
         gmCounter++;
         console.log("turn no. " + gmCounter);
         var objElement = $(document.body).xpath(lib.btnSelector);
@@ -557,11 +657,11 @@ enus.addToolbarButton = function() {
         }
     }, 500);
 };
-enus.addButtonClick = function() {
+enus.addButtonClick = function () {
     var $ = jQuery;
     var lib = this;
     if ($('#gm-edit-btn').length) {
-        $('#gm-edit-btn').click(function() {
+        $('#gm-edit-btn').click(function () {
             if (this.fullScreen) {
                 tinyMCE.get('gminput').execCommand('mceFullScreen');
             }
@@ -577,10 +677,10 @@ enus.addButtonClick = function() {
         console.log('Edit Button Click added');
     }
 };
-enus.ensurePlugins = function() {
+enus.ensurePlugins = function () {
     var $ = jQuery;
-    if (typeof($.fn.tagName) == 'undefined') {
-        $.fn.tagName = function(toLower) {
+    if (typeof ($.fn.tagName) == 'undefined') {
+        $.fn.tagName = function (toLower) {
             var tn = this.prop("tagName");
             if (toLower) {
                 tn = tn.toLowerCase();
@@ -589,43 +689,43 @@ enus.ensurePlugins = function() {
         };
     }
 };
-enus.createToolbarHtml = function() {
+enus.createToolbarHtml = function () {
     var btnHtml = this.createToolbarEditBtn();
     var html = '';
     html += '<div id="gm-tb" title="Edit with TinyMCE" class="' + this.btnSelector + '">' + btnHtml + '</div>';
     return html;
 };
-enus.createToolbarEditBtn = function() {
+enus.createToolbarEditBtn = function () {
     var html = '<div id="gm-edit-btn" style="display:inline-block;" name="gm-edit-btn" class="gm-btn"><i class="fi-page-edit"></i></div>';
     return html;
 };
 /*
  * resets the lightbox back to hidden state
  */
-enus.lightBoxReset = function() {
+enus.lightBoxReset = function () {
     var $ = jQuery;
     $('.gmbackdrop, .gmbox').animate({
         'opacity': '0'
-    }, 300, 'linear', function() {
+    }, 300, 'linear', function () {
         $('.gmbackdrop, .gmbox').css('display', 'none');
     });
     $('textarea#gminput').val(''); // clean up textarea
 };
 
-enus.lightBoxAddCss = function() {
+enus.lightBoxAddCss = function () {
     // var bdoc = BIGBYTE.USERSCRIPT.DOCUMENT;
     // bdoc.addCss_Node(this.lightBoxCss, 'body');
 };
-enus.confirmExit = function() {
+enus.confirmExit = function () {
     return confirm("Are you sure you want to close this editor?");
 };
-enus.save = function() {
+enus.save = function () {
     var $ = jQuery;
     var e = tinyMCE.get("gminput").getContent();
     var lib = this;
     $(".gmbackdrop, .gmbox").animate({
         opacity: "0"
-    }, 300, "linear", function() {
+    }, 300, "linear", function () {
         $(".gmbackdrop, .gmbox").css("display", "none");
     });
     var content = $(this.iframeSelector).contents().find(lib.noteSelector);
@@ -633,12 +733,12 @@ enus.save = function() {
     $("textarea#gminput").val(""), tinyMCE.get("gminput").setContent("");
     $(this.sidebarSelector).show();
 };
-enus.writeLightBox = function(id, title) {
+enus.writeLightBox = function (id, title) {
     var html = this.getLightBoxHtml(id, title);
     var bdoc = BIGBYTE.USERSCRIPT.DOCUMENT;
     bdoc.addHtml_Node(html);
 };
-enus.getLightBoxHtml = function(id, title) {
+enus.getLightBoxHtml = function (id, title) {
     id = typeof id !== 'undefined' ? id : 'gminput';
     title = typeof title !== 'undefined' ? title : '';
     var h = '<div class="gmbackdrop"></div>';
@@ -663,38 +763,67 @@ entn.version = '4.1.0';
 
 // #endregion Properties
 // #region init
-if (typeof(entn.init) == 'undefined') {
-    entn.init = function() {
+if (typeof (entn.init) == 'undefined') {
+    entn.init = function () {
         var gmTinyMceTimerCounter = 0;
         var ver = this.version;
         var id = 'gminput';
-        var gmTinyMceTimer = setInterval(function() {
+        var gmTinyMceTimer = setInterval(function () {
             gmTinyMceTimerCounter++;
             console.log("turn no. " + gmTinyMceTimerCounter + ' looking for tinymce');
-            if (typeof(tinyMCE) !== undefined) {
+            if (typeof (tinyMCE) !== undefined) {
                 console.log('found tinymce library');
                 clearInterval(gmTinyMceTimer);
-                tinyMCE.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
 
+                var loadTable = GM_config.get('tinymcePluginTable');
+                if (loadTable) {
+                    tinyMCE.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js')
+                }
+                var loadCharmap = GM_config.get('tinymcePluginCharmap');
+                if (loadCharmap) {
+                    tinyMCE.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
+                }
+                var loadCode = GM_config.get('tinymcePluginCode');
+                if (loadCode) {
+                    tinyMCE.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
+                }
+                var loadFullscreen = GM_config.get('tinymcePluginFullscreen');
+                if (loadFullscreen) {
+                    tinyMCE.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
+                }
+                var loadEmoticons = GM_config.get('tinymcePluginEmoticons');
+                if (loadEmoticons) {
+                    tinyMCE.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
+                }
+                var loadWordcount = GM_config.get('tinymcePluginWordcount');
+                if (loadEmoticons) {
+                    tinyMCE.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
+                }
+                var loadPrint = GM_config.get('tinymcePluginPrint');
+                if (loadPrint) {
+                    tinyMCE.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
+                }
+                var loadPreview = GM_config.get('tinymcePluginPreview');
+                if (loadPreview) {
+                    tinyMCE.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
+                }
+                var loadImage = GM_config.get('tinymcePluginImage');
+                if (loadImage) {
+                    tinyMCE.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
+                }
+                var loadSearchreplace = GM_config.get('tinymcePluginSearchreplace');
+                if (loadSearchreplace) {
+                    tinyMCE.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
+                }
                 var tinyMceExternalPlugins = {
-                    // 'charmap': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js',
-                    // 'fullscreen': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js',
                     'textcolor': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
                     'colorpicker': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
                     'nonbreaking': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/nonbreaking/plugin.min.js',
                     'insertdatetime': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js',
-                    'code': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js',
                     'hr': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
-                    'searchreplace': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js',
-                    'table': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js',
-                    'image': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js',
-                    'emoticons': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js',
-                    'link': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js',
-                    'wordcount': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js',
-                    'print': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js',
-                    'preview': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js'
+                    'link': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
                 };
-                tinyMceExternalPlugins.fullscreen = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js';
+                
 
                 var tinyMceInit = {
                     selector: 'textarea#' + id,
@@ -717,9 +846,9 @@ if (typeof(entn.init) == 'undefined') {
                     inline: false,
                     browser_spellcheck: true,
                     plugins: '',
-                    menubar: "edit insert format view tools table",
+                    menubar: 'edit insert format view tools' + (loadTable ? ' table':''),
                     toolbar1: 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-                    toolbar2: 'fullscreen print preview | forecolor backcolor | insertdatetime table searchreplace | link image emoticons | charmap | code',
+                    toolbar2: (loadFullscreen ? 'fullscreen ' : '') + (loadPrint ? 'print ' : '') + (loadPreview ? 'preview ' : '') + '| forecolor backcolor | insertdatetime ' + (loadTable ? 'table ' : '') + (loadSearchreplace ? 'searchreplace ' : '') + '| link ' + (loadImage ? 'image ' : '') + (loadEmoticons ? ' emoticons' : '') + (loadCharmap ? ' | charmap' : '') + (loadCode ? ' | code' : ''),
                     external_plugins: null,
                     content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
                     content_style: 'a,blockquote,body,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,iframe,img,li,ol,p,pre,q,ul{border:0;padding:0;margin:0}a,abbr,acronym,address,area,b,bdo,big,blockquote,caption,center,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,font,h3,h4,h5,h6,hr,i,ins,kbd,li,map,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,u,ul{line-height:1.57143em}a,body{margin:0}body,h1,h2{font-family:gotham,helvetica,arial,sans-serif}a,img[name=en-crypt]{cursor:pointer}h3,p{margin-bottom:.714285em}del{text-decoration:line-through}dfn{font-style:italic}body{box-sizing:border-box;color:#383838;font-size:14px;padding-right:1px;word-wrap:break-word}a:link,a:visited{color:#047ac6}a:active,a:hover{color:#2596de}h1{font-size:1.5em;font-weight:700;line-height:1.04762em;margin-bottom:.4761em;margin-top:.9523em}h2{font-size:1.286em;font-weight:700;line-height:1.22222em;margin-bottom:.5556em;margin-top:1.111em}h3,h4,h5,h6{font-size:1em;font-weight:700;font-family:gotham,helvetica,arial,sans-serif}h3{margin-top:1.4285em}div{font-family:gotham,helvetica,arial,sans-serif;font-size:14px}img.en-media{height:auto;margin-bottom:1.286em;max-width:100%}img.en-media[height="1"]{height:1px}p+div img,p+img{margin-top:.714285em}div+div img,div+img{margin-top:.857412em}div+div img+img,img+img,li ol,li ul{margin-top:0}ol,ul{list-style-position:outside;margin-bottom:.714285em;margin-left:2em;margin-top:.2857em;padding-left:0}li ol,li ul{margin-bottom:0}h1+ol,h1+ul,h2+ol,h2+ul,p+ol,p+ul{margin-top:-.428571em}blockquote{border-left:2px solid #bfbfbf;margin-bottom:1.4285em;margin-left:1.4285em;margin-top:1.4285em;padding-left:.714285em}code,pre{font-family:Monaco,Courier,monospace}cite{font-style:italic}table{font-size:1em}td,th{padding:.2em 2em .2em 0;text-align:left;vertical-align:top}button.en-ignore{margin-bottom:1em}.highlight{background:#c9f2d0;border:1px solid #62eb92}.Decrypted{background-color:#f7f7f7;padding:5px}.Decrypted .Header{color:#404040;font-family:gotham,helvetica,arial,sans-serif;font-size:11px;padding-bottom:5px}.Decrypted .Body{background-color:#fff;padding:5px}.canvas-container{background:url(/redesign/global/img/loading-spinner.gif) center center no-repeat #fff;border:1px solid #cacaca;margin-bottom:10px}',
@@ -765,7 +894,36 @@ if (typeof(entn.init) == 'undefined') {
 
                     }
                 };
-                tinyMceInit.plugins = (tinyMceInit.plugins + ' -charmap').trim();
+                if (loadTable) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -table').trim();
+                }
+                if (loadCharmap) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -charmap').trim();
+                }
+                if (loadCode) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -code').trim();
+                }
+                if (loadFullscreen) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -fullscreen').trim();
+                }
+                if (loadEmoticons) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -emoticons').trim();
+                }
+                if (loadWordcount) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -wordcount').trim();
+                }
+                if (loadPrint) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -print').trim();
+                }
+                if (loadPreview) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -preview').trim();
+                }
+                if (loadImage) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -image').trim();
+                }
+                if (loadSearchreplace) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -searchreplace').trim();
+                }
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
                 tinyMCE.init(tinyMceInit);
             }
@@ -774,15 +932,94 @@ if (typeof(entn.init) == 'undefined') {
                 console.log('reache max value for finding TinyMCE Lib');
                 clearInterval(gmTinyMceTimer);
             }
-        },500);
+        }, 500);
 
 
     };
 }
+
+GM_config.init(
+    {
+        'id': bbDoc.preKey + 'Config', // The id used for this instance of GM_config
+        'title': bbDoc.MenuName, // Panel Title
+        'fields': // Fields object
+        {
+            'tinymcePluginFullscreen':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Full Screen.',
+                'default': true
+            },
+            'tinymcePluginTable':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Table.',
+                'default': true
+            },
+            'tinymcePluginCharmap':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Special Characters.',
+                'default': true
+            },
+            'tinymcePluginCode':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Html Code.',
+                'default': true
+            },
+            'tinymcePluginPreview':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Preview.',
+                'default': true
+            },
+            'tinymcePluginPrint':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Print.',
+                'default': true
+            },
+            'tinymcePluginImage':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Image.',
+                'default': true
+            },
+            'tinymcePluginSearchreplace':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Find & Replace.',
+                'default': true
+            },
+            'tinymcePluginEmoticons':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Emoticons.',
+                'default': true
+            },
+            'tinymcePluginWordcount':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Word Count.',
+                'default': true
+            }
+        },
+        'css': '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
+    });
 
 // #endregion init
 // #endnsregion BIGBYTE.USERSCRIPT.STHL.TMCE
 // init the lib objects.
 if (window.top == window.self) {
     enus.init();
+}
+
+if (typeof GM_registerMenuCommand === 'function') {
+    console.log('Registering: Open ' + bbDoc.shortName + ' Options Menu')
+    GM_registerMenuCommand(bbDoc.MenuName, function () {
+        GM_config.open();
+    });
+} else {
+    console.log('Unable to Register: Open ' + bbDoc.shortName + ' Options Menu');
 }
