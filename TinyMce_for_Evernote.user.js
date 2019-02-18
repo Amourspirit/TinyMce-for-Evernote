@@ -748,6 +748,11 @@ if (typeof (entn.init) == 'undefined') {
                 if (loadAdvlist) {
                     tinyMCE.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
                 }
+                var loadBbcode = GM_config.get('tinymcePluginBbcode');
+                if (loadBbcode) {
+                    tinyMCE.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
+                }
+
                 var tinyMceExternalPlugins = {
                     'textcolor': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
                     'colorpicker': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
@@ -835,6 +840,8 @@ if (typeof (entn.init) == 'undefined') {
                 }
                 if (loadCode) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -code').trim();
+                    tinyMceInit.code_dialog_width = parseInt(GM_config.get('tinymcePluginCodeWidth'));
+                    tinyMceInit.code_dialog_height = parseInt(GM_config.get('tinymcePluginCodeHeight'));
                 }
                 if (loadFullscreen) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -fullscreen').trim();
@@ -862,6 +869,9 @@ if (typeof (entn.init) == 'undefined') {
                 }
                 if (loadAdvlist) {
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -advlist').trim();
+                }
+                if (loadBbcode) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -bbcode').trim();
                 }
 
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
@@ -908,6 +918,22 @@ GM_config.init(
             'label': 'Load Plugin Html Code?',
             'default': true
         },
+        'tinymcePluginCodeWidth':
+        {
+            'label': 'Width in pixels of HTML code editor.',
+            'type': 'int',
+            'min': 200,
+            'max': 4000,
+            'default': 400
+        },
+        'tinymcePluginCodeHeight':
+        {
+            'label': 'Height in pixels of HTML code editor.',
+            'type': 'int',
+            'min': 200,
+            'max': 4000,
+            'default': 300
+        },
         'tinymcePluginPreview':
         {
             'type': 'checkbox',
@@ -948,6 +974,12 @@ GM_config.init(
         {
             'type': 'checkbox',
             'label': 'Load Plugin Advanced List?',
+            'default': false
+        },
+        'tinymcePluginBbcode':
+        {
+            'type': 'checkbox',
+            'label': 'Load Plugin BBCode?',
             'default': false
         },
         'tinymcePluginWordcount':
