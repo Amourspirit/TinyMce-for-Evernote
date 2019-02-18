@@ -284,7 +284,10 @@ enus.lightBoxCss += 'box-shadow:0 0 5px #444}.gmclose{float:right;margin-right:6
 enus.lightBoxCss += ' 0 solid rgba(0,0,0,.2)}div.mce-tinymce.mce-container.mce-panel{margin-top:2em}div.mce-tinymce.mce-container.mce-panel.mce-fullscreen';
 enus.lightBoxCss += '{margin-top:0}#gm-edit-btn{font-size:1.6em;color:#ABABAB;cursor:pointer;}#gm-edit-btn:hover{color:#2DBE60}';
 enus.lightBoxCss += '.gmbox-window{top:50%;left:50%;transform: translate(-50%, -50%);position: absolute;';
-enus.lightBoxCss += 'width:700px;height:450px;}#gm-tb{display:inline-block;position:absolute;}';
+enus.lightBoxCss += '}#gm-tb{display:inline-block;position:absolute;}';
+// popup width is set in function enus.onAllScriptsLoaded
+// popup height is not set and adjust automatically
+
 // #endregion Properties
 // #region Init
 /**
@@ -458,7 +461,19 @@ enus.onAllScriptsLoaded = function (e) {
         lib.lightBoxAddCss();
         lib.writeLightBox();
         lib.TMCE.init();
+        
+        // set the width of the popup TinyMce editor from settings
+        // get the padding of .gmbox
+        var intGmboxPadLeft = parseInt($('.gmbox').css('padding-left'));
+        var intGmboxPadRight = parseInt($('.gmbox').css('padding-right'));
+        // get the set value for thw width
+        var intTinymceWidth = parseInt(GM_config.get('tinymceWidth'));
+        // calc the over all width
+        intTinymceWidth = intTinymceWidth - (intGmboxPadLeft + intGmboxPadRight);
+        // assign the width to the style
+        $('.gmbox-window').width(intTinymceWidth);
 
+        // set the cancel function for TinyMce popup
         $('.gmclose').click(function () {
             $.event.trigger({
                 type: "tinymceCancel",
@@ -946,6 +961,14 @@ GM_config.init(
             'type': 'checkbox',
             'label': 'Ask for confirmation before closing without saving?',
             'default': true
+        },
+        'tinymceWidth':
+        {
+            'label': 'Width in pixels of editor when not full screen.', // Appears next to field
+            'type': 'int', // Makes this setting a text input
+            'min': 400, // Optional lower range limit
+            'max': 4000, // Optional upper range limit
+            'default': 660 // Default value if user doesn't change it
         }
     },
     'css': '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
