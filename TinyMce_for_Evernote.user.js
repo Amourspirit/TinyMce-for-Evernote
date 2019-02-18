@@ -130,7 +130,7 @@ if (typeof (bbDoc.loadScript) == 'undefined') {
                 var maxCount = scriptItm.timeout * 10; // multply by 10 to convert into 10th of seconds
 
                 if (scriptItm.count > maxCount) {
-                    console.error('unable to load script, Aborting: ', scriptItm.src);
+                    console.error(bbDoc.shortName + ': unable to load script, Aborting: ', scriptItm.src);
                     return;
                 }
                 var testmethod;
@@ -273,7 +273,7 @@ enus.ns = 'BIGBYTE.USERSCRIPT.EVERNOTE';
 // #region Properties
 enus.btnSelector = '';
 enus.iframeSelector = '';
-enus.sidebarSelector = '';
+// enus.sidebarSelector = '';
 enus.noteSelector = '';
 enus.fullScreen = false;
 // light box related
@@ -300,7 +300,7 @@ enus.init = function () {
         BIGBYTE.USERSCRIPT.EVERNOTE.TMCE.version = tinyMCE.majorVersion + '.' + tinyMCE.minorVersion;
     }
     var tinyMceVer = BIGBYTE.USERSCRIPT.EVERNOTE.TMCE.version;
-    console.log('tinyMCE Version', tinyMceVer);
+    console.log(bbDoc.shortName + ': tinyMCE Version', tinyMceVer);
     // var pluginSrc = '//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery-1.8.0.min.js';
     var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
     // https://github.com/ilinsky/jquery-xpath/
@@ -429,7 +429,7 @@ enus.onBbScriptLoaded = function (e) {
  * this is main loading point for the script.
  */
 enus.onAllScriptsLoaded = function (e) {
-    console.log('all scripts have been loaded.');
+    console.log(bbDoc.shortName + ': all scripts have been loaded.');
     jQuery(function ($, undefined) {
         var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
         // lib.btnSelector = '.GJDCG5CEMB';
@@ -446,8 +446,6 @@ enus.onAllScriptsLoaded = function (e) {
             lib.noteSelector = 'body';
         }
 
-        lib.sidebarSelector = '#gwt-debug-sidebar';
-
         lib.ensurePlugins();
         lib.addToolbarButton();
 
@@ -456,7 +454,6 @@ enus.onAllScriptsLoaded = function (e) {
         $(document).on("tinymceSave", lib.onTinymceSave);
         $(document).on("tinymceCancel", lib.onTinymceCancel);
         $(document).on('tinymceFullScreen', lib.onTinyMceFulllscreen);
-
 
         lib.lightBoxAddCss();
         lib.writeLightBox();
@@ -470,17 +467,13 @@ enus.onAllScriptsLoaded = function (e) {
                 tinyMceId: 'gminput'
             });
         });
-
-
     });
 };
 
 enus.onEditBtnAdded = function (e) {
-    console.log('onEditBtnAdded event fired');
+    console.log(bbDoc.shortName + ': onEditBtnAdded event fired');
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     var $ = jQuery;
-
-
     lib.addButtonClick();
 };
 
@@ -488,7 +481,7 @@ enus.onEditBtnAdded = function (e) {
  * Event that fire when TinyMce is initiated
  */
 enus.onTinymceInit = function (e) {
-    console.log('Tiny Mce Init was triggered');
+    console.log(bbDoc.shortName + ': Tiny Mce Init was triggered');
 };
 /**
  * Event that fire when TinyMce save is clicked
@@ -551,11 +544,11 @@ enus.addToolbarButton = function () {
     var gmCounter = 0;
     var gmTimer = setInterval(function () {
         gmCounter++;
-        console.log("turn no. " + gmCounter);
+        console.log(bbDoc.shortName + ': turn no. ' + gmCounter);
         var objElement = $(document.body).xpath(lib.btnSelector);
         var objLen = objElement.length;
         if (objLen) {
-            console.log('Found element for button placement');
+            console.log(bbDoc.shortName + ': Found element for button placement');
             // add my own toolbar button
             clearInterval(gmTimer);
             objElement.append(lib.createToolbarHtml());
@@ -565,7 +558,7 @@ enus.addToolbarButton = function () {
                 time: new Date()
             });
         } else {
-            console.log('Unable to find element for button placement');
+            console.log(bbDoc.shortName + ': Unable to find element for button placement');
         }
 
         if (gmCounter >= 20 || objLen > 0) {
@@ -590,7 +583,7 @@ enus.addButtonClick = function () {
             }, 300, 'linear');
             $('.gmbackdrop, .gmbox').css('display', 'block');
         });
-        console.log('Edit Button Click added');
+        console.log(bbDoc.shortName + ': Edit Button Click added');
     }
 };
 enus.ensurePlugins = function () {
@@ -647,7 +640,6 @@ enus.save = function () {
     var content = $(this.iframeSelector).contents().find(lib.noteSelector);
     content.html(e);
     $("textarea#gminput").val(""), tinyMCE.get("gminput").setContent("");
-    $(this.sidebarSelector).show();
 };
 enus.writeLightBox = function (id, title) {
     var html = this.getLightBoxHtml(id, title);
@@ -686,9 +678,9 @@ if (typeof (entn.init) == 'undefined') {
         var id = 'gminput';
         var gmTinyMceTimer = setInterval(function () {
             gmTinyMceTimerCounter++;
-            console.log("turn no. " + gmTinyMceTimerCounter + ' looking for tinymce');
+            console.log(bbDoc.shortName + ': turn no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
             if (typeof (tinyMCE) !== undefined) {
-                console.log('found tinymce library');
+                console.log(bbDoc.shortName + ': found tinymce library');
                 clearInterval(gmTinyMceTimer);
 
                 var loadTable = GM_config.get('tinymcePluginTable');
@@ -853,7 +845,7 @@ if (typeof (entn.init) == 'undefined') {
             }
             // set a limit to how many time we check for tinymce
             if (gmTinyMceTimerCounter >= 20) {
-                console.log('reache max value for finding TinyMCE Lib');
+                console.log(bbDoc.shortName + ': reached max value for finding TinyMCE Lib');
                 clearInterval(gmTinyMceTimer);
             }
         }, 500);
@@ -952,10 +944,10 @@ if (window.top == window.self) {
 }
 
 if (typeof GM_registerMenuCommand === 'function') {
-    console.log('Registering: Open ' + bbDoc.shortName + ' Options Menu')
+    console.log(bbDoc.shortName + ': Registering: Open ' + bbDoc.shortName + ' Options Menu')
     GM_registerMenuCommand(bbDoc.MenuName, function () {
         GM_config.open();
     });
 } else {
-    console.log('Unable to Register: Open ' + bbDoc.shortName + ' Options Menu');
+    console.log(bbDoc.shortName + ': Unable to Register: Open ' + bbDoc.shortName + ' Options Menu');
 }
