@@ -1,0 +1,1 @@
+!function(){"use strict";return tinymce.PluginManager.add("hilite",function(t,n){t.addButton("hilite",{text:"hilite button",icon:!1,onclick:function(){t.setContent("<p>content added from hilite</p>")}})}),function(){}}()();
