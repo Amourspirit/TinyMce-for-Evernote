@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         2.0.3
+// @version         2.0.4
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
@@ -314,7 +314,7 @@ enus.init = function () {
     // https://github.com/ilinsky/jquery-xpath/
     var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
 
-        // no jquery at this point use pure javascript events
+    // no jquery at this point use pure javascript events
     if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
         document.addEventListener("bbScriptLoaded", BIGBYTE.USERSCRIPT.EVERNOTE.onBbScriptLoaded);
     } else if (document.attachEvent) { // For IE 8 and earlier versions
@@ -468,7 +468,7 @@ enus.onAllScriptsLoaded = function (e) {
         lib.lightBoxAddCss();
         lib.writeLightBox();
         lib.TMCE.init();
-        
+
         // set the width of the popup TinyMce editor from settings
         // get the padding of .gmbox
         var intGmboxPadLeft = parseInt($('.gmbox').css('padding-left'));
@@ -524,7 +524,7 @@ enus.onTinymceSave = function (e) {
 enus.onTinymceCancel = function (e) {
     var lib = BIGBYTE.USERSCRIPT.EVERNOTE;
     var confirm = GM_config.get('tinymceConfirmNoSaveExit');
-   
+
     if (e.tinyMceId == 'gminput') {
         var confirm = GM_config.get('tinymceConfirmNoSaveExit');
         if (confirm) {
@@ -536,7 +536,7 @@ enus.onTinymceCancel = function (e) {
             lib.lightBoxReset();
             tinyMCE.get(e.tinyMceId).setContent(''); // clean up tinyMCE
         }
-        
+
     }
 };
 enus.onTinyMceFulllscreen = function (e) {
@@ -771,9 +771,9 @@ if (typeof (entn.init) == 'undefined') {
                 }
                 var loadHilite = GM_config.get('tinymcePluginHilite');
                 if (loadHilite) {
-                    tinyMCE.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@a212cc9ef5d6527d257a783becda02fcc5ef1623/js/plugin.min.js');
+                    tinyMCE.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
                 }
-                
+
                 var tinyMceExternalPlugins = {
                     'textcolor': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
                     'colorpicker': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
@@ -781,7 +781,7 @@ if (typeof (entn.init) == 'undefined') {
                     'hr': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
                     'link': 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
                 };
-               
+
 
                 var tinyMceInit = {
                     selector: 'textarea#' + id,
@@ -804,9 +804,9 @@ if (typeof (entn.init) == 'undefined') {
                     inline: false,
                     browser_spellcheck: true,
                     plugins: '',
-                    menubar: 'edit insert format view tools' + (loadTable ? ' table':''),
+                    menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
                     toolbar1: 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-                    toolbar2: (loadFullscreen ? 'fullscreen ' : '') 
+                    toolbar2: (loadFullscreen ? 'fullscreen ' : '')
                         + (loadPrint ? 'print ' : '')
                         + (loadPreview ? 'preview ' : '')
                         + '| forecolor backcolor | '
@@ -932,140 +932,140 @@ if (typeof (entn.init) == 'undefined') {
 }
 
 GM_config.init(
-{
-    'id': bbDoc.preKey + 'Config', // The id used for this instance of GM_config
-    'title': bbDoc.MenuName, // Panel Title
-    'fields': // Fields object
     {
-        'tinymcePluginFullscreen':
+        'id': bbDoc.preKey + 'Config', // The id used for this instance of GM_config
+        'title': bbDoc.MenuName, // Panel Title
+        'fields': // Fields object
         {
-            'type': 'checkbox',
-            'label': 'Load Plugin Full Screen?',
-            'default': true
+            'tinymcePluginFullscreen':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Full Screen?',
+                'default': true
+            },
+            'tinymcePluginTable':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Table?',
+                'default': true
+            },
+            'tinymcePluginCharmap':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Special Characters?',
+                'default': true
+            },
+            'tinymcePluginCode':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Html Code?',
+                'default': true
+            },
+            'tinymcePluginCodeWidth':
+            {
+                'label': 'Width in pixels of HTML code editor.',
+                'type': 'int',
+                'min': 200,
+                'max': 4000,
+                'default': 400
+            },
+            'tinymcePluginCodeHeight':
+            {
+                'label': 'Height in pixels of HTML code editor.',
+                'type': 'int',
+                'min': 200,
+                'max': 4000,
+                'default': 300
+            },
+            'tinymcePluginPreview':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Preview?',
+                'default': true
+            },
+            'tinymcePluginPrint':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Print?',
+                'default': true
+            },
+            'tinymcePluginInsertdatetime':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Insert Date Time?',
+                'default': true
+            },
+            'tinymcePluginImage':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Image?',
+                'default': true
+            },
+            'tinymcePluginSearchreplace':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Find & Replace?',
+                'default': true
+            },
+            'tinymcePluginEmoticons':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Emoticons?',
+                'default': true
+            },
+            'tinymcePluginAdvlist':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Advanced List?',
+                'default': false
+            },
+            'tinymcePluginVisualblocks':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Visual Blocks?',
+                'default': true
+            },
+            'tinymcePluginVisualchars':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Visual Characters?',
+                'default': false
+            },
+            'tinymcePluginBbcode':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin BBCode?',
+                'default': false
+            },
+            'tinymcePluginWordcount':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Word Count?',
+                'default': true
+            },
+            'tinymcePluginHilite':
+            {
+                'type': 'checkbox',
+                'label': 'Load Plugin Hilite?',
+                'default': true
+            },
+            'tinymceConfirmNoSaveExit':
+            {
+                'type': 'checkbox',
+                'label': 'Ask for confirmation before closing without saving?',
+                'default': true
+            },
+            'tinymceWidth':
+            {
+                'label': 'Width in pixels of editor when not full screen.', // Appears next to field
+                'type': 'int', // Makes this setting a text input
+                'min': 400, // Optional lower range limit
+                'max': 4000, // Optional upper range limit
+                'default': 660 // Default value if user doesn't change it
+            }
         },
-        'tinymcePluginTable':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Table?',
-            'default': true
-        },
-        'tinymcePluginCharmap':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Special Characters?',
-            'default': true
-        },
-        'tinymcePluginCode':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Html Code?',
-            'default': true
-        },
-        'tinymcePluginCodeWidth':
-        {
-            'label': 'Width in pixels of HTML code editor.',
-            'type': 'int',
-            'min': 200,
-            'max': 4000,
-            'default': 400
-        },
-        'tinymcePluginCodeHeight':
-        {
-            'label': 'Height in pixels of HTML code editor.',
-            'type': 'int',
-            'min': 200,
-            'max': 4000,
-            'default': 300
-        },
-        'tinymcePluginPreview':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Preview?',
-            'default': true
-        },
-        'tinymcePluginPrint':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Print?',
-            'default': true
-        },
-        'tinymcePluginInsertdatetime':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Insert Date Time?',
-            'default': true
-        },
-        'tinymcePluginImage':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Image?',
-            'default': true
-        },
-        'tinymcePluginSearchreplace':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Find & Replace?',
-            'default': true
-        },
-        'tinymcePluginEmoticons':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Emoticons?',
-            'default': true
-        },
-        'tinymcePluginAdvlist':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Advanced List?',
-            'default': false
-        },
-        'tinymcePluginVisualblocks':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Visual Blocks?',
-            'default': true
-        },
-        'tinymcePluginVisualchars':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Visual Characters?',
-            'default': false
-        },
-        'tinymcePluginBbcode':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin BBCode?',
-            'default': false
-        },
-        'tinymcePluginWordcount':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Word Count?',
-            'default': true
-        },
-        'tinymcePluginHilite':
-        {
-            'type': 'checkbox',
-            'label': 'Load Plugin Hilite?',
-            'default': true
-        },
-        'tinymceConfirmNoSaveExit':
-        {
-            'type': 'checkbox',
-            'label': 'Ask for confirmation before closing without saving?',
-            'default': true
-        },
-        'tinymceWidth':
-        {
-            'label': 'Width in pixels of editor when not full screen.', // Appears next to field
-            'type': 'int', // Makes this setting a text input
-            'min': 400, // Optional lower range limit
-            'max': 4000, // Optional upper range limit
-            'default': 660 // Default value if user doesn't change it
-        }
-    },
-    'css': '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
-});
+        'css': '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
+    });
 
 // #endregion init
 // #endnsregion BIGBYTE.USERSCRIPT.STHL.TMCE
