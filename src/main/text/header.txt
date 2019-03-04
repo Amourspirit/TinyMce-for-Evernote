@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name            TinyMce for Evernote
+// @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
+// @version         @BUILD_NUMBER@
+// @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
+// @author          Paul Moss
+// @run-at          document-end
+// @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
+// @include         /^https?:\/\/www\.evernote\.com\/u\/0/Home\.action.*n=.*$/
+// @include         /^https?:\/\/app\.yinxiang\.com\/Home\.action.*n=.*$/
+// @include         /^https?:\/\/app\.yinxiang\.com\/u\/0/Home\.action.*n=.*$/
+// @match           https://www.evernote.com/Home.action*
+// @match           https://www.evernote.com/u/0/Home.action*
+// @match           https://app.yinxiang.com/Home.action*
+// @match           https://app.yinxiang.com/u/0/Home.action*
+// @noframes
+// @license         MIT
+// @homepageURL     https://amourspirit.github.io/TinyMce-for-Evernote/
+// @update          https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
+// @downloadURL     https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/TinyMce_for_Evernote.user.js
+// @contributionURL https://amourspirit.github.io/TinyMce-for-Evernote/#donate
+// @require         https://openuserjs.org/src/libs/sizzle/GM_config.min.js
+// @grant           GM_registerMenuCommand
+// @grant           GM_addStyle
+// @grant           GM_setValue
+// @grant           GM_getValue
+// ==/UserScript==

@@ -1,0 +1,12 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "@ephox/tslint-rules/tslint.json"
+  ],
+  "jsRules": {},
+  "rules": {
+    "only-arrow-functions": true,
+    "no-console": false
+  },
+  "rulesDirectory": []
+}
