@@ -14,8 +14,9 @@
     "outDir": "lib",
     "baseUrl": ".",
     "removeComments": true,
-    "allowSyntheticDefaultImports": true // for jquery
-  },
+    "allowSyntheticDefaultImports": true, // for jquery
+    "strict": true
+    },
   "include": [
     "src/main/ts",
     "node_modules/@ephox/**/*/api/Main.d.ts"
