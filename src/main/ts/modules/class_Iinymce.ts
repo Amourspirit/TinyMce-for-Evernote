@@ -7,8 +7,9 @@ import * as tinymce from 'tinymce';
 import { Log } from './class_Log';
 import { Settings as appSettings } from './class_Settings';
 import { ITinyMceExternalPlugins } from './Interfaces';
-import { Clock } from './class_clock';
-import GM_config from 'GM_config';
+// import { Clock } from './class_clock';
+// import GM_config from 'GM_config';
+declare const GM_config: any;
 
 export class TinyMceWork {
   public fullscreen: boolean = false;
@@ -22,15 +23,13 @@ export class TinyMceWork {
     const ver: string = appSettings.tinyMceVersion;
     const id: string = appSettings.tinyId;
     const lib: TinyMceWork = this;
-    const tinyMceTimer = new Clock('tinyMceTimer', 500);
-    // log the name of the clock and the tick argument to the console
-    tinyMceTimer.onClockTick.subscribe((c, n) => {
-      gmTinyMceTimerCounter = n;
+    const gmTinyMceTimer = setInterval(() => {
+      gmTinyMceTimerCounter++;
       Log.message(appSettings.shortName + ': try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
-      if (typeof (tinymce) !== undefined) {
+      if (typeof (tinymce) !== 'undefined') {
         Log.message(appSettings.shortName + ': found tinymce library');
-
-        tinyMceTimer.dispose();
+        // tinyMceTimer.dispose();
+        clearInterval(gmTinyMceTimer);
 
         tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
 
@@ -247,8 +246,13 @@ export class TinyMceWork {
       // set a limit to how many time we check for tinymce
       if (gmTinyMceTimerCounter >= 20) {
         Log.message(appSettings.shortName + ': reached max value for finding TinyMCE Lib');
-        tinyMceTimer.dispose();
+        // tinyMceTimer.dispose();
+        clearInterval(gmTinyMceTimer);
       }
-    });
+    }, 500);
+   /*  const tinyMceTimer = new Clock('tinyMceTimer', 500);
+    tinyMceTimer.onClockTick.subscribe((c, n) => {
+
+    }); */
   }
 }

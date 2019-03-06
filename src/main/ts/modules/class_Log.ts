@@ -1,19 +1,26 @@
-import { Settings as settings } from "./class_Settings";
+import { Settings as appSettings } from './class_Settings';
+import { DebugLevel } from './enums';
 export class Log {
-    private constructor(){
 
-    };
-    static message = (msg: string, ...optionalParams: any[]): void => {
-        if (settings.debug === false) {
+    public static message = (msg: string, ...optionalParams: any[]): void => {
+        if (!(appSettings.debugLevel >= DebugLevel.Info)) {
             return;
         }
         console.log(msg, ...optionalParams);
-    };
-    
-    static error = (error: any, ...optionalParams: any[]): void => {
-        if (settings.debug === false) {
+    }
+
+    public static error = (error: any, ...optionalParams: any[]): void => {
+        if (!(appSettings.debugLevel >= DebugLevel.Error)) {
             return;
         }
         console.error(error, ...optionalParams);
+    }
+    public static debug = (msg: string, ...optionalParams: any[]): void => {
+        if (!(appSettings.debugLevel >= DebugLevel.Debug)) {
+            return;
+        }
+        console.log(msg, ...optionalParams);
+    }
+    private constructor() {
     }
 }

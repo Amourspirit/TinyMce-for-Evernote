@@ -1,6 +1,7 @@
 // tslint:disable-next-line
-/// <reference path="../../../types/gmconfig.d.ts" />
-import GM_config from 'GM_config';
+// <reference path="../../../types/gmconfig.d.ts" />
+// import GM_config from 'GM_config';
+declare const GM_config: any;
 
 import { Settings as appSettings } from './class_Settings';
 
@@ -9,8 +10,8 @@ export class GmConfig {
     public constructor() {}
 
     public init = (): void => {
-
-        const initValues: GM_config.IGMconfigInitValues = {
+        // const initValues: GM_config.IGMconfigInitValues = {
+        const initValues = {
             id: appSettings.preKey + 'Config', // The id used for this instance of GM_config
             title: appSettings.menuName, // Panel Title
             fields: // Fields object
