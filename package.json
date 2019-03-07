@@ -1,6 +1,6 @@
 {
   "name": "tinymce-for-evernote",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "description": "Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.",
   "main": "TinyMce_for_Evernote.user.js",
   "scripts": {
@@ -14,6 +14,11 @@
     "tinymce",
     "evernote",
     "userscript"
+  ],
+  "contributors": [
+    {
+      "name": "Paul Moss"
+    }
   ],
   "author": "Paul Moss",
   "license": "MIT",
