@@ -44,10 +44,6 @@ export class Evernote {
         this.lightBoxCss += '.gmbox-window{top:50%;left:50%;transform: translate(-50%, -50%);position: absolute;';
         this.lightBoxCss += '}#gm-tb{display:inline-block;position:absolute;}';
     }
-    public onMe = (e: any): void => {
-        Log.debug('onMe called: param', e);
-        Log.debug('onMe this: ', this);
-    }
 
     public init = (): void => {
         // @debug start
@@ -80,12 +76,11 @@ export class Evernote {
             // @debug start
             if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: bbScriptLoaded`); }
             // @debug end
-            document.addEventListener('bbScriptLoaded', this.onMe);
             document.addEventListener('bbScriptLoaded', this.onBbScriptLoaded);
             // @debug start
             if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: allScriptsLoaded`); }
             // @debug end
-            document.addEventListener('allScriptsLoaded', this.onBbScriptLoaded);
+            document.addEventListener('allScriptsLoaded', this.onAllScriptsLoaded);
         } else {
             // @debug start
             if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Failed adding Event Listener: allScriptsLoaded`); }
@@ -244,7 +239,7 @@ export class Evernote {
         Log.message(appSettings.shortName + ': Tiny Mce Init was triggered');
     }
 
-    public onTinymceSave = (e: any): void => {
+    public onTinymceSave = (e: any, data: any): void => {
         // @debug start
         let methodName: string = '';
         // Higher price to check using enumes each time so capture the values here
@@ -254,12 +249,20 @@ export class Evernote {
         if (appDebugLevel >= levelDebug) {
             methodName = 'onTinymceSave';
             Log.debug(`${methodName}: Entered.`);
+            if (!data) {
+                Log.error(`${methodName}: data seems to be null`);
+            } else if (data.tinyMceId !== appSettings.tinyId) {
+                Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+            }
         }
         // @debug end
-        if (e.tinyMceId === appSettings.tinyId) {
+        if (data.tinyMceId === appSettings.tinyId) {
             this.save();
             this.lightBoxReset();
-            const ed: tinymce.Editor = tinymce.EditorManager.editors[e.tinyMceId];
+            const ed: tinymce.Editor = tinymce.EditorManager.editors[data.tinyMceId];
+            if (!ed) {
+                Log.error(`${methodName}: Editor was not found and is null. Param e, data`, e, data);
+            }
             ed.setContent(''); // clean up tinyMCE
         }
         // @debug start
@@ -279,10 +282,18 @@ export class Evernote {
         if (appDebugLevel >= levelDebug) {
             methodName = 'onTinymceCancel';
             Log.debug(`${methodName}: Entered.`);
+            if (!data) {
+                Log.error(`${methodName}: data seems to be null`);
+            } else if (data.tinyMceId !== appSettings.tinyId) {
+                Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+            }
         }
         // @debug end
         if (data.tinyMceId === appSettings.tinyId) {
             const ed: tinymce.Editor = tinymce.EditorManager.editors[data.tinyMceId];
+            if (!ed) {
+                Log.error(`${methodName}: Editor was not found and is null. Params e, data`, e, data);
+            }
             const confirm: boolean = GM_config.get('tinymceConfirmNoSaveExit');
             if (confirm) {
                 if (this.confirmExit()) {
@@ -301,7 +312,7 @@ export class Evernote {
         // @debug end
     }
 
-    public onTinyMceFulllscreen = (e: any) => {
+    public onTinyMceFulllscreen = (e: any, data: any) => {
         // @debug start
         let methodName: string = '';
         // Higher price to check using enumes each time so capture the values here
@@ -311,11 +322,18 @@ export class Evernote {
         if (appDebugLevel >= levelDebug) {
             methodName = 'onTinyMceFulllscreen';
             Log.debug(`${methodName}: Entered.`);
+            if (!data) {
+                Log.error(`${methodName}: data seems to be null`);
+            } else if (data.tinyMceId !== appSettings.tinyId) {
+                Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+            } else {
+                Log.debug(`${methodName}: param data`, data);
+            }
         }
         // @debug end
-        if (e.tinyMceId === appSettings.tinyId) {
+        if (data.tinyMceId === appSettings.tinyId) {
             this.fullScreen = e.state;
-            if (e.state) {
+            if (data.state) {
                 // remove the class that keeps the window centered if needed
                 if ($('#tinybox').hasClass('gmbox-window')) {
                     $('#tinybox').removeClass('gmbox-window');
@@ -426,24 +444,18 @@ export class Evernote {
                 }
             );
             // @debug start
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(`${methodName}: Dispatching event allScriptsLoaded.`);
-            }
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Dispatching event allScriptsLoaded.`); }
             // @debug end
             document.dispatchEvent(allScriptsLoaded);
         } else {
             // @debug start
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(`${methodName}: Calling loadScripts() to load next`);
-            }
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Calling loadScripts() to load next`); }
             // @debug end
             // add the next script
             this.loadScripts();
         }
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Leaving.`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving.`); }
         // @debug end
     }
 
@@ -475,15 +487,15 @@ export class Evernote {
             Log.debug(`${methodName}: Entered.`);
         }
         // @debug end
-        const lib: Evernote = this;
+        // const lib: Evernote = this;
         if ($('#gm-edit-btn').length) {
             $('#gm-edit-btn').click((): void => {
                 const k: any = appSettings.tinyId;
                 const ed: tinymce.Editor = tinymce.EditorManager.editors[k];
-                if (lib.fullScreen) {
+                if (this.fullScreen) {
                     ed.execCommand('mceFullScreen');
                 }
-                ed.setContent($(lib.iframeSelector).contents().find(lib.noteSelector).html());
+                ed.setContent($(this.iframeSelector).contents().find(this.noteSelector).html());
                 $('.gmbackdrop, .gmbox').animate({
                     opacity: '.50'
                 }, 300, 'linear');
@@ -492,7 +504,9 @@ export class Evernote {
                 }, 300, 'linear');
                 $('.gmbackdrop, .gmbox').css('display', 'block');
             });
-            Log.message(appSettings.shortName + ': Edit Button Click added');
+            Log.message(`${appSettings.shortName}: Edit Button Click added`);
+        } else {
+            Log.error(`${appSettings.shortName}: addButtonClick: #gm-edit-btn was not found`);
         }
         // @debug start
         if (appDebugLevel >= levelDebug) {
@@ -519,7 +533,7 @@ export class Evernote {
             // tslint:disable-next-line
             const objElement: any = $(document.body).xpath(lib.btnSelector);
             if (objElement.length) {
-                Log.message(appSettings.shortName + ': Found element for button placement');
+                Log.message(`${appSettings.shortName}: Found element for button placement`);
                 // add my own toolbar button
                 clearInterval(gmTimer);
                 objElement.append(lib.createToolbarHtml());
@@ -528,8 +542,6 @@ export class Evernote {
                     message: 'Button Added',
                     time: new Date()
                 });
-            } else {
-                Log.message(appSettings.shortName + ': Unable to find element for button placement');
             }
             if (gmCounter >= 20 || objElement.length > 0) {
                 clearInterval(gmTimer);

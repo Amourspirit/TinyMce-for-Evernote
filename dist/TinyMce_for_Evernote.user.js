@@ -47,7 +47,7 @@
         DebugLevel[DebugLevel["Error"] = 4] = "Error";
     })(DebugLevel || (DebugLevel = {}));
 
-    var Settings = (function () {
+    var Settings =  (function () {
         function Settings() {
         }
         Settings.tinyId = 'gminput';
@@ -59,7 +59,7 @@
         return Settings;
     }());
 
-    var Log = (function () {
+    var Log =  (function () {
         function Log() {
         }
         Log.message = function (msg) {
@@ -104,74 +104,11 @@
         };
         return Log;
     }());
-
-    var ScriptItem = (function () {
-        function ScriptItem(si) {
-            this._disposed = false;
-            this.name = si.name;
-            this.src = si.src;
-            this.type = si.type;
-            this.testMethod = si.testMethod;
-            this.text = si.text;
-            this.timeout = si.timeout;
-            this.loaded = si.loaded;
-            this.count = si.count;
-            this.tag = si.tag;
-        }
-        Object.defineProperty(ScriptItem.prototype, "isDisposed", {
-            get: function () {
-                return this._disposed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ScriptItem.prototype.dispose = function () {
-            var methodName = 'ScriptItem.dispose';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered");
-            }
-            if (this._disposed === true) {
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Already disopsed returning.");
-                }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving");
-                }
-                return;
-            }
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Disopsing of " + this.name);
-            }
-            this._disposed = true;
-            this.name = '';
-            this.src = '';
-            this.type = '';
-            this.testMethod = '';
-            this.text = '';
-            this.timeout = 0;
-            this.count = 0;
-            this.loaded = false;
-            this.tag = '';
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving");
-            }
-        };
-        return ScriptItem;
-    }());
-
-    var BigbyteLoader = (function () {
+    var BigbyteLoader =  (function () {
         function BigbyteLoader() {
         }
         BigbyteLoader.addJsNode = function (text, sUrl, funcToRun, runOnLoad) {
-            var methodName = 'addJsNode';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered.");
-                Log.debug(methodName + ": Working on .", text, sUrl);
-            }
+
             var D = document;
             var scriptNode = D.createElement('script');
             if (runOnLoad) {
@@ -189,9 +126,7 @@
             }
             var targ = D.getElementsByTagName('head')[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving.");
-            }
+
         };
         BigbyteLoader.addJsNodeToBody = function (text, sUrl, funcToRun, runOnLoad) {
             var methodName = 'addJsNodeToBody';
@@ -223,13 +158,7 @@
             }
         };
         BigbyteLoader.addCssNode = function (text, element) {
-            var methodName = 'addCssNode';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered.");
-                Log.debug(methodName + ": Working on .", text, element);
-            }
+
             element = typeof element !== 'undefined' ? element : 'head';
             var D = document;
             var scriptNode = D.createElement('style');
@@ -237,18 +166,10 @@
             scriptNode.textContent = text;
             var targ = D.getElementsByTagName(element)[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving.");
-            }
+
         };
         BigbyteLoader.addLinkNode = function (href, type, rel) {
-            var methodName = 'addLinkNode';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered.");
-                Log.debug(methodName + ": Working on .", href);
-            }
+
             type = typeof type !== 'undefined' ? type : 'text/css';
             rel = typeof rel !== 'undefined' ? rel : 'stylesheet';
             var D = document;
@@ -262,156 +183,100 @@
             }
             var targ = D.getElementsByTagName('head')[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving.");
-            }
+
         };
         BigbyteLoader.addHtmlNode = function (html) {
-            var methodName = 'addHtmlNode';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered.");
-                Log.debug(methodName + ": Working on .", html);
-            }
+
             var D = document;
             var targ = D.getElementsByTagName('body')[0] || D.body || D.documentElement;
             targ.insertAdjacentHTML('beforeend', html);
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving.");
-            }
+
         };
         BigbyteLoader.loadScript = function (scriptItem) {
-            var methodName = 'BigbyteLoader.loadScript';
-            var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Entered in " + methodName + ".");
+            if (scriptItem.timeout === 0) {
+                scriptItem.timeout = 30;
             }
-            if (!(BigbyteLoader.currentScritp) || (BigbyteLoader.currentScritp.isDisposed === true)) {
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Creating a new instance of ScriptItem for BigbyteLoader.currentScritp:", scriptItem.name);
-                }
-                BigbyteLoader.currentScritp = new ScriptItem(scriptItem);
-                if (BigbyteLoader.currentScritp.timeout === 0) {
-                    BigbyteLoader.currentScritp.timeout = 30;
-                }
-            }
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": scriptItem param:", BigbyteLoader.currentScritp);
-            }
+
             var bbScriptLoadedEvent = new CustomEvent('bbScriptLoaded', {
                 detail: {
                     message: 'Script Loaded',
                     time: new Date(),
-                    scriptItm: BigbyteLoader.currentScritp
+                    scriptItm: scriptItem
                 },
                 bubbles: true,
                 cancelable: false
             });
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": switch test for: " + BigbyteLoader.currentScritp.type);
-            }
-            switch (BigbyteLoader.currentScritp.type) {
+
+            switch (scriptItem.type) {
                 case 'linkedjs':
                     var skipTest = false;
-                    if (typeof (BigbyteLoader.currentScritp.testMethod) === 'undefined' || (BigbyteLoader.currentScritp.testMethod.length === 0)) {
+                    if (typeof (scriptItem.testMethod) === 'undefined' || (scriptItem.testMethod.length === 0)) {
                         skipTest = true;
                     }
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": skipTest for adding script:", skipTest);
-                    }
+
                     if (skipTest) {
-                        BigbyteLoader.currentScritp.loaded = true;
-                        BigbyteLoader.addJsNode(BigbyteLoader.currentScritp.text, BigbyteLoader.currentScritp.src);
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": Dispatching event bbScriptLoaded");
-                        }
+                        scriptItem.loaded = true;
+                        BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
+
                         document.dispatchEvent(bbScriptLoadedEvent);
                         return;
                     }
-                    BigbyteLoader.currentScritp.count++;
-                    var maxCount = BigbyteLoader.currentScritp.timeout * 10;
-                    if (BigbyteLoader.currentScritp.count > maxCount) {
-                        Log.error(Settings.shortName + ': unable to load script, Aborting: ', BigbyteLoader.currentScritp.src);
+                    scriptItem.count++;
+                    var maxCount = scriptItem.timeout * 10; 
+                    if (scriptItem.count > maxCount) {
+                        Log.error(Settings.shortName + ': unable to load script, Aborting: ', scriptItem.src);
                         return;
                     }
                     var testmethod = void 0;
-                    var evilEval = eval;
+                    var evilEval = eval; 
                     try {
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": Trying Evil Eval");
-                        }
-                        testmethod = evilEval(BigbyteLoader.currentScritp.testMethod);
+                        testmethod = evilEval(scriptItem.testMethod);
                     }
                     catch (e) {
                         testmethod = 'undefined';
                         Log.error(Settings.shortName + ": loadScript: Error running Eval:", e);
                     }
                     if (typeof (testmethod) === 'undefined') {
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": Undefined Test method");
-                        }
-                        if (!BigbyteLoader.currentScritp.loaded) {
-                            BigbyteLoader.currentScritp.loaded = true;
-                            BigbyteLoader.addJsNode(BigbyteLoader.currentScritp.text, BigbyteLoader.currentScritp.src);
+
+                        if (!scriptItem.loaded) {
+                            scriptItem.loaded = true;
+                            BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
                         }
                         setTimeout(function () {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Loading script via timer", BigbyteLoader.currentScritp.name);
-                            }
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Leaving due tp timer.");
-                            }
-                            BigbyteLoader.loadScript(BigbyteLoader.currentScritp);
+
+                            BigbyteLoader.loadScript(scriptItem);
                         }, 100);
                     }
                     else {
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": Dispatching event bbScriptLoaded");
-                        }
+
                         document.dispatchEvent(bbScriptLoadedEvent);
                     }
                     break;
                 case 'css':
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to load css");
+
+                    if (typeof (scriptItem.tag) === 'undefined') {
+                        scriptItem.tag = 'body'; 
                     }
-                    if (typeof (BigbyteLoader.currentScritp.tag) === 'undefined') {
-                        BigbyteLoader.currentScritp.tag = 'body';
-                    }
-                    BigbyteLoader.addCssNode(BigbyteLoader.currentScritp.src, BigbyteLoader.currentScritp.tag);
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Dispatching event bbScriptLoaded");
-                    }
+                    BigbyteLoader.addCssNode(scriptItem.src, scriptItem.tag);
+
                     document.dispatchEvent(bbScriptLoadedEvent);
                     break;
                 case 'csslink':
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to load css link");
-                    }
-                    BigbyteLoader.addLinkNode(BigbyteLoader.currentScritp.src);
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Dispatching event bbScriptLoaded");
-                    }
+
+                    BigbyteLoader.addLinkNode(scriptItem.src);
+
                     document.dispatchEvent(bbScriptLoadedEvent);
                     break;
                 default:
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debugWarn(methodName + ": Failed to Load Script: " + BigbyteLoader.currentScritp.name + ". Case Default was hit!");
-                    }
                     break;
             }
-            BigbyteLoader.currentScritp.dispose();
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(methodName + ": Leaving");
-            }
+
             return;
         };
         return BigbyteLoader;
     }());
 
-    var UserScriptUtil = (function () {
+    var UserScriptUtil =  (function () {
         function UserScriptUtil() {
         }
         UserScriptUtil.extend = function () {
@@ -431,7 +296,7 @@
         return UserScriptUtil;
     }());
 
-    var Util = (function () {
+    var Util =  (function () {
         function Util() {
         }
         Util.getMethodName = function (obj) {
@@ -450,25 +315,17 @@
         };
         return Util;
     }());
-
-    var TinyMceWork = (function () {
+    var TinyMceWork =  (function () {
         function TinyMceWork() {
             var _this = this;
             this.fullscreen = false;
             this.gmConfig = GM_config;
             this.init = function () {
-                var methodName = 'init';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 var gmTinyMceTimerCounter = 0;
                 var ver = Settings.tinyMceVersion;
                 var id = Settings.tinyId;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": tinymce id: " + ver + " Version: " + id);
-                }
+
                 var lib = _this;
                 var gmTinyMceTimer = setInterval(function () {
                     gmTinyMceTimerCounter++;
@@ -479,114 +336,81 @@
                         tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
                         var loadTable = lib.gmConfig.get('tinymcePluginTable');
                         if (loadTable) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding table to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
                         }
                         var loadCharmap = lib.gmConfig.get('tinymcePluginCharmap');
                         if (loadCharmap) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding charmap to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
                         }
                         var loadCode = lib.gmConfig.get('tinymcePluginCode');
                         if (loadCode) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding code to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
                         }
                         var loadFullscreen = lib.gmConfig.get('tinymcePluginFullscreen');
                         if (loadFullscreen) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding fullscreen to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
                         }
                         var loadEmoticons = lib.gmConfig.get('tinymcePluginEmoticons');
                         if (loadEmoticons) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding emoticons to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
                         }
                         var loadWordcount = lib.gmConfig.get('tinymcePluginWordcount');
                         if (loadEmoticons) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding wordcount to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
                         }
                         var loadPrint = lib.gmConfig.get('tinymcePluginPrint');
                         if (loadPrint) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding print to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
                         }
                         var loadPreview = lib.gmConfig.get('tinymcePluginPreview');
                         if (loadPreview) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding preview to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
                         }
                         var loadInsertdatetime = lib.gmConfig.get('tinymcePluginInsertdatetime');
                         if (loadInsertdatetime) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding insertdatetime to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
                         }
                         var loadImage = lib.gmConfig.get('tinymcePluginImage');
                         if (loadImage) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding image to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
                         }
                         var loadSearchreplace = lib.gmConfig.get('tinymcePluginSearchreplace');
                         if (loadSearchreplace) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding searchreplace to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
                         }
                         var loadAdvlist = lib.gmConfig.get('tinymcePluginAdvlist');
                         if (loadAdvlist) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding advlist to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
                         }
                         var loadBbcode = lib.gmConfig.get('tinymcePluginBbcode');
                         if (loadBbcode) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding bbcode to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
                         }
                         var loadVisualblocks = lib.gmConfig.get('tinymcePluginVisualblocks');
                         if (loadVisualblocks) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding visualblocks to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
                         }
                         var loadVisualchars = lib.gmConfig.get('tinymcePluginVisualchars');
                         if (loadVisualchars) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding visualchars to tinymce plugins");
-                            }
                             tinymce.PluginManager.load('visualchars', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/visualchars/plugin.min.js');
                         }
                         var loadHilite = lib.gmConfig.get('tinymcePluginHilite');
                         if (loadHilite) {
-                            if (appDebugLevel >= levelDebug) {
-                                Log.debug(methodName + ": Adding hilite to tinymce plugins");
-                            }
+
                             tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
                         }
                         var tinyMceExternalPlugins = {
@@ -616,9 +440,7 @@
                             init_instance_callback: function () {
                                 $('.mce-i-mysave').addClass('fi-save');
                                 $('.mce-i-myexit').addClass('fi-x');
-                                if (appDebugLevel >= levelDebug) {
-                                    Log.debug(methodName + ": Triggering Event tinymceInit");
-                                }
+
                                 $(document).trigger('tinymceInit', {
                                     type: 'tinymceInit',
                                     message: 'init',
@@ -722,9 +544,7 @@
                             tinyMceInit.plugins = (tinyMceInit.plugins + ' -hilite').trim();
                         }
                         tinyMceInit.external_plugins = tinyMceExternalPlugins;
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": tinymce.init being called with param", tinyMceInit);
-                        }
+
                         tinymce.init(tinyMceInit);
                     }
                     if (gmTinyMceTimerCounter >= 20) {
@@ -732,15 +552,12 @@
                         clearInterval(gmTinyMceTimer);
                     }
                 }, 500);
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving");
-                }
+
             };
         }
         return TinyMceWork;
     }());
-
-    var Evernote = (function () {
+    var Evernote =  (function () {
         function Evernote() {
             var _this = this;
             this.btnSelector = '';
@@ -749,18 +566,7 @@
             this.fullScreen = false;
             this.scripts = [];
             this.TMCE = new TinyMceWork();
-            this.onMe = function (e) {
-                Log.debug('onMe called: param', e);
-                Log.debug('onMe this: ', _this);
-            };
             this.init = function () {
-                var methodName = '';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    methodName = 'Evernote.init';
-                    Log.debug(methodName + ": Entered in init.");
-                }
                 if (typeof (tinymce__default) !== 'undefined') {
                     Settings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
                 }
@@ -768,87 +574,49 @@
                 Log.message(Settings.shortName + ': tinyMCE Version', tinyMceVer);
                 var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
                 var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
-                if (document.addEventListener) {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Adding Event Listener: bbScriptLoaded");
-                    }
-                    document.addEventListener('bbScriptLoaded', _this.onMe);
+                if (document.addEventListener) { 
+
                     document.addEventListener('bbScriptLoaded', _this.onBbScriptLoaded);
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Adding Event Listener: allScriptsLoaded");
-                    }
-                    document.addEventListener('allScriptsLoaded', _this.onBbScriptLoaded);
+
+                    document.addEventListener('allScriptsLoaded', _this.onAllScriptsLoaded);
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Failed adding Event Listener: allScriptsLoaded");
-                    }
+
                 }
                 if (typeof (jQuery) === 'undefined') {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to add jquery link: " + pluginXpathJq);
-                    }
+
                     _this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": No need to load jQuery already loaded");
-                    }
+
                 }
                 if (typeof (jQuery().xpath) === 'undefined') {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to add jquery xpath link: " + pluginXpathJq);
-                    }
+
                     _this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": No need to load jQuery xpath already loaded");
-                    }
+
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Attempting to icons-css");
-                }
+
                 _this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Attempting to hilite-icons-css");
-                }
+
                 _this.addScript('hilite-icons-css', '//api.bigbytetech.ca/js/hilite.css', 'csslink');
                 if (typeof (tinymce__default) === 'undefined') {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Could not find tinymce. Attempting to add via link injection.");
-                    }
+
                     _this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Found tinymce");
-                    }
+
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Attempting to add tinyMceCss");
-                }
+
                 _this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Attempting to add lightboxcss");
-                }
+
                 _this.addScript('lightboxcss', _this.lightBoxCss, 'css', undefined, { tag: 'body' });
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Calling " + methodName + " loadScripts");
-                }
                 _this.loadScripts();
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving");
-                }
+
             };
             this.onAllScriptsLoaded = function (e) {
-                var methodName = '';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    methodName = 'onAllScriptsLoaded';
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 Log.message(Settings.shortName + ': all scripts have been loaded.');
                 _this.btnSelector = '//*[@id="gwt-debug-NoteAttributesView-root"]/div[1]/div[1]';
                 if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
@@ -859,111 +627,75 @@
                     _this.iframeSelector = '.RichTextArea-entinymce';
                     _this.noteSelector = 'body';
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": calliing ensuringPlugins()");
-                }
+
                 _this.ensurePlugins();
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": calliing addToolbarButton()");
-                }
+
                 _this.addToolbarButton();
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": adding custom event handlers");
-                }
+
                 $(document).on('editBtnAdded', _this.onEditBtnAdded);
                 $(document).on('tinymceInit', _this.onTinymceInit);
                 $(document).on('tinymceSave', _this.onTinymceSave);
                 $(document).on('tinymceCancel', _this.onTinymceCancel);
                 $(document).on('tinymceFullScreen', _this.onTinyMceFulllscreen);
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": calliing writeLightBox()");
-                }
                 _this.writeLightBox();
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": calliing init on TinyMceWork class instance of TMCE");
-                }
+
                 _this.TMCE.init();
                 var intGmboxPadLeft = parseInt($('.gmbox').css('padding-left'), 10);
                 var intGmboxPadRight = parseInt($('.gmbox').css('padding-right'), 10);
                 var intTinymceWidth = parseInt(GM_config.get('tinymceWidth'), 10);
                 intTinymceWidth = intTinymceWidth - (intGmboxPadLeft + intGmboxPadRight);
                 $('.gmbox-window').width(intTinymceWidth);
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": .gmbox-window class width", intTinymceWidth);
-                }
                 $('.gmclose').click(function () {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": .gmclose click function entered");
-                        Log.debug(methodName + ": .gmclose click function tinyID", Settings.tinyId);
-                        Log.debug(methodName + ": .gmclose click triggering tinymceCancel custom eveent");
-                    }
+
                     $(document).trigger('tinymceCancel', {
                         message: 'cancel',
                         tinyMceId: Settings.tinyId
                     });
                 });
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving");
-                }
+
             };
             this.onTinymceInit = function (e) {
                 Log.message(Settings.shortName + ': Tiny Mce Init was triggered');
             };
-            this.onTinymceSave = function (e) {
-                var methodName = '';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    methodName = 'onTinymceSave';
-                    Log.debug(methodName + ": Entered.");
-                }
-                if (e.tinyMceId === Settings.tinyId) {
+            this.onTinymceSave = function (e, data) {
+
+                if (data.tinyMceId === Settings.tinyId) {
                     _this.save();
                     _this.lightBoxReset();
-                    var ed = tinymce__default.EditorManager.editors[e.tinyMceId];
-                    ed.setContent('');
+                    var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
+                    if (!ed) {
+                        Log.error(methodName + ": Editor was not found and is null. Param e, data", e, data);
+                    }
+                    ed.setContent(''); 
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.onTinymceCancel = function (e, data) {
-                var methodName = '';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    methodName = 'onTinymceCancel';
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 if (data.tinyMceId === Settings.tinyId) {
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
+                    if (!ed) {
+                        Log.error(methodName + ": Editor was not found and is null. Params e, data", e, data);
+                    }
                     var confirm_1 = GM_config.get('tinymceConfirmNoSaveExit');
                     if (confirm_1) {
                         if (_this.confirmExit()) {
                             _this.lightBoxReset();
-                            ed.setContent('');
+                            ed.setContent(''); 
                         }
                     }
                     else {
                         _this.lightBoxReset();
-                        ed.setContent('');
+                        ed.setContent(''); 
                     }
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
-            this.onTinyMceFulllscreen = function (e) {
-                var methodName = '';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    methodName = 'onTinyMceFulllscreen';
-                    Log.debug(methodName + ": Entered.");
-                }
-                if (e.tinyMceId === Settings.tinyId) {
+            this.onTinyMceFulllscreen = function (e, data) {
+
+                if (data.tinyMceId === Settings.tinyId) {
                     _this.fullScreen = e.state;
-                    if (e.state) {
+                    if (data.state) {
                         if ($('#tinybox').hasClass('gmbox-window')) {
                             $('#tinybox').removeClass('gmbox-window');
                         }
@@ -974,17 +706,10 @@
                         }
                     }
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.addScript = function (sName, sSrc, objType, objTestMethod, args) {
-                var methodName = 'addScript';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 var newItm = {
                     name: sName,
                     src: sSrc,
@@ -997,24 +722,16 @@
                     count: 0
                 };
                 if (args) {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to add script:", newItm);
-                    }
+
                     _this.scripts[sName] = newItm;
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Attempting to extend script:", newItm);
-                    }
+
                     var extended = UserScriptUtil.extend(newItm, args);
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Extended script:", extended);
-                    }
+
                     _this.scripts[sName] = extended;
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving");
-                }
+
             };
             this.isScriptsLoaded = function () {
                 for (var key in _this.scripts) {
@@ -1025,13 +742,6 @@
                 return true;
             };
             this.onBbScriptLoaded = function (e) {
-                var methodName = 'onBbScriptLoaded';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                    Log.debug(methodName + ": Param e", e);
-                }
                 delete _this.scripts[e.detail.scriptItm.name];
                 var done = _this.isScriptsLoaded();
                 if (done) {
@@ -1043,50 +753,29 @@
                         bubbles: true,
                         cancelable: false
                     });
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Dispatching event allScriptsLoaded.");
-                    }
+
                     document.dispatchEvent(allScriptsLoaded);
                 }
                 else {
-                    if (appDebugLevel >= levelDebug) {
-                        Log.debug(methodName + ": Calling loadScripts() to load next");
-                    }
                     _this.loadScripts();
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.onEditBtnAdded = function (e) {
-                var methodName = 'onEditBtnAdded';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 Log.message(Settings.shortName + ': onEditBtnAdded event fired');
                 _this.addButtonClick();
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.addButtonClick = function () {
-                var methodName = 'addButtonClick';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
-                var lib = _this;
                 if ($('#gm-edit-btn').length) {
                     $('#gm-edit-btn').click(function () {
                         var k = Settings.tinyId;
                         var ed = tinymce__default.EditorManager.editors[k];
-                        if (lib.fullScreen) {
+                        if (_this.fullScreen) {
                             ed.execCommand('mceFullScreen');
                         }
-                        ed.setContent($(lib.iframeSelector).contents().find(lib.noteSelector).html());
+                        ed.setContent($(_this.iframeSelector).contents().find(_this.noteSelector).html());
                         $('.gmbackdrop, .gmbox').animate({
                             opacity: '.50'
                         }, 300, 'linear');
@@ -1095,19 +784,15 @@
                         }, 300, 'linear');
                         $('.gmbackdrop, .gmbox').css('display', 'block');
                     });
-                    Log.message(Settings.shortName + ': Edit Button Click added');
+                    Log.message(Settings.shortName + ": Edit Button Click added");
                 }
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
+                else {
+                    Log.error(Settings.shortName + ": addButtonClick: #gm-edit-btn was not found");
                 }
+
             };
             this.addToolbarButton = function () {
-                var methodName = 'addToolbarButton';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 var lib = _this;
                 var gmCounter = 0;
                 var gmTimer = setInterval(function () {
@@ -1115,7 +800,7 @@
                     Log.message(Settings.shortName + ': try no. ' + gmCounter);
                     var objElement = $(document.body).xpath(lib.btnSelector);
                     if (objElement.length) {
-                        Log.message(Settings.shortName + ': Found element for button placement');
+                        Log.message(Settings.shortName + ": Found element for button placement");
                         clearInterval(gmTimer);
                         objElement.append(lib.createToolbarHtml());
                         $(document).trigger('editBtnAdded', {
@@ -1124,16 +809,11 @@
                             time: new Date()
                         });
                     }
-                    else {
-                        Log.message(Settings.shortName + ': Unable to find element for button placement');
-                    }
                     if (gmCounter >= 20 || objElement.length > 0) {
                         clearInterval(gmTimer);
                     }
                 }, 500);
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.createToolbarHtml = function () {
                 var btnHtml = _this.createToolbarEditBtn();
@@ -1165,18 +845,13 @@
                 }, 300, 'linear', function () {
                     $('.gmbackdrop, .gmbox').css('display', 'none');
                 });
-                $('textarea#gminput').val('');
+                $('textarea#gminput').val(''); 
             };
             this.confirmExit = function () {
                 return confirm('Are you sure you want to close this editor?');
             };
             this.save = function () {
-                var methodName = 'save';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 var k = Settings.tinyId;
                 var ed = tinymce__default.EditorManager.editors[k];
                 var e = ed.getContent();
@@ -1188,24 +863,15 @@
                 var content = $(_this.iframeSelector).contents().find(_this.noteSelector);
                 content.html(e);
                 $('textarea#gminput').val(''), ed.setContent('');
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Leaving.");
-                }
+
             };
             this.loadScripts = function () {
-                var methodName = 'Evernote.loadScripts';
-                var appDebugLevel = Settings.debugLevel;
-                var levelDebug = DebugLevel.Debug;
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(methodName + ": Entered.");
-                }
+
                 var count = 0;
                 for (var key in _this.scripts) {
                     if (_this.scripts.hasOwnProperty(key)) {
                         var script = _this.scripts[key];
-                        if (appDebugLevel >= levelDebug) {
-                            Log.debug(methodName + ": Attempting to add script:", script);
-                        }
+
                         count++;
                         if (count > 1) {
                             return;
@@ -1213,10 +879,7 @@
                         BigbyteLoader.loadScript(script);
                     }
                 }
-                if (appDebugLevel >= levelDebug) {
-                    methodName = Util.getMethodName(function () { return _this.init; });
-                    Log.debug(methodName + ": Exiting " + methodName + ".");
-                }
+
             };
             this.ensurePlugins = function () {
                 if (typeof ($.fn.tagName) === 'undefined') {
@@ -1241,6 +904,129 @@
         return Evernote;
     }());
 
+    var GmConfig =  (function () {
+        function GmConfig() {
+            this.init = function () {
+                var initValues = {
+                    id: Settings.preKey + 'Config',
+                    title: Settings.menuName,
+                    fields: 
+                    {
+                        tinymcePluginFullscreen: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Full Screen?',
+                            default: true
+                        },
+                        tinymcePluginTable: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Table?',
+                            default: true
+                        },
+                        tinymcePluginCharmap: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Special Characters?',
+                            default: true
+                        },
+                        tinymcePluginCode: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Html Code?',
+                            default: true
+                        },
+                        tinymcePluginCodeWidth: {
+                            label: 'Width in pixels of HTML code editor.',
+                            type: 'int',
+                            min: 200,
+                            max: 4000,
+                            default: 400
+                        },
+                        tinymcePluginCodeHeight: {
+                            label: 'Height in pixels of HTML code editor.',
+                            type: 'int',
+                            min: 200,
+                            max: 4000,
+                            default: 300
+                        },
+                        tinymcePluginPreview: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Preview?',
+                            default: true
+                        },
+                        tinymcePluginPrint: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Print?',
+                            default: true
+                        },
+                        tinymcePluginInsertdatetime: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Insert Date Time?',
+                            default: true
+                        },
+                        tinymcePluginImage: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Image?',
+                            default: true
+                        },
+                        tinymcePluginSearchreplace: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Find & Replace?',
+                            default: true
+                        },
+                        tinymcePluginEmoticons: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Emoticons?',
+                            default: true
+                        },
+                        tinymcePluginAdvlist: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Advanced List?',
+                            default: false
+                        },
+                        tinymcePluginVisualblocks: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Visual Blocks?',
+                            default: true
+                        },
+                        tinymcePluginVisualchars: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Visual Characters?',
+                            default: false
+                        },
+                        tinymcePluginBbcode: {
+                            type: 'checkbox',
+                            label: 'Load Plugin BBCode?',
+                            default: false
+                        },
+                        tinymcePluginWordcount: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Word Count?',
+                            default: true
+                        },
+                        tinymcePluginHilite: {
+                            type: 'checkbox',
+                            label: 'Load Plugin Hilite?',
+                            default: true
+                        },
+                        tinymceConfirmNoSaveExit: {
+                            type: 'checkbox',
+                            label: 'Ask for confirmation before closing without saving?',
+                            default: true
+                        },
+                        tinymceWidth: {
+                            label: 'Width in pixels of editor when not full screen.',
+                            type: 'int',
+                            min: 400,
+                            max: 4000,
+                            default: 660 
+                        }
+                    },
+                    css: '#MyConfig_section_0 { display: none !important; }' 
+                };
+                GM_config.init(initValues);
+            };
+        }
+        return GmConfig;
+    }());
+
     var validateIfTop = function () {
         return window.top === window.self;
     };
@@ -1248,18 +1034,19 @@
         Log.message(Settings.shortName + ': Start loading...');
         var en = new Evernote();
         en.init();
+        var gConfig = new GmConfig();
+        gConfig.init();
+        if (typeof GM_registerMenuCommand === 'function') {
+            Log.message(Settings.shortName + ': Registering: Open ' + Settings.shortName + ' Options Menu');
+            GM_registerMenuCommand(Settings.menuName, function () {
+                GM_config.open();
+                Log.message(Settings.shortName + ': Registered: Open ' + Settings.shortName + ' Options Menu');
+            });
+        }
+        else {
+            Log.error(Settings.shortName + ': Unable to Register: Open ' + Settings.shortName + ' Options Menu');
+        }
         Log.message(Settings.shortName + ': End loading...');
-    }
-    if (typeof GM_registerMenuCommand === 'function') {
-        Log.message(Settings.shortName + ': Registering: Open ' + Settings.shortName + ' Options Menu');
-        GM_registerMenuCommand(Settings.menuName, function () {
-            GM_config.open();
-            Log.message(Settings.shortName + ': Registered: Open ' + Settings.shortName + ' Options Menu');
-        });
-    }
-    else {
-        Log.error(Settings.shortName + ': Unable to Register: Open ' + Settings.shortName + ' Options Menu');
     }
 
 }($, tinymce));
-//# sourceMappingURL=TinyMce_for_Evernote.user.js.map

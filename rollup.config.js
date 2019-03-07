@@ -5,7 +5,7 @@ import commonJS from 'rollup-plugin-commonjs';
 export default {
     input: __dirname + '/lib/TinyMce_for_Evernote.user.js',
     output: {
-        file: __dirname + '/scratch/compiled/TinyMce_for_Evernote.user.js',
+        file: __dirname + '/scratch/rolled/TinyMce_for_Evernote.user.js',
         format: 'iife', // immediately-invoked function expression — suitable for <script> tags
         // banner: '(function() {\n  \'use strict\';',
         // footer: '})();',
