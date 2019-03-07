@@ -1,10 +1,11 @@
-import { IScriptItem as IScriptItem } from './Interfaces';
+import { IScriptItem } from './Interfaces';
+import { ScriptItem } from './class_ScriptItem';
 import { Settings as appSettings } from './class_Settings';
 import { Log as Log } from './class_Log';
 import { DebugLevel } from './enums';
 
 export class BigbyteLoader {
-
+  public static currentScritp: ScriptItem;
   public static addJsNode = (text: string, sUrl: string, funcToRun?: string, runOnLoad?: EventListenerOrEventListenerObject): void => {
     const methodName: string = 'addJsNode';
     // Higher price to check using enumes each time so capture the values here
@@ -139,127 +140,139 @@ export class BigbyteLoader {
   }
 
   public static loadScript = (scriptItem: IScriptItem): void => {
-    const methodName: string = 'loadScript';
+    // @debug start
+    const methodName: string = 'BigbyteLoader.loadScript';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.Debug;
-
-    if (appDebugLevel >= levelDebug) {
-      Log.debug(`${methodName}: Entered in ${methodName}.`);
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered in ${methodName}.`); }
+    // @debug end
+    if (!(BigbyteLoader.currentScritp) || (BigbyteLoader.currentScritp.isDisposed === true)) {
+      // @debug start
+      if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Creating a new instance of ScriptItem for BigbyteLoader.currentScritp:`, scriptItem.name); }
+      // @debug end
+      BigbyteLoader.currentScritp = new ScriptItem(scriptItem);
+      if (BigbyteLoader.currentScritp.timeout === 0) {
+        BigbyteLoader.currentScritp.timeout = 30;
+      }
     }
-    if (typeof (scriptItem.count) === 'undefined') {
-      scriptItem.count = 0;
-    }
-    if (typeof (scriptItem.loaded) === 'undefined') {
-      scriptItem.loaded = false;
-    }
-    if (typeof (scriptItem.text) === 'undefined') {
-      scriptItem.text = ''; // timeout in seconds
-    }
-    if (typeof (scriptItem.timeout) === 'undefined') {
-      scriptItem.timeout = 30; // timeout in seconds
-    }
-    if (appDebugLevel >= levelDebug) {
-      Log.debug(`${methodName}: scriptItem param:`, scriptItem);
-    }
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: scriptItem param:`, BigbyteLoader.currentScritp); }
+    // @debug end
 
     const bbScriptLoadedEvent = new CustomEvent(
       'bbScriptLoaded', {
         detail: {
           message: 'Script Loaded',
           time: new Date(),
-          scriptItm: scriptItem
+          scriptItm: BigbyteLoader.currentScritp
         },
         bubbles: true,
         cancelable: false
       }
     );
-
-    switch (scriptItem.type) {
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: switch test for: ${BigbyteLoader.currentScritp.type}`); }
+    // @debug end
+    switch (BigbyteLoader.currentScritp.type) {
       case 'linkedjs':
         let skipTest: boolean = false;
-        if (typeof (scriptItem.testMethod) === 'undefined' || (scriptItem.testMethod.length === 0)) {
+        if (typeof (BigbyteLoader.currentScritp.testMethod) === 'undefined' || (BigbyteLoader.currentScritp.testMethod.length === 0)) {
           skipTest = true;
         }
-        if (appDebugLevel >= levelDebug) {
-          Log.debug(`${methodName}: skipTest for adding script:`, skipTest);
-        }
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: skipTest for adding script:`, skipTest); }
+        // @debug end
         if (skipTest) {
           // there is no test for this item so we will and assume
           // all is fine/
-          scriptItem.loaded = true;
-          BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
+          BigbyteLoader.currentScritp.loaded = true;
+          BigbyteLoader.addJsNode(BigbyteLoader.currentScritp.text, BigbyteLoader.currentScritp.src);
           // trigger event for loaded
+          // @debug start
+          if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Dispatching event bbScriptLoaded`); }
+          // @debug end
           document.dispatchEvent(bbScriptLoadedEvent);
           return;
         }
-        scriptItem.count++;
-        const maxCount: number = scriptItem.timeout * 10; // multply by 10 to convert into 10th of seconds
+        BigbyteLoader.currentScritp.count++;
+        const maxCount: number = BigbyteLoader.currentScritp.timeout * 10; // multply by 10 to convert into 10th of seconds
 
-        if (scriptItem.count > maxCount) {
-          Log.error(appSettings.shortName + ': unable to load script, Aborting: ', scriptItem.src);
+        if (BigbyteLoader.currentScritp.count > maxCount) {
+          Log.error(appSettings.shortName + ': unable to load script, Aborting: ', BigbyteLoader.currentScritp.src);
           return;
         }
         let testmethod: any;
         const evilEval = eval; // this doe to get around tslint no eval
         try {
-          if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Trying Evil Eval`);
-          }
+          // @debug start
+          if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Trying Evil Eval`); }
+          // @debug end
           // tslint:disable-next-line
-          testmethod = evilEval(scriptItem.testMethod);
+          testmethod = evilEval(BigbyteLoader.currentScritp.testMethod);
         } catch (e) {
           testmethod = 'undefined';
+          Log.error(`${appSettings.shortName}: loadScript: Error running Eval:`, e);
         }
         if (typeof (testmethod) === 'undefined') {
-          if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Undefined Test method`);
-          }
-          if (!scriptItem.loaded) {
-            scriptItem.loaded = true;
-            BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
+          // @debug start
+          if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Undefined Test method`); }
+          // @debug end
+          if (!BigbyteLoader.currentScritp.loaded) {
+            BigbyteLoader.currentScritp.loaded = true;
+            BigbyteLoader.addJsNode(BigbyteLoader.currentScritp.text, BigbyteLoader.currentScritp.src);
           }
           setTimeout(() => {
-            if (appDebugLevel >= levelDebug) {
-              Log.debug(`${methodName}: Loading script via timer`, scriptItem);
-          }
-            BigbyteLoader.loadScript(scriptItem);
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Loading script via timer`, BigbyteLoader.currentScritp.name); }
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving due tp timer.`); }
+            // @debug end
+            BigbyteLoader.loadScript(BigbyteLoader.currentScritp);
           }, 100);
+          // BigbyteLoader.currentScritp.dispose();
         } else {
           // script item is loaded trigger an evert
-          if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Script is loaded. Dispatching event`);
-          }
+          // @debug start
+          if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Dispatching event bbScriptLoaded`); }
+          // @debug end
           document.dispatchEvent(bbScriptLoadedEvent);
         }
         break;
       case 'css':
-        if (appDebugLevel >= levelDebug) {
-          Log.debug(`${methodName}: Attempting to load css`);
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to load css`); }
+        // @debug end
+        if (typeof (BigbyteLoader.currentScritp.tag) === 'undefined') {
+          BigbyteLoader.currentScritp.tag = 'body'; // timeout in seconds
         }
-        if (typeof (scriptItem.tag) === 'undefined') {
-          scriptItem.tag = 'body'; // timeout in seconds
-        }
-        BigbyteLoader.addCssNode(scriptItem.src, scriptItem.tag);
-        if (appDebugLevel >= levelDebug) {
-          Log.debug(`${methodName}: Finished loading css and dispatching event`);
-        }
+        BigbyteLoader.addCssNode(BigbyteLoader.currentScritp.src, BigbyteLoader.currentScritp.tag);
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Dispatching event bbScriptLoaded`); }
+        // @debug end
         document.dispatchEvent(bbScriptLoadedEvent);
         break;
       case 'csslink':
-        if (appDebugLevel >= levelDebug) {
-          Log.debug(`${methodName}: Attempting to load css link`);
-        }
-        BigbyteLoader.addLinkNode(scriptItem.src);
-        if (appDebugLevel >= levelDebug) {
-          Log.debug(`${methodName}: Finished loading css link and dispatching event`);
-        }
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to load css link`); }
+        // @debug end
+        BigbyteLoader.addLinkNode(BigbyteLoader.currentScritp.src);
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Dispatching event bbScriptLoaded`); }
+        // @debug end
         document.dispatchEvent(bbScriptLoadedEvent);
         break;
       default:
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debugWarn(`${methodName}: Failed to Load Script: ${BigbyteLoader.currentScritp.name}. Case Default was hit!`); }
+        // @debug end
         // statements_def
         break;
     }
+    BigbyteLoader.currentScritp.dispose();
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
+    return;
   }
   private constructor() { }
 }

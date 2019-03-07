@@ -33,6 +33,7 @@ export class Evernote {
     private fullScreen: boolean = false;
     private scripts: IKeyAny = [];
     private TMCE: TinyMceWork = new TinyMceWork();
+
     public constructor() {
         this.lightBoxCss = '.gmbackdrop,.gmbox{position:absolute;display:none}.gmbackdrop{top:0;left:0;width:100%;height:100%;background:#000;opacity:0;';
         this.lightBoxCss += 'filter:alpha(opacity=0);z-index:201}.gmbox{background:#fff;z-index:202;padding:10px;';
@@ -43,6 +44,11 @@ export class Evernote {
         this.lightBoxCss += '.gmbox-window{top:50%;left:50%;transform: translate(-50%, -50%);position: absolute;';
         this.lightBoxCss += '}#gm-tb{display:inline-block;position:absolute;}';
     }
+    public onMe = (e: any): void => {
+        Log.debug('onMe called: param', e);
+        Log.debug('onMe this: ', this);
+    }
+
     public init = (): void => {
         // @debug start
         let methodName: string = '';
@@ -51,7 +57,7 @@ export class Evernote {
         const levelDebug = DebugLevel.Debug;
 
         if (appDebugLevel >= levelDebug) {
-            methodName = 'init';
+            methodName = 'Evernote.init';
             Log.debug(`${methodName}: Entered in init.`);
         }
         // @debug end
@@ -71,7 +77,19 @@ export class Evernote {
         const pluginXpathJq: string = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
 
         if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: bbScriptLoaded`); }
+            // @debug end
+            document.addEventListener('bbScriptLoaded', this.onMe);
+            document.addEventListener('bbScriptLoaded', this.onBbScriptLoaded);
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: allScriptsLoaded`); }
+            // @debug end
             document.addEventListener('allScriptsLoaded', this.onBbScriptLoaded);
+        } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Failed adding Event Listener: allScriptsLoaded`); }
+            // @debug end
         }
 
         if (typeof (jQuery) === 'undefined') {
@@ -86,9 +104,7 @@ export class Evernote {
         }
         if (typeof (jQuery().xpath) === 'undefined') {
             // @debug start
-            if (appDebugLevel >= levelDebug) {
-                Log.debug(`${methodName}: Attempting to add jquery xpath link: ${pluginXpathJq}`);
-            }
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery xpath link: ${pluginXpathJq}`); }
             // @debug end
             this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
         } else {
@@ -117,9 +133,7 @@ export class Evernote {
             // @debug end
         }
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Attempting to add tinyMceCss`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add tinyMceCss`); }
         // @debug end
         this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
         // @debug start
@@ -132,9 +146,7 @@ export class Evernote {
         // this.addScript('tinymce_advanced_theme', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/themes/advanced/theme.min.js','linkedjs') // no checking required
         this.loadScripts();
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Leaving`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
         // @debug end
     }
 
@@ -148,7 +160,6 @@ export class Evernote {
         // Higher price to check using enumes each time so capture the values here
         const appDebugLevel = appSettings.debugLevel;
         const levelDebug = DebugLevel.Debug;
-
         if (appDebugLevel >= levelDebug) {
             methodName = 'onAllScriptsLoaded';
             Log.debug(`${methodName}: Entered.`);
@@ -168,22 +179,16 @@ export class Evernote {
             this.noteSelector = 'body';
         }
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: calliing ensuringPlugins()`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: calliing ensuringPlugins()`); }
         // @debug end
         this.ensurePlugins();
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: calliing addToolbarButton()`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: calliing addToolbarButton()`); }
         // @debug end
         this.addToolbarButton();
 
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: adding custom event handlers`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: adding custom event handlers`); }
         // @debug end
         $(document).on('editBtnAdded', this.onEditBtnAdded);
         $(document).on('tinymceInit', this.onTinymceInit);
@@ -192,16 +197,12 @@ export class Evernote {
         $(document).on('tinymceFullScreen', this.onTinyMceFulllscreen);
 
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: calliing writeLightBox()`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: calliing writeLightBox()`); }
         // @debug end
         // this.lightBoxAddCss();
         this.writeLightBox();
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: calliing init on TinyMceWork class instance of TMCE`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: calliing init on TinyMceWork class instance of TMCE`); }
         // @debug end
         this.TMCE.init();
 
@@ -218,9 +219,7 @@ export class Evernote {
         // assign the width to the style
         $('.gmbox-window').width(intTinymceWidth);
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: .gmbox-window class width`, intTinymceWidth);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: .gmbox-window class width`, intTinymceWidth); }
         // @debug end
         // set the cancel function for TinyMce popup
         $('.gmclose').click(() => {
@@ -237,9 +236,7 @@ export class Evernote {
             });
         });
         // @debug start
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Leaving`);
-        }
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
         // @debug end
     }
 
@@ -342,10 +339,15 @@ export class Evernote {
      * these are scripts tha will be loaded when the BIGBYTE.USERSCRIPT.EVERNOTE.init() is fired
      */
     private addScript = (sName: string, sSrc: string, objType: any, objTestMethod?: any, args?: any): void => {
+        // @debug start
         const methodName: string = 'addScript';
         // Higher price to check using enumes each time so capture the values here
         const appDebugLevel = appSettings.debugLevel;
         const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+        }
+        // @debug end
         const newItm: IScriptItem = {
             name: sName,
             src: sSrc,
@@ -353,28 +355,36 @@ export class Evernote {
             testMethod: (objTestMethod) ? objTestMethod : '',
             text: '',
             loaded: false,
-            timeout: 0,
+            timeout: 30,
             tag: '',
             count: 0
         };
         if (args) {
+            // @debug start
             if (appDebugLevel >= levelDebug) {
                 Log.debug(`${methodName}: Attempting to add script:`, newItm);
             }
+            // @debug end
             this.scripts[sName] = newItm;
         } else {
+            // @debug start
             if (appDebugLevel >= levelDebug) {
                 Log.debug(`${methodName}: Attempting to extend script:`, newItm);
             }
+            // @debug end
             const extended: any = usUtil.extend(newItm, args);
+            // @debug start
             if (appDebugLevel >= levelDebug) {
                 Log.debug(`${methodName}: Extended script:`, extended);
             }
+            // @debug end
             this.scripts[sName] = extended;
         }
+        // @debug start
         if (appDebugLevel >= levelDebug) {
             Log.debug(`${methodName}: Leaving`);
         }
+        // @debug end
     }
 
     /*
@@ -391,6 +401,16 @@ export class Evernote {
     }
 
     private onBbScriptLoaded = (e: any): void => {
+        // @debug start
+        const methodName: string = 'onBbScriptLoaded';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+            Log.debug(`${methodName}: Param e`, e);
+        }
+        // @debug end
         // delete the added script
         delete this.scripts[e.detail.scriptItm.name];
         const done: boolean = this.isScriptsLoaded();
@@ -405,18 +425,56 @@ export class Evernote {
                     cancelable: false
                 }
             );
+            // @debug start
+            if (appDebugLevel >= levelDebug) {
+                Log.debug(`${methodName}: Dispatching event allScriptsLoaded.`);
+            }
+            // @debug end
             document.dispatchEvent(allScriptsLoaded);
         } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) {
+                Log.debug(`${methodName}: Calling loadScripts() to load next`);
+            }
+            // @debug end
             // add the next script
             this.loadScripts();
         }
+        // @debug start
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Leaving.`);
+        }
+        // @debug end
     }
 
     private onEditBtnAdded = (e: any): void => {
+        // @debug start
+        const methodName: string = 'onEditBtnAdded';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+        }
+        // @debug end
         Log.message(appSettings.shortName + ': onEditBtnAdded event fired');
         this.addButtonClick();
+        // @debug start
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Leaving.`);
+        }
+        // @debug end
     }
     private addButtonClick = (): void => {
+        // @debug start
+        const methodName: string = 'addButtonClick';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+        }
+        // @debug end
         const lib: Evernote = this;
         if ($('#gm-edit-btn').length) {
             $('#gm-edit-btn').click((): void => {
@@ -436,9 +494,23 @@ export class Evernote {
             });
             Log.message(appSettings.shortName + ': Edit Button Click added');
         }
+        // @debug start
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Leaving.`);
+        }
+        // @debug end
     }
 
     private addToolbarButton = (): void => {
+        // @debug start
+        const methodName: string = 'addToolbarButton';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+        }
+        // @debug end
         const lib = this;
         let gmCounter: number = 0;
         const gmTimer = setInterval((): void => {
@@ -463,6 +535,11 @@ export class Evernote {
                 clearInterval(gmTimer);
             }
         }, 500);
+        // @debug start
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Leaving.`);
+        }
+        // @debug end
     }
     private createToolbarHtml = (): string => {
         const btnHtml: string = this.createToolbarEditBtn();
@@ -505,6 +582,15 @@ export class Evernote {
     }
 
     private save = (): void => {
+        // @debug start
+        const methodName: string = 'save';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Entered.`);
+        }
+        // @debug end
         const k: any = appSettings.tinyId;
         const ed: tinymce.Editor = tinymce.EditorManager.editors[k];
         const e: any = ed.getContent();
@@ -516,25 +602,28 @@ export class Evernote {
         const content: any = $(this.iframeSelector).contents().find(this.noteSelector);
         content.html(e);
         $('textarea#gminput').val(''), ed.setContent('');
+        // @debug start
+        if (appDebugLevel >= levelDebug) {
+            Log.debug(`${methodName}: Leaving.`);
+        }
+        // @debug end
     }
 
     private loadScripts = (): void => {
-        let methodName: string = 'loadScripts';
+        // @debug start
+        let methodName: string = 'Evernote.loadScripts';
         // Higher price to check using enumes each time so capture the values here
         const appDebugLevel = appSettings.debugLevel;
         const levelDebug = DebugLevel.Debug;
-
-        if (appDebugLevel >= levelDebug) {
-            Log.debug(`${methodName}: Entered.`);
-        }
-
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
+        // @debug end
         let count: number = 0;
         for (const key in this.scripts) {
             if (this.scripts.hasOwnProperty(key)) {
                 const script: IScriptItem = this.scripts[key];
-                if (appDebugLevel >= levelDebug) {
-                    Log.debug(`${methodName}: Attempting to add script:`, script);
-                }
+                // @debug start
+                if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add script:`, script); }
+                // @debug end
                 count++;
                 if (count > 1) {
                     return;
@@ -542,10 +631,12 @@ export class Evernote {
                 Loader.loadScript(script);
             }
         }
+        // @debug start
         if (appDebugLevel >= levelDebug) {
             methodName = util.getMethodName(() => this.init);
-            Log.debug(`${methodName}: exiting ${methodName}.`);
+            Log.debug(`${methodName}: Exiting ${methodName}.`);
         }
+        // @debug end
     }
     // custom plugin for jquery that coverts tag name into lower case.
     private ensurePlugins = () => {

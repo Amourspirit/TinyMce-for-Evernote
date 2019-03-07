@@ -19,7 +19,14 @@ export class Log {
         if (!(appSettings.debugLevel >= DebugLevel.Debug)) {
             return;
         }
-        console.log(msg, ...optionalParams);
+        console.log(`${appSettings.shortName}: Debug: ${msg}`, ...optionalParams);
+    }
+
+    public static debugWarn = (msg: string, ...optionalParams: any[]): void => {
+        if (!(appSettings.debugLevel >= DebugLevel.Debug)) {
+            return;
+        }
+        console.warn(`${appSettings.shortName}: Debug: ${msg}`, ...optionalParams);
     }
     private constructor() {
     }
