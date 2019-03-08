@@ -1,0 +1,64 @@
+/*
+Do not add extra classes to this file unless explicitly for lightbox.
+*/
+.gmbackdrop,
+.gmbox {
+    position: absolute;
+    display: none;
+}
+.gmbackdrop {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0;
+    filter:alpha(opacity=0);
+    z-index: 201;
+}
+.gmbox {
+    background: #fff;
+    z-index: 202;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 0 5px #444;
+    -webkit-box-shadow: 0 0 5px #444;
+    box-shadow: 0 0 5px #444;
+}
+.gmclose {
+    float: right;
+    margin-right: 6px;
+    cursor: pointer;
+}
+.mce-panel {
+    border: none;
+}
+div.gmbox .mce-panel {
+    border: 0 solid rgba(0,0,0,.2);
+}
+div.mce-tinymce.mce-container.mce-panel {
+    margin-top: 2em;
+}
+div.mce-tinymce.mce-container.mce-panel.mce-fullscreen {
+    margin-top: 0;
+}
+#gm-edit-btn {
+    font-size: 1.6em;
+    color: #ABABAB;
+    cursor: pointer;
+}
+#gm-edit-btn:hover {
+    color: #2DBE60;
+}
+.gmbox-window {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+#gm-tb {
+    display: inline-block;
+    position: absolute;
+}

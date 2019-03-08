@@ -1,4 +1,6 @@
 {
+  "_name": "TinyMce_for_Evernote",
+  "_debuglevel": 3,
   "name": "tinymce-for-evernote",
   "version": "3.0.0",
   "description": "Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.",
@@ -38,7 +40,10 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-htmlmin": "^3.0.0",
     "grunt-contrib-uglify": "^4.0.0",
+    "grunt-if-next": "^0.1.5",
     "grunt-remove-comments": "^0.1.6",
     "grunt-shell": "^2.1.0",
     "grunt-text-replace": "^0.4.0",

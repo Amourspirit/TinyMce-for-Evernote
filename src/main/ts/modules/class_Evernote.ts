@@ -35,14 +35,8 @@ export class Evernote {
     private TMCE: TinyMceWork = new TinyMceWork();
 
     public constructor() {
-        this.lightBoxCss = '.gmbackdrop,.gmbox{position:absolute;display:none}.gmbackdrop{top:0;left:0;width:100%;height:100%;background:#000;opacity:0;';
-        this.lightBoxCss += 'filter:alpha(opacity=0);z-index:201}.gmbox{background:#fff;z-index:202;padding:10px;';
-        this.lightBoxCss += '-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-moz-box-shadow:0 0 5px #444;-webkit-box-shadow:0 0 5px #444;';
-        this.lightBoxCss += 'box-shadow:0 0 5px #444}.gmclose{float:right;margin-right:6px;cursor:pointer}.mce-panel{border:none}div.gmbox .mce-panel{border:';
-        this.lightBoxCss += ' 0 solid rgba(0,0,0,.2)}div.mce-tinymce.mce-container.mce-panel{margin-top:2em}div.mce-tinymce.mce-container.mce-panel.mce-fullscreen';
-        this.lightBoxCss += '{margin-top:0}#gm-edit-btn{font-size:1.6em;color:#ABABAB;cursor:pointer;}#gm-edit-btn:hover{color:#2DBE60}';
-        this.lightBoxCss += '.gmbox-window{top:50%;left:50%;transform: translate(-50%, -50%);position: absolute;';
-        this.lightBoxCss += '}#gm-tb{display:inline-block;position:absolute;}';
+        // tslint:disable-next-line
+        this.lightBoxCss = "//BUILD_INCLUDE('./scratch/css/lightbox.min.css')";
     }
 
     public init = (): void => {
@@ -554,14 +548,16 @@ export class Evernote {
         // @debug end
     }
     private createToolbarHtml = (): string => {
+        // tslint:disable-next-line
+        const css = "//BUILD_INCLUDE('./scratch/text/buttonstyle.txt')";
         const btnHtml: string = this.createToolbarEditBtn();
         let html: string = '';
-        html += '<div id="gm-tb" title="Edit with TinyMCE" class="' + this.btnSelector + '">' + btnHtml + '</div>';
+        html += `<div id="gm-tb" title="Edit with TinyMCE" style="${css}">${btnHtml}</div>`;
         return html;
     }
-
     private createToolbarEditBtn = (): string => {
-        const html: string = '<div id="gm-edit-btn" style="display:inline-block;" name="gm-edit-btn" class="gm-btn"><i class="fi-page-edit"></i></div>';
+        // tslint:disable-next-line
+        const html: string = "//BUILD_INCLUDE('./scratch/html/gm-edit-btn.html')[asJsString]";
         return html;
     }
     private getLightBoxHtml = (id?: string, title?: string): string => {
