@@ -1,11 +1,12 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonJS from 'rollup-plugin-commonjs';
+import pkg from "./package.json";
 // import 'jquery';
 
 export default {
-    input: __dirname + '/lib/TinyMce_for_Evernote.user.js',
+    input: __dirname + `/lib/${pkg._name}.user.js`,
     output: {
-        file: __dirname + '/scratch/rolled/TinyMce_for_Evernote.user.js',
+        file: __dirname + `/scratch/rolled/${pkg._name}.user.js`,
         format: 'iife', // immediately-invoked function expression — suitable for <script> tags
         // banner: '(function() {\n  \'use strict\';',
         // footer: '})();',
