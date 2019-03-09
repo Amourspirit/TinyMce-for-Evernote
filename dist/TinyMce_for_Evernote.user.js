@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.0.1
+// @version         3.0.2
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -42,9 +42,9 @@
     (function (DebugLevel) {
         DebugLevel[DebugLevel["None"] = 0] = "None";
         DebugLevel[DebugLevel["Debug"] = 1] = "Debug";
-        DebugLevel[DebugLevel["Info"] = 2] = "Info";
+        DebugLevel[DebugLevel["Error"] = 2] = "Error";
         DebugLevel[DebugLevel["Warn"] = 3] = "Warn";
-        DebugLevel[DebugLevel["Error"] = 4] = "Error";
+        DebugLevel[DebugLevel["Info"] = 4] = "Info";
     })(DebugLevel || (DebugLevel = {}));
 
     var Settings =  (function () {
@@ -67,27 +67,37 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (!(Settings.debugLevel >= DebugLevel.Info)) {
+            if (Settings.debugLevel > DebugLevel.Info) {
                 return;
             }
             console.log.apply(console, [msg].concat(optionalParams));
         };
-        Log.error = function (error) {
+        Log.warn = function (msg) {
             var optionalParams = [];
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (!(Settings.debugLevel >= DebugLevel.Error)) {
+            if (Settings.debugLevel > DebugLevel.Warn) {
                 return;
             }
-            console.error.apply(console, [error].concat(optionalParams));
+            console.warn.apply(console, [msg].concat(optionalParams));
+        };
+        Log.error = function (msg) {
+            var optionalParams = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                optionalParams[_i - 1] = arguments[_i];
+            }
+            if (Settings.debugLevel > DebugLevel.Error) {
+                return;
+            }
+            console.error.apply(console, [msg].concat(optionalParams));
         };
         Log.debug = function (msg) {
             var optionalParams = [];
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (!(Settings.debugLevel >= DebugLevel.Debug)) {
+            if (Settings.debugLevel > DebugLevel.Debug) {
                 return;
             }
             console.log.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
@@ -97,7 +107,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (!(Settings.debugLevel >= DebugLevel.Debug)) {
+            if (Settings.debugLevel > DebugLevel.Debug) {
                 return;
             }
             console.warn.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
@@ -315,247 +325,233 @@
         };
         return Util;
     }());
-    var TinyMceWork =  (function () {
-        function TinyMceWork() {
+    var TinymceWork =  (function () {
+        function TinymceWork() {
             var _this = this;
             this.fullscreen = false;
             this.gmConfig = GM_config;
             this.init = function () {
 
-                var gmTinyMceTimerCounter = 0;
                 var ver = Settings.tinyMceVersion;
                 var id = Settings.tinyId;
 
-                var lib = _this;
-                var gmTinyMceTimer = setInterval(function () {
-                    gmTinyMceTimerCounter++;
-                    Log.message(Settings.shortName + ': try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
-                    if (typeof (tinymce) !== 'undefined') {
-                        Log.message(Settings.shortName + ': found tinymce library');
-                        clearInterval(gmTinyMceTimer);
-                        tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
-                        var loadTable = lib.gmConfig.get('tinymcePluginTable');
-                        if (loadTable) {
+                tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
+                var loadTable = _this.gmConfig.get('tinymcePluginTable');
+                if (loadTable) {
 
-                            tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
-                        }
-                        var loadCharmap = lib.gmConfig.get('tinymcePluginCharmap');
-                        if (loadCharmap) {
+                    tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
+                }
+                var loadCharmap = _this.gmConfig.get('tinymcePluginCharmap');
+                if (loadCharmap) {
 
-                            tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
-                        }
-                        var loadCode = lib.gmConfig.get('tinymcePluginCode');
-                        if (loadCode) {
+                    tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
+                }
+                var loadCode = _this.gmConfig.get('tinymcePluginCode');
+                if (loadCode) {
 
-                            tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
-                        }
-                        var loadFullscreen = lib.gmConfig.get('tinymcePluginFullscreen');
-                        if (loadFullscreen) {
+                    tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
+                }
+                var loadFullscreen = _this.gmConfig.get('tinymcePluginFullscreen');
+                if (loadFullscreen) {
 
-                            tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
-                        }
-                        var loadEmoticons = lib.gmConfig.get('tinymcePluginEmoticons');
-                        if (loadEmoticons) {
+                    tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
+                }
+                var loadEmoticons = _this.gmConfig.get('tinymcePluginEmoticons');
+                if (loadEmoticons) {
 
-                            tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
-                        }
-                        var loadWordcount = lib.gmConfig.get('tinymcePluginWordcount');
-                        if (loadEmoticons) {
+                    tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
+                }
+                var loadWordcount = _this.gmConfig.get('tinymcePluginWordcount');
+                if (loadEmoticons) {
 
-                            tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
-                        }
-                        var loadPrint = lib.gmConfig.get('tinymcePluginPrint');
-                        if (loadPrint) {
+                    tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
+                }
+                var loadPrint = _this.gmConfig.get('tinymcePluginPrint');
+                if (loadPrint) {
 
-                            tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
-                        }
-                        var loadPreview = lib.gmConfig.get('tinymcePluginPreview');
-                        if (loadPreview) {
+                    tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
+                }
+                var loadPreview = _this.gmConfig.get('tinymcePluginPreview');
+                if (loadPreview) {
 
-                            tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
-                        }
-                        var loadInsertdatetime = lib.gmConfig.get('tinymcePluginInsertdatetime');
-                        if (loadInsertdatetime) {
+                    tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
+                }
+                var loadInsertdatetime = _this.gmConfig.get('tinymcePluginInsertdatetime');
+                if (loadInsertdatetime) {
 
-                            tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
-                        }
-                        var loadImage = lib.gmConfig.get('tinymcePluginImage');
-                        if (loadImage) {
+                    tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
+                }
+                var loadImage = _this.gmConfig.get('tinymcePluginImage');
+                if (loadImage) {
 
-                            tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
-                        }
-                        var loadSearchreplace = lib.gmConfig.get('tinymcePluginSearchreplace');
-                        if (loadSearchreplace) {
+                    tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
+                }
+                var loadSearchreplace = _this.gmConfig.get('tinymcePluginSearchreplace');
+                if (loadSearchreplace) {
 
-                            tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
-                        }
-                        var loadAdvlist = lib.gmConfig.get('tinymcePluginAdvlist');
-                        if (loadAdvlist) {
+                    tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
+                }
+                var loadAdvlist = _this.gmConfig.get('tinymcePluginAdvlist');
+                if (loadAdvlist) {
 
-                            tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
-                        }
-                        var loadBbcode = lib.gmConfig.get('tinymcePluginBbcode');
-                        if (loadBbcode) {
+                    tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
+                }
+                var loadBbcode = _this.gmConfig.get('tinymcePluginBbcode');
+                if (loadBbcode) {
 
-                            tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
-                        }
-                        var loadVisualblocks = lib.gmConfig.get('tinymcePluginVisualblocks');
-                        if (loadVisualblocks) {
+                    tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
+                }
+                var loadVisualblocks = _this.gmConfig.get('tinymcePluginVisualblocks');
+                if (loadVisualblocks) {
 
-                            tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
-                        }
-                        var loadVisualchars = lib.gmConfig.get('tinymcePluginVisualchars');
-                        if (loadVisualchars) {
-                            tinymce.PluginManager.load('visualchars', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/visualchars/plugin.min.js');
-                        }
-                        var loadHilite = lib.gmConfig.get('tinymcePluginHilite');
-                        if (loadHilite) {
+                    tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
+                }
+                var loadVisualchars = _this.gmConfig.get('tinymcePluginVisualchars');
+                if (loadVisualchars) {
+                    tinymce.PluginManager.load('visualchars', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/visualchars/plugin.min.js');
+                }
+                var loadHilite = _this.gmConfig.get('tinymcePluginHilite');
+                if (loadHilite) {
 
-                            tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
-                        }
-                        var tinyMceExternalPlugins = {
-                            textcolor: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
-                            colorpicker: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
-                            nonbreaking: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/nonbreaking/plugin.min.js',
-                            hr: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
-                            link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
-                        };
-                        var toolbar1 = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
-                        var toolbar2 = (loadFullscreen ? 'fullscreen ' : '');
-                        toolbar2 += (loadPrint ? 'print ' : '');
-                        toolbar2 += (loadPreview ? 'preview ' : '');
-                        toolbar2 += '| forecolor backcolor | ';
-                        toolbar2 += (loadPreview ? 'insertdatetime ' : '');
-                        toolbar2 += (loadTable ? 'table ' : '');
-                        toolbar2 += (loadSearchreplace ? 'searchreplace ' : '');
-                        toolbar2 += '| link ' + (loadImage ? 'image ' : '');
-                        toolbar2 += (loadEmoticons ? ' emoticons' : '');
-                        toolbar2 += (loadCharmap ? ' | charmap' : '');
-                        toolbar2 += (loadCode ? ' | code' : '');
-                        toolbar2 += (loadVisualchars ? ' | visualchars' : '');
-                        toolbar2 += (loadVisualblocks ? ' | visualblocks' : '');
-                        toolbar2 += (loadHilite ? ' | hilite' : '');
-                        var tinyMceInit = {
-                            selector: 'textarea#' + id,
-                            init_instance_callback: function () {
-                                $('.mce-i-mysave').addClass('fi-save');
-                                $('.mce-i-myexit').addClass('fi-x');
+                    tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
+                }
+                var tinyMceExternalPlugins = {
+                    textcolor: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
+                    colorpicker: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
+                    nonbreaking: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/nonbreaking/plugin.min.js',
+                    hr: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
+                    link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
+                };
+                var toolbar1 = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
+                var toolbar2 = (loadFullscreen ? 'fullscreen ' : '');
+                toolbar2 += (loadPrint ? 'print ' : '');
+                toolbar2 += (loadPreview ? 'preview ' : '');
+                toolbar2 += '| forecolor backcolor | ';
+                toolbar2 += (loadPreview ? 'insertdatetime ' : '');
+                toolbar2 += (loadTable ? 'table ' : '');
+                toolbar2 += (loadSearchreplace ? 'searchreplace ' : '');
+                toolbar2 += '| link ' + (loadImage ? 'image ' : '');
+                toolbar2 += (loadEmoticons ? ' emoticons' : '');
+                toolbar2 += (loadCharmap ? ' | charmap' : '');
+                toolbar2 += (loadCode ? ' | code' : '');
+                toolbar2 += (loadVisualchars ? ' | visualchars' : '');
+                toolbar2 += (loadVisualblocks ? ' | visualblocks' : '');
+                toolbar2 += (loadHilite ? ' | hilite' : '');
+                var tinyMceInit = {
+                    selector: 'textarea#' + id,
+                    init_instance_callback: function () {
+                        $('.mce-i-mysave').addClass('fi-save');
+                        $('.mce-i-myexit').addClass('fi-x');
 
-                                $(document).trigger('tinymceInit', {
-                                    type: 'tinymceInit',
-                                    message: 'init',
+                        $(document).trigger('tinymceInit', {
+                            type: 'tinymceInit',
+                            message: 'init',
+                            time: new Date(),
+                            tinyMceId: id
+                        });
+                    },
+                    height: 260,
+                    inline: false,
+                    browser_spellcheck: true,
+                    plugins: '',
+                    menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
+                    toolbar: [toolbar1, toolbar2],
+                    content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
+                    content_style: "a,blockquote,body,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,iframe,img,li,ol,p,pre,q,ul{border:0;padding:0;margin:0}a,abbr,acronym,address,area,b,bdo,big,blockquote,caption,center,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,font,h3,h4,h5,h6,hr,i,ins,kbd,li,map,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,u,ul{line-height:1.57143em}a,body{margin:0}body,h1,h2{font-family:gotham,helvetica,arial,sans-serif}a,img[name=en-crypt]{cursor:pointer}h3,p{margin-bottom:.714285em}del{text-decoration:line-through}dfn{font-style:italic}body{box-sizing:border-box;color:#383838;font-size:14px;padding-right:1px;word-wrap:break-word}a:link,a:visited{color:#047ac6}a:active,a:hover{color:#2596de}h1{font-size:1.5em;font-weight:700;line-height:1.04762em;margin-bottom:.4761em;margin-top:.9523em}h2{font-size:1.286em;font-weight:700;line-height:1.22222em;margin-bottom:.5556em;margin-top:1.111em}h3,h4,h5,h6{font-size:1em;font-weight:700;font-family:gotham,helvetica,arial,sans-serif}h3{margin-top:1.4285em}div{font-family:gotham,helvetica,arial,sans-serif;font-size:14px}img.en-media{height:auto;margin-bottom:1.286em;max-width:100%}img.en-media[height='1']{height:1px}p+div img,p+img{margin-top:.714285em}div+div img,div+img{margin-top:.857412em}div+div img+img,img+img,li ol,li ul{margin-top:0}ol,ul{list-style-position:outside;margin-bottom:.714285em;margin-left:2em;margin-top:.2857em;padding-left:0}li ol,li ul{margin-bottom:0}h1+ol,h1+ul,h2+ol,h2+ul,p+ol,p+ul{margin-top:-.428571em}blockquote{border-left:2px solid #bfbfbf;margin-bottom:1.4285em;margin-left:1.4285em;margin-top:1.4285em;padding-left:.714285em}code,pre{font-family:Monaco,Courier,monospace}cite{font-style:italic}table{font-size:1em}td,th{padding:.2em 2em .2em 0;text-align:left;vertical-align:top}button.en-ignore{margin-bottom:1em}.highlight{background:#c9f2d0;border:1px solid #62eb92}.Decrypted{background-color:#f7f7f7;padding:5px}.Decrypted .Header{color:#404040;font-family:gotham,helvetica,arial,sans-serif;font-size:11px;padding-bottom:5px}.Decrypted .Body{background-color:#fff;padding:5px}.canvas-container{background:url(/redesign/global/img/loading-spinner.gif) center center no-repeat #fff;border:1px solid #cacaca;margin-bottom:10px}",
+                    keep_styles: false,
+                    setup: function (ed) {
+                        ed.on('FullscreenStateChanged', function (e) {
+                            _this.fullscreen = e.state;
+                            $(document).trigger('tinymceFullScreen', {
+                                type: 'tinymceFullScreen',
+                                message: 'fullscreen toogle',
+                                time: new Date(),
+                                state: e.state,
+                                tinyMceId: id
+                            });
+                        });
+                        ed.addButton('mysave', {
+                            title: 'Save',
+                            onclick: function () {
+                                $(document).trigger('tinymceSave', {
+                                    type: 'tinymceSave',
+                                    message: 'save',
                                     time: new Date(),
                                     tinyMceId: id
                                 });
-                            },
-                            height: 260,
-                            inline: false,
-                            browser_spellcheck: true,
-                            plugins: '',
-                            menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
-                            toolbar: [toolbar1, toolbar2],
-                            content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
-                            content_style: "a,blockquote,body,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,iframe,img,li,ol,p,pre,q,ul{border:0;padding:0;margin:0}a,abbr,acronym,address,area,b,bdo,big,blockquote,caption,center,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,font,h3,h4,h5,h6,hr,i,ins,kbd,li,map,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,u,ul{line-height:1.57143em}a,body{margin:0}body,h1,h2{font-family:gotham,helvetica,arial,sans-serif}a,img[name=en-crypt]{cursor:pointer}h3,p{margin-bottom:.714285em}del{text-decoration:line-through}dfn{font-style:italic}body{box-sizing:border-box;color:#383838;font-size:14px;padding-right:1px;word-wrap:break-word}a:link,a:visited{color:#047ac6}a:active,a:hover{color:#2596de}h1{font-size:1.5em;font-weight:700;line-height:1.04762em;margin-bottom:.4761em;margin-top:.9523em}h2{font-size:1.286em;font-weight:700;line-height:1.22222em;margin-bottom:.5556em;margin-top:1.111em}h3,h4,h5,h6{font-size:1em;font-weight:700;font-family:gotham,helvetica,arial,sans-serif}h3{margin-top:1.4285em}div{font-family:gotham,helvetica,arial,sans-serif;font-size:14px}img.en-media{height:auto;margin-bottom:1.286em;max-width:100%}img.en-media[height='1']{height:1px}p+div img,p+img{margin-top:.714285em}div+div img,div+img{margin-top:.857412em}div+div img+img,img+img,li ol,li ul{margin-top:0}ol,ul{list-style-position:outside;margin-bottom:.714285em;margin-left:2em;margin-top:.2857em;padding-left:0}li ol,li ul{margin-bottom:0}h1+ol,h1+ul,h2+ol,h2+ul,p+ol,p+ul{margin-top:-.428571em}blockquote{border-left:2px solid #bfbfbf;margin-bottom:1.4285em;margin-left:1.4285em;margin-top:1.4285em;padding-left:.714285em}code,pre{font-family:Monaco,Courier,monospace}cite{font-style:italic}table{font-size:1em}td,th{padding:.2em 2em .2em 0;text-align:left;vertical-align:top}button.en-ignore{margin-bottom:1em}.highlight{background:#c9f2d0;border:1px solid #62eb92}.Decrypted{background-color:#f7f7f7;padding:5px}.Decrypted .Header{color:#404040;font-family:gotham,helvetica,arial,sans-serif;font-size:11px;padding-bottom:5px}.Decrypted .Body{background-color:#fff;padding:5px}.canvas-container{background:url(/redesign/global/img/loading-spinner.gif) center center no-repeat #fff;border:1px solid #cacaca;margin-bottom:10px}",
-                            keep_styles: false,
-                            setup: function (ed) {
-                                ed.on('FullscreenStateChanged', function (e) {
-                                    lib.fullscreen = e.state;
-                                    $(document).trigger('tinymceFullScreen', {
-                                        type: 'tinymceFullScreen',
-                                        message: 'fullscreen toogle',
-                                        time: new Date(),
-                                        state: e.state,
-                                        tinyMceId: id
-                                    });
-                                });
-                                ed.addButton('mysave', {
-                                    title: 'Save',
-                                    onclick: function () {
-                                        $(document).trigger('tinymceSave', {
-                                            type: 'tinymceSave',
-                                            message: 'save',
-                                            time: new Date(),
-                                            tinyMceId: id
-                                        });
-                                    }
-                                });
-                                ed.addButton('myexit', {
-                                    title: 'Close',
-                                    onclick: function () {
-                                        $(document).trigger('tinymceCancel', {
-                                            type: 'tinymceCancel',
-                                            message: 'cancel',
-                                            time: new Date(),
-                                            tinyMceId: id
-                                        });
-                                    }
+                            }
+                        });
+                        ed.addButton('myexit', {
+                            title: 'Close',
+                            onclick: function () {
+                                $(document).trigger('tinymceCancel', {
+                                    type: 'tinymceCancel',
+                                    message: 'cancel',
+                                    time: new Date(),
+                                    tinyMceId: id
                                 });
                             }
-                        };
-                        tinyMceInit.plugins = (tinyMceInit.plugins + ' -lists').trim();
-                        if (loadTable) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -table').trim();
-                        }
-                        if (loadCharmap) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -charmap').trim();
-                        }
-                        if (loadCode) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -code').trim();
-                            tinyMceInit.code_dialog_width = parseInt(GM_config.get('tinymcePluginCodeWidth'), 10);
-                            tinyMceInit.code_dialog_height = parseInt(GM_config.get('tinymcePluginCodeHeight'), 10);
-                        }
-                        if (loadFullscreen) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -fullscreen').trim();
-                        }
-                        if (loadEmoticons) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -emoticons').trim();
-                        }
-                        if (loadWordcount) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -wordcount').trim();
-                        }
-                        if (loadPrint) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -print').trim();
-                        }
-                        if (loadPreview) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -preview').trim();
-                        }
-                        if (loadInsertdatetime) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -insertdatetime').trim();
-                        }
-                        if (loadImage) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -image').trim();
-                        }
-                        if (loadSearchreplace) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -searchreplace').trim();
-                        }
-                        if (loadAdvlist) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -advlist').trim();
-                        }
-                        if (loadBbcode) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -bbcode').trim();
-                        }
-                        if (loadVisualblocks) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -visualblocks').trim();
-                        }
-                        if (loadVisualchars) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -visualchars').trim();
-                        }
-                        if (loadHilite) {
-                            tinyMceInit.plugins = (tinyMceInit.plugins + ' -hilite').trim();
-                        }
-                        tinyMceInit.external_plugins = tinyMceExternalPlugins;
+                        });
+                    }
+                };
+                tinyMceInit.plugins = (tinyMceInit.plugins + ' -lists').trim();
+                if (loadTable) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -table').trim();
+                }
+                if (loadCharmap) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -charmap').trim();
+                }
+                if (loadCode) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -code').trim();
+                    tinyMceInit.code_dialog_width = parseInt(GM_config.get('tinymcePluginCodeWidth'), 10);
+                    tinyMceInit.code_dialog_height = parseInt(GM_config.get('tinymcePluginCodeHeight'), 10);
+                }
+                if (loadFullscreen) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -fullscreen').trim();
+                }
+                if (loadEmoticons) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -emoticons').trim();
+                }
+                if (loadWordcount) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -wordcount').trim();
+                }
+                if (loadPrint) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -print').trim();
+                }
+                if (loadPreview) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -preview').trim();
+                }
+                if (loadInsertdatetime) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -insertdatetime').trim();
+                }
+                if (loadImage) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -image').trim();
+                }
+                if (loadSearchreplace) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -searchreplace').trim();
+                }
+                if (loadAdvlist) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -advlist').trim();
+                }
+                if (loadBbcode) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -bbcode').trim();
+                }
+                if (loadVisualblocks) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -visualblocks').trim();
+                }
+                if (loadVisualchars) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -visualchars').trim();
+                }
+                if (loadHilite) {
+                    tinyMceInit.plugins = (tinyMceInit.plugins + ' -hilite').trim();
+                }
+                tinyMceInit.external_plugins = tinyMceExternalPlugins;
 
-                        tinymce.init(tinyMceInit);
-                    }
-                    if (gmTinyMceTimerCounter >= 20) {
-                        Log.message(Settings.shortName + ': reached max value for finding TinyMCE Lib');
-                        clearInterval(gmTinyMceTimer);
-                    }
-                }, 500);
+                tinymce.init(tinyMceInit);
 
             };
         }
-        return TinyMceWork;
+        return TinymceWork;
     }());
     var Evernote =  (function () {
         function Evernote() {
@@ -565,55 +561,22 @@
             this.noteSelector = '';
             this.fullScreen = false;
             this.scripts = [];
-            this.TMCE = new TinyMceWork();
+            this.TMCE = new TinymceWork();
             this.init = function () {
-                if (typeof (tinymce__default) !== 'undefined') {
-                    Settings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
-                }
-                var tinyMceVer = Settings.tinyMceVersion;
-                Log.message(Settings.shortName + ': tinyMCE Version', tinyMceVer);
-                var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
-                var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
-                if (document.addEventListener) { 
-
-                    document.addEventListener('bbScriptLoaded', _this.onBbScriptLoaded);
-
-                    document.addEventListener('allScriptsLoaded', _this.onAllScriptsLoaded);
-                }
-                else {
-
-                }
-                if (typeof (jQuery) === 'undefined') {
-
-                    _this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
-                }
-                else {
-
-                }
-                if (typeof (jQuery().xpath) === 'undefined') {
-
-                    _this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
-                }
-                else {
-
-                }
-
-                _this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
-
-                _this.addScript('hilite-icons-css', '//api.bigbytetech.ca/js/hilite.css', 'csslink');
-                if (typeof (tinymce__default) === 'undefined') {
-
-                    _this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
-                }
-                else {
-
-                }
-
-                _this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
-
-                _this.addScript('lightboxcss', _this.lightBoxCss, 'css', undefined, { tag: 'body' });
-                _this.loadScripts();
-
+                var gmTinyMceTimerCounter = 0;
+                var gmTinyMceTimer = setInterval(function () {
+                    gmTinyMceTimerCounter++;
+                    Log.message(Settings.shortName + ': Evernote:init: try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
+                    if (typeof (tinymce__default) !== 'undefined') {
+                        clearInterval(gmTinyMceTimer);
+                        Log.message(Settings.shortName + ': Evernote:init: found tinymce library');
+                        _this.startWork();
+                    }
+                    if (gmTinyMceTimerCounter >= 20) {
+                        Log.message(Settings.shortName + ': Sorry, reached max value for finding tinymce.');
+                        clearInterval(gmTinyMceTimer);
+                    }
+                }, 500);
             };
             this.onAllScriptsLoaded = function (e) {
 
@@ -708,6 +671,54 @@
                 }
 
             };
+            this.startWork = function () {
+
+                if (typeof (tinymce__default) !== 'undefined') {
+                    Settings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
+                }
+                var tinyMceVer = Settings.tinyMceVersion;
+                Log.message(Settings.shortName + ': tinyMCE Version', tinyMceVer);
+                var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
+                var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
+                if (document.addEventListener) { 
+
+                    document.addEventListener('bbScriptLoaded', _this.onBbScriptLoaded);
+
+                    document.addEventListener('allScriptsLoaded', _this.onAllScriptsLoaded);
+                }
+                else {
+
+                }
+                if (typeof (jQuery) === 'undefined') {
+
+                    _this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
+                }
+                else {
+
+                }
+                if (typeof (jQuery().xpath) === 'undefined') {
+
+                    _this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
+                }
+                else {
+
+                }
+
+                _this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
+                if (typeof (tinymce__default) === 'undefined') {
+
+                    _this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
+                }
+                else {
+
+                }
+
+                _this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
+
+                _this.addScript('lightboxcss', _this.lightBoxCss, 'css', undefined, { tag: 'body' });
+                _this.loadScripts();
+
+            };
             this.addScript = function (sName, sSrc, objType, objTestMethod, args) {
 
                 var newItm = {
@@ -793,16 +804,15 @@
             };
             this.addToolbarButton = function () {
 
-                var lib = _this;
                 var gmCounter = 0;
                 var gmTimer = setInterval(function () {
                     gmCounter++;
-                    Log.message(Settings.shortName + ': try no. ' + gmCounter);
-                    var objElement = $(document.body).xpath(lib.btnSelector);
+                    Log.message(Settings.shortName + ": try no. " + gmCounter + " to find element for button pacement");
+                    var objElement = $(document.body).xpath(_this.btnSelector);
                     if (objElement.length) {
-                        Log.message(Settings.shortName + ": Found element for button placement");
                         clearInterval(gmTimer);
-                        objElement.append(lib.createToolbarHtml());
+                        Log.message(Settings.shortName + ": Found element for button placement on " + gmCounter + " try");
+                        objElement.append(_this.createToolbarHtml());
                         $(document).trigger('editBtnAdded', {
                             type: 'editBtnAdded',
                             message: 'Button Added',

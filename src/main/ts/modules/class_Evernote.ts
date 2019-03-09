@@ -16,8 +16,9 @@ import { Settings as appSettings } from './class_Settings';
 import { UserScriptUtil as usUtil } from './class_UserscriptUtil';
 import { Util as util } from './class_util';
 import { Log } from './class_Log';
-import { TinyMceWork } from './class_Iinymce';
+import { TinymceWork } from './class_Iinymce';
 import tinymce from 'tinymce';
+
 // import { IScriptItem } from './Interfaces';
 import {
     IScriptItem,
@@ -32,7 +33,7 @@ export class Evernote {
     private noteSelector: string = '';
     private fullScreen: boolean = false;
     private scripts: IKeyAny = [];
-    private TMCE: TinyMceWork = new TinyMceWork();
+    private TMCE: TinymceWork = new TinymceWork();
 
     public constructor() {
         // tslint:disable-next-line
@@ -40,103 +41,25 @@ export class Evernote {
     }
 
     public init = (): void => {
-        // @debug start
-        let methodName: string = '';
-        // Higher price to check using enumes each time so capture the values here
-        const appDebugLevel = appSettings.debugLevel;
-        const levelDebug = DebugLevel.Debug;
-
-        if (appDebugLevel >= levelDebug) {
-            methodName = 'Evernote.init';
-            Log.debug(`${methodName}: Entered in init.`);
-        }
-        // @debug end
-        /*  if (window.top !== window.self) {
-             return;
-         } */
-        if (typeof (tinymce) !== 'undefined') {
-            appSettings.tinyMceVersion = tinymce.EditorManager.majorVersion + '.' + tinymce.EditorManager.minorVersion;
-        }
-
-        const tinyMceVer: string = appSettings.tinyMceVersion;
-        Log.message(appSettings.shortName + ': tinyMCE Version', tinyMceVer);
-
-        // var pluginSrc = '//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery-1.8.0.min.js';
-        const pluginSrc: string = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
-        // https://github.com/ilinsky/jquery-xpath/
-        const pluginXpathJq: string = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
-
-        if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: bbScriptLoaded`); }
-            // @debug end
-            document.addEventListener('bbScriptLoaded', this.onBbScriptLoaded);
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: allScriptsLoaded`); }
-            // @debug end
-            document.addEventListener('allScriptsLoaded', this.onAllScriptsLoaded);
-        } else {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Failed adding Event Listener: allScriptsLoaded`); }
-            // @debug end
-        }
-
-        if (typeof (jQuery) === 'undefined') {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery link: ${pluginXpathJq}`); }
-            // @debug end
-            this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
-        } else {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery already loaded`); }
-            // @debug end
-        }
-        if (typeof (jQuery().xpath) === 'undefined') {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery xpath link: ${pluginXpathJq}`); }
-            // @debug end
-            this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
-        } else {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery xpath already loaded`); }
-            // @debug end
-        }
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to icons-css`); }
-        // @debug end
-        this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to hilite-icons-css`); }
-        // @debug end
-        this.addScript('hilite-icons-css', '//api.bigbytetech.ca/js/hilite.css', 'csslink');
-        // this.addScript('code-css','shi/css/shi_default.min.css','csslink');
-        // tiny mce
-        if (typeof (tinymce) === 'undefined') {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Could not find tinymce. Attempting to add via link injection.`); }
-            // @debug end
-            this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
-        } else {
-            // @debug start
-            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Found tinymce`); }
-            // @debug end
-        }
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add tinyMceCss`); }
-        // @debug end
-        this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add lightboxcss`); }
-        // @debug end
-        this.addScript('lightboxcss', this.lightBoxCss, 'css', undefined, { tag: 'body' });
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Calling ${methodName} loadScripts`); }
-        // @debug end
-        // this.addScript('tinymce_advanced_theme', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/themes/advanced/theme.min.js','linkedjs') // no checking required
-        this.loadScripts();
-        // @debug start
-        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
-        // @debug end
+        // returning a boolean value from this method on success or failure does not work due to false would be returned
+        // before the setInterval could run.
+        let gmTinyMceTimerCounter: number = 0;
+        const gmTinyMceTimer = setInterval(() => {
+            gmTinyMceTimerCounter++;
+            Log.message(appSettings.shortName + ': Evernote:init: try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
+            if (typeof (tinymce) !== 'undefined') {
+                // tinyMceTimer.dispose();
+                clearInterval(gmTinyMceTimer);
+                Log.message(appSettings.shortName + ': Evernote:init: found tinymce library');
+                this.startWork();
+            }
+            // set a limit to how many time we check for tinymce
+            if (gmTinyMceTimerCounter >= 20) {
+                Log.message(appSettings.shortName + ': Sorry, reached max value for finding tinymce.');
+                // tinyMceTimer.dispose();
+                clearInterval(gmTinyMceTimer);
+            }
+        }, 500);
     }
 
     /*
@@ -346,6 +269,102 @@ export class Evernote {
         // @debug end
     }
 
+    private startWork = (): void => {
+        // @debug start
+        let methodName: string = '';
+        // Higher price to check using enumes each time so capture the values here
+        const appDebugLevel = appSettings.debugLevel;
+        const levelDebug = DebugLevel.Debug;
+
+        if (appDebugLevel >= levelDebug) {
+            methodName = 'Evernote.startWork';
+            Log.debug(`${methodName}: entered`);
+        }
+        // @debug end
+        if (typeof (tinymce) !== 'undefined') {
+            appSettings.tinyMceVersion = tinymce.EditorManager.majorVersion + '.' + tinymce.EditorManager.minorVersion;
+        }
+
+        const tinyMceVer: string = appSettings.tinyMceVersion;
+        Log.message(appSettings.shortName + ': tinyMCE Version', tinyMceVer);
+
+        // var pluginSrc = '//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery-1.8.0.min.js';
+        const pluginSrc: string = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
+        // https://github.com/ilinsky/jquery-xpath/
+        const pluginXpathJq: string = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
+
+        if (document.addEventListener) { // For all major browsers, except IE 8 and earlier
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: bbScriptLoaded`); }
+            // @debug end
+            document.addEventListener('bbScriptLoaded', this.onBbScriptLoaded);
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding Event Listener: allScriptsLoaded`); }
+            // @debug end
+            document.addEventListener('allScriptsLoaded', this.onAllScriptsLoaded);
+        } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Failed adding Event Listener: allScriptsLoaded`); }
+            // @debug end
+        }
+
+        if (typeof (jQuery) === 'undefined') {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery link: ${pluginXpathJq}`); }
+            // @debug end
+            this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
+        } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery already loaded`); }
+            // @debug end
+        }
+        if (typeof (jQuery().xpath) === 'undefined') {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery xpath link: ${pluginXpathJq}`); }
+            // @debug end
+            this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
+        } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery xpath already loaded`); }
+            // @debug end
+        }
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to icons-css`); }
+        // @debug end
+        this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to hilite-icons-css`); }
+        // @debug end
+        // this.addScript('code-css','shi/css/shi_default.min.css','csslink');
+        // tiny mce
+        if (typeof (tinymce) === 'undefined') {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Could not find tinymce. Attempting to add via link injection.`); }
+            // @debug end
+            this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
+        } else {
+            // @debug start
+            if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Found tinymce`); }
+            // @debug end
+        }
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add tinyMceCss`); }
+        // @debug end
+        this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add lightboxcss`); }
+        // @debug end
+        this.addScript('lightboxcss', this.lightBoxCss, 'css', undefined, { tag: 'body' });
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Calling ${methodName} loadScripts`); }
+        // @debug end
+        // this.addScript('tinymce_advanced_theme', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/themes/advanced/theme.min.js','linkedjs') // no checking required
+        this.loadScripts();
+        // @debug start
+        if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+        // @debug end
+    }
+
     /*
      * Adds script item to the BIGBYTE.USERSCRIPT.EVERNOTE.scripts array
      * these are scripts tha will be loaded when the BIGBYTE.USERSCRIPT.EVERNOTE.init() is fired
@@ -519,18 +538,17 @@ export class Evernote {
             Log.debug(`${methodName}: Entered.`);
         }
         // @debug end
-        const lib = this;
         let gmCounter: number = 0;
         const gmTimer = setInterval((): void => {
             gmCounter++;
-            Log.message(appSettings.shortName + ': try no. ' + gmCounter);
+            Log.message(`${appSettings.shortName}: try no. ${gmCounter} to find element for button pacement`);
             // tslint:disable-next-line
-            const objElement: any = $(document.body).xpath(lib.btnSelector);
+            const objElement: any = $(document.body).xpath(this.btnSelector);
             if (objElement.length) {
-                Log.message(`${appSettings.shortName}: Found element for button placement`);
-                // add my own toolbar button
                 clearInterval(gmTimer);
-                objElement.append(lib.createToolbarHtml());
+                Log.message(`${appSettings.shortName}: Found element for button placement on ${gmCounter} try`);
+                // add my own toolbar button
+                objElement.append(this.createToolbarHtml());
                 $(document).trigger('editBtnAdded', {
                     type: 'editBtnAdded',
                     message: 'Button Added',

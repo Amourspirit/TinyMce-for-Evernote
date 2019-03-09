@@ -14,9 +14,11 @@ const validateIfTop = (): boolean => {
 
 if (validateIfTop()) {
     Log.message(appSettings.shortName + ': Start loading...');
-    const en = new Evernote();
+    const en: Evernote = new Evernote();
     en.init();
 
+    // better to load GM_Config event if the script failed to load. The failure may have been due to a user tweak.
+    // by loading GM_Config the user can change the settings even if the script fails to load.
     const gConfig: GmConfig = new GmConfig();
     gConfig.init();
     if (typeof GM_registerMenuCommand === 'function') {
