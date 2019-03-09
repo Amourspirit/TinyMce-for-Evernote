@@ -1,14 +1,14 @@
 export enum PriorityLevel {
-    None,
-    Low,
-    Med,
-    High,
+  None,
+  Low,
+  Med,
+  High,
 }
 
 export enum DebugLevel {
-    None,
-    Debug,
-    Error,
-    Warn,
-    Info,
+  None,
+  Debug,
+  Error,
+  Warn,
+  Info,
 }

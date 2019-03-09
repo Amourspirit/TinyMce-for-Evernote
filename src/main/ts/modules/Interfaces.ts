@@ -1,32 +1,32 @@
 export interface IScriptItem {
-    name: string;
-    src: string;
-    type: string;
-    testMethod: string;
-    text: string;
-    timeout: number;
-    loaded: boolean;
-    count: number;
-    tag: string;
+  name: string;
+  src: string;
+  type: string;
+  testMethod: string;
+  text: string;
+  timeout: number;
+  loaded: boolean;
+  count: number;
+  tag: string;
 }
 export interface IKeyAny {
-    [key: string]: any;
+  [key: string]: any;
 }
 export interface ITinyMceExternalPlugins {
-    textcolor: string;
-    colorpicker: string;
-    nonbreaking: string;
-    hr: string;
-    link: string;
-    [key: string]: any;
+  textcolor: string;
+  colorpicker: string;
+  nonbreaking: string;
+  hr: string;
+  link: string;
+  [key: string]: any;
 }
 
 export interface ITriggerEvent {
-    type: string;
-    tinyMceId: string;
-    message?: string;
-    time: Date;
-    state?: boolean;
+  type: string;
+  tinyMceId: string;
+  message?: string;
+  time: Date;
+  state?: boolean;
 }
 
 /**
@@ -52,7 +52,7 @@ export interface ITriggerEvent {
 ```
  **/
 export interface IDisposableAsync {
-    dispose(): Promise<void>;
+  dispose(): Promise<void>;
 }
 
 /**
@@ -60,5 +60,5 @@ export interface IDisposableAsync {
  *  @see {@link  https://gist.github.com/dsherret/cf5d6bec3d0f791cef00 }
  **/
 export interface IDisposable {
-    dispose(): void;
+  dispose(): void;
 }
