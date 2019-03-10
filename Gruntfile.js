@@ -79,7 +79,7 @@ module.exports = function (grunt) {
                     ) {
                         file = file
                             .replace(/"/g, '\\"')
-                            .replace(/'/g, '\\"')
+                            .replace(/'/g, "\\'")
                             .replace(/\r\n|\n/g, "\\n");
                     }
                 }
