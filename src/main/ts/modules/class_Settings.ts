@@ -7,7 +7,7 @@ export class Settings {
   public static debugLevel: DebugLevel = DebugLevel.Info;
   public static readonly menuName: string = 'TinyMce Options';
   public static tinyMceVersion: string = '4.1.0';
-
+  public static fullScreenRealId = 'tinymce-real-fs';
   private constructor() {
   }
 }

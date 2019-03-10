@@ -21,4 +21,34 @@ export class Util {
     }
     return result || '';
   }
+/**
+ * Cancels an event from taking place.
+ * @param e the event to cancle
+ * @see {@link https://webdevelopment2.com/the-secret-of-cancelling-and-stopping-events-using-javascript/ }
+ */
+  public static cancelEvent = (e: any): void => {
+    if (!e) { e = window.event; }
+    if (e.preventDefault) {
+      e.preventDefault();
+    } else {
+      e.returnValue = false;
+    }
+  }
+
+  /**
+   * Stops an event from taking place.
+   * @param e the event to stop
+   * @see {@link https://webdevelopment2.com/the-secret-of-cancelling-and-stopping-events-using-javascript/ }
+   * stopEvent, well stops the event. Seriously, it stops the event from being called by other background elements.
+   * Many elements may use the same event called by just one.
+   * So stopping it here ensures that it doesn’t propagate * to the background elements. cancelEvent squashes the browser’s default behavior.
+   */
+  public static stopEvent = (e: any): void => {
+    if (!e) { e = window.event; }
+    if (e.stopPropagation) {
+      e.stopPropagation();
+    } else {
+      e.cancelBubble = true;
+    }
+  }
 }

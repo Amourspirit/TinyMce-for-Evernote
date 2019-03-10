@@ -56,6 +56,7 @@
         Settings.debugLevel = DebugLevel.Info;
         Settings.menuName = 'TinyMce Options';
         Settings.tinyMceVersion = '4.1.0';
+        Settings.fullScreenRealId = 'tinymce-real-fs';
         return Settings;
     }());
 
@@ -323,6 +324,28 @@
             }
             return result || '';
         };
+        Util.cancelEvent = function (e) {
+            if (!e) {
+                e = window.event;
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            else {
+                e.returnValue = false;
+            }
+        };
+        Util.stopEvent = function (e) {
+            if (!e) {
+                e = window.event;
+            }
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            else {
+                e.cancelBubble = true;
+            }
+        };
         return Util;
     }());
     var TinymceWork =  (function () {
@@ -559,6 +582,7 @@
             this.btnSelector = '';
             this.iframeSelector = '';
             this.noteSelector = '';
+            this.tinymceDivId = '';
             this.fullScreen = false;
             this.scripts = [];
             this.TMCE = new TinymceWork();
@@ -657,6 +681,7 @@
             this.onTinyMceFulllscreen = function (e, data) {
 
                 if (data.tinyMceId === Settings.tinyId) {
+                    _this.getTinymceDivId();
                     _this.fullScreen = e.state;
                     if (data.state) {
                         if ($('#tinybox').hasClass('gmbox-window')) {
@@ -842,7 +867,9 @@
                 var html = '<div class="gmbackdrop"></div>';
                 html += '<div id="tinybox" class="gmbox gmbox-window"><div class="gmclose"><i class="fi-x" style="color:black"></i></div>';
                 html += title;
+                html += "<div id=\"" + Settings.fullScreenRealId + "\">";
                 html += '<textarea id="' + id + '" rows="18" cols="68"></textarea>';
+                html += '</div>';
                 html += '</div></div>';
                 return html;
             };
@@ -902,6 +929,18 @@
                         return tn;
                     };
                 }
+            };
+            this.getTinymceDivId = function () {
+                if (_this.tinymceDivId.length > 0) {
+                    return _this.tinymceDivId;
+                }
+
+                var div = $("div#" + Settings.fullScreenRealId + " :first-child");
+                if (div.length > 0) {
+                    _this.tinymceDivId = div.attr('id') + '';
+                }
+
+                return _this.tinymceDivId;
             };
             this.lightBoxCss = ".gmbackdrop,.gmbox{position:absolute;display:none}.gmbackdrop{top:0;left:0;width:100%;height:100%;background:#000;opacity:0;z-index:201}.gmbox{background:#fff;z-index:202;padding:10px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-moz-box-shadow:0 0 5px #444;-webkit-box-shadow:0 0 5px #444;box-shadow:0 0 5px #444}.gmclose{float:right;margin-right:6px;cursor:pointer}.mce-panel{border:none}div.gmbox .mce-panel{border:0 solid rgba(0,0,0,.2)}div.mce-tinymce.mce-container.mce-panel{margin-top:2em}div.mce-tinymce.mce-container.mce-panel.mce-fullscreen{margin-top:0}#gm-edit-btn{font-size:1.6em;color:#ababab;cursor:pointer}#gm-edit-btn:hover{color:#2dbe60}.gmbox-window{top:50%;left:50%;transform:translate(-50%,-50%);position:absolute}#gm-tb{display:inline-block;position:absolute}";
         }
