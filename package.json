@@ -2,7 +2,7 @@
   "_name": "TinyMce_for_Evernote",
   "_debuglevel": 4,
   "name": "tinymce-for-evernote",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.",
   "main": "TinyMce_for_Evernote.user.js",
   "scripts": {

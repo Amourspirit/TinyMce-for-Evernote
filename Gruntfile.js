@@ -28,6 +28,8 @@ module.exports = function (grunt) {
      * @return {String} fileContent
      *
      * @see https://gist.github.com/purtuga/85ee689f0d3d90484ce3
+     * @see https://gist.github.com/Amourspirit/7024ecc4420c4c925c742d7b5f26d939
+     * @see https://www.regexpal.com/?fam=108265
      *
      * @example
      *
@@ -57,52 +59,36 @@ module.exports = function (grunt) {
             //
             //      asJsString
             //
-            var re = /(?:(?:\/\/)|(?:<\!\-\-)|(?:\/\*)) {0,}BUILD_INCLUDE\(['"](.*)['"]\)(?:\[(.*)\])?/i,
+            var re = /(?:(?:\/\/)|(?:<\!\-\-)|(?:\/\*))[ \t]*BUILD_INCLUDE\(['"](.*)['"]\)(?:\[(.*)\])?(?:(?:[ \t]*\-\->)|(?:[ \t]*\*\/))?/i,
                 match, file, fileIncludeOptions;
 
-            while ((match = re.exec(fileContent)) !== null) {
-
+                while ((match = re.exec(fileContent)) !== null) {
                 grunt.log.write(".");
                 grunt.verbose.writeln("    Match array: " + match);
-
                 file = grunt.template.process(match[1]);
-
                 grunt.verbose.writeln("    File to embed: " + file);
-
                 file = grunt.file.read(file);
-
                 // If options were set, then parse them
                 if (match[2]) {
-
                     fileIncludeOptions = match[2].split(',');
-
                     // If option: asJsString
                     if (
                         fileIncludeOptions.some(function (option) {
                             return String(option).toLowerCase() === "asjsstring";
                         })
                     ) {
-
                         file = file
-                            .replace(/\"/g, '\\x22')
-                            .replace(/\'/g, '\\x27')
+                            .replace(/"/g, '\\"')
+                            .replace(/'/g, '\\"')
                             .replace(/\r\n|\n/g, "\\n");
-
                     }
-
-
                 }
-
                 fileContent = fileContent.replace(match[0], function () { return file; });
-
             }
             grunt.log.writeln("");
             return fileContent;
-
         }
-
         return fileContent;
-
     } //end: includeFile()
 
     grunt.initConfig({

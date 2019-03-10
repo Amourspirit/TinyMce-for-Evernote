@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.0.2
+// @version         3.0.3
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -858,7 +858,7 @@
                 return html;
             };
             this.createToolbarEditBtn = function () {
-                var html = "<div id=\x22gm-edit-btn\x22 style=\x22display:inline-block;\x22 name=\x22gm-edit-btn\x22 class=\x22gm-btn\x22><i class=\x22fi-page-edit\x22></i></div>";
+                var html = "<div id=\"gm-edit-btn\" style=\"display:inline-block;\" name=\"gm-edit-btn\" class=\"gm-btn\"><i class=\"fi-page-edit\"></i></div>";
                 return html;
             };
             this.getLightBoxHtml = function (id, title) {

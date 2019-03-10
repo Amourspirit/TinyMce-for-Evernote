@@ -201,7 +201,7 @@ export class TinymceWork {
       // external_plugins: null,
       content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
       // tslint:disable-next-line
-      content_style: "//BUILD_INCLUDE('./scratch/css/tinymce-content.min.css')",
+      content_style: "// BUILD_INCLUDE('./scratch/css/tinymce-content.min.css')",
       // valid_elements: 'ol ul',
       // extended_valid_elements: 'ol[|class|style] ul[class|style]',
       keep_styles: false,

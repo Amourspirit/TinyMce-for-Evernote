@@ -570,7 +570,7 @@ export class Evernote {
   }
   private createToolbarHtml = (): string => {
     // tslint:disable-next-line
-    const css = "//BUILD_INCLUDE('./scratch/text/buttonstyle.txt')";
+    const css = "// BUILD_INCLUDE('./scratch/text/buttonstyle.txt')";
     const btnHtml: string = this.createToolbarEditBtn();
     let html: string = '';
     html += `<div id="gm-tb" title="Edit with TinyMCE" style="${css}">${btnHtml}</div>`;
@@ -578,7 +578,7 @@ export class Evernote {
   }
   private createToolbarEditBtn = (): string => {
     // tslint:disable-next-line
-    const html: string = "//BUILD_INCLUDE('./scratch/html/gm-edit-btn.html')[asJsString]";
+    const html: string = "// BUILD_INCLUDE('./scratch/html/gm-edit-btn.html')[asJsString]";
     return html;
   }
   private getLightBoxHtml = (id?: string, title?: string): string => {
