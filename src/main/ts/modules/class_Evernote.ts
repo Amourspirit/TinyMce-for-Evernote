@@ -12,7 +12,7 @@
 declare const GM_config: any;
 import $ from 'jquery';
 import { BigbyteLoader as Loader } from './class_LoadScript';
-import { Settings as appSettings } from './class_Settings';
+import { appSettings } from './class_Settings';
 import { UserScriptUtil as usUtil } from './class_UserscriptUtil';
 import { Util as util } from './class_util';
 import { Log } from './class_Log';

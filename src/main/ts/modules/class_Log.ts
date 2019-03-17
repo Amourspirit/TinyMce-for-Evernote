@@ -1,4 +1,4 @@
-import { Settings as appSettings } from './class_Settings';
+import { appSettings } from './class_Settings';
 import { DebugLevel } from './enums';
 export class Log {
 

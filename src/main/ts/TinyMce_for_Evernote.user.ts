@@ -1,6 +1,6 @@
 import { Evernote } from './modules/class_Evernote';
 import { Log } from './modules/class_Log';
-import { Settings as appSettings } from './modules/class_Settings';
+import { appSettings } from './modules/class_Settings';
 import { GmConfig } from './modules/class_GmConfig';
 
 // tinymce.EditorManager.editors[0].id; will get id of Evernote's tinymce editor.

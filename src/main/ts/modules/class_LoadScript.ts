@@ -1,6 +1,6 @@
 import { IScriptItem } from './Interfaces';
 // import { ScriptItem } from './class_ScriptItem';
-import { Settings as appSettings } from './class_Settings';
+import { appSettings } from './class_Settings';
 import { Log as Log } from './class_Log';
 import { DebugLevel } from './enums';
 

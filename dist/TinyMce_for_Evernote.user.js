@@ -47,18 +47,15 @@
         DebugLevel[DebugLevel["info"] = 4] = "info";
     })(DebugLevel || (DebugLevel = {}));
 
-    var Settings =  (function () {
-        function Settings() {
-        }
-        Settings.tinyId = 'gminput';
-        Settings.shortName = 'TMCEE';
-        Settings.preKey = 'tmceen_';
-        Settings.debugLevel = DebugLevel.info;
-        Settings.menuName = 'TinyMce Options';
-        Settings.tinyMceVersion = '4.1.0';
-        Settings.fullScreenRealId = 'tinymce-real-fs';
-        return Settings;
-    }());
+    var appSettings = {
+        tinyId: 'gminput',
+        shortName: 'TMCEE',
+        preKey: 'tmceen_',
+        debugLevel: DebugLevel.info,
+        menuName: 'TinyMce Options',
+        tinyMceVersion: '4.1.0',
+        fullScreenRealId: 'tinymce-real-fs'
+    };
 
     var Log =  (function () {
         function Log() {
@@ -68,7 +65,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.info) {
+            if (appSettings.debugLevel > DebugLevel.info) {
                 return;
             }
             console.log.apply(console, [msg].concat(optionalParams));
@@ -78,7 +75,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.warn) {
+            if (appSettings.debugLevel > DebugLevel.warn) {
                 return;
             }
             console.warn.apply(console, [msg].concat(optionalParams));
@@ -88,7 +85,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.error) {
+            if (appSettings.debugLevel > DebugLevel.error) {
                 return;
             }
             console.error.apply(console, [msg].concat(optionalParams));
@@ -98,20 +95,20 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.debug) {
+            if (appSettings.debugLevel > DebugLevel.debug) {
                 return;
             }
-            console.log.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
+            console.log.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(optionalParams));
         };
         Log.debugWarn = function (msg) {
             var optionalParams = [];
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.debug) {
+            if (appSettings.debugLevel > DebugLevel.debug) {
                 return;
             }
-            console.warn.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
+            console.warn.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(optionalParams));
         };
         return Log;
     }());
@@ -139,7 +136,7 @@
         };
         BigbyteLoader.addJsNodeToBody = function (text, sUrl, funcToRun, runOnLoad) {
             var methodName = 'addJsNodeToBody';
-            var appDebugLevel = Settings.debugLevel;
+            var appDebugLevel = appSettings.debugLevel;
             var levelDebug = DebugLevel.debug;
             if (appDebugLevel >= levelDebug) {
                 Log.debug(methodName + ": Entered.");
@@ -223,7 +220,7 @@
                     scriptItem.count++;
                     var maxCount = scriptItem.timeout * 10; 
                     if (scriptItem.count > maxCount) {
-                        Log.error(Settings.shortName + ': unable to load script, Aborting: ', scriptItem.src);
+                        Log.error(appSettings.shortName + ': unable to load script, Aborting: ', scriptItem.src);
                         return;
                     }
                     var testmethod = void 0;
@@ -233,7 +230,7 @@
                     }
                     catch (e) {
                         testmethod = 'undefined';
-                        Log.error(Settings.shortName + ": loadScript: Error running Eval:", e);
+                        Log.error(appSettings.shortName + ": loadScript: Error running Eval:", e);
                     }
                     if (typeof (testmethod) === 'undefined') {
                         if (!scriptItem.loaded) {
@@ -334,8 +331,8 @@
             this.fullscreen = false;
             this.gmConfig = GM_config;
             this.init = function () {
-                var ver = Settings.tinyMceVersion;
-                var id = Settings.tinyId;
+                var ver = appSettings.tinyMceVersion;
+                var id = appSettings.tinyId;
                 tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
                 var loadTable = _this.gmConfig.get('tinymcePluginTable');
                 if (loadTable) {
@@ -550,20 +547,20 @@
                 var gmTinyMceTimerCounter = 0;
                 var gmTinyMceTimer = setInterval(function () {
                     gmTinyMceTimerCounter++;
-                    Log.message(Settings.shortName + ': Evernote:init: try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
+                    Log.message(appSettings.shortName + ': Evernote:init: try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
                     if (typeof (tinymce__default) !== 'undefined') {
                         clearInterval(gmTinyMceTimer);
-                        Log.message(Settings.shortName + ': Evernote:init: found tinymce library');
+                        Log.message(appSettings.shortName + ': Evernote:init: found tinymce library');
                         _this.startWork();
                     }
                     if (gmTinyMceTimerCounter >= 20) {
-                        Log.message(Settings.shortName + ': Sorry, reached max value for finding tinymce.');
+                        Log.message(appSettings.shortName + ': Sorry, reached max value for finding tinymce.');
                         clearInterval(gmTinyMceTimer);
                     }
                 }, 500);
             };
             this.onAllScriptsLoaded = function (e) {
-                Log.message(Settings.shortName + ': all scripts have been loaded.');
+                Log.message(appSettings.shortName + ': all scripts have been loaded.');
                 _this.btnSelector = '//*[@id="gwt-debug-NoteAttributesView-root"]/div[1]/div[1]';
                 if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
                     _this.iframeSelector = '.RichTextArea-entinymce';
@@ -590,15 +587,15 @@
                 $('.gmclose').click(function () {
                     $(document).trigger('tinymceCancel', {
                         message: 'cancel',
-                        tinyMceId: Settings.tinyId
+                        tinyMceId: appSettings.tinyId
                     });
                 });
             };
             this.onTinymceInit = function (e) {
-                Log.message(Settings.shortName + ': Tiny Mce Init was triggered');
+                Log.message(appSettings.shortName + ': Tiny Mce Init was triggered');
             };
             this.onTinymceSave = function (e, data) {
-                if (data.tinyMceId === Settings.tinyId) {
+                if (data.tinyMceId === appSettings.tinyId) {
                     _this.save();
                     _this.lightBoxReset();
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
@@ -609,7 +606,7 @@
                 }
             };
             this.onTinymceCancel = function (e, data) {
-                if (data.tinyMceId === Settings.tinyId) {
+                if (data.tinyMceId === appSettings.tinyId) {
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
                     if (!ed) {
                         Log.error(methodName + ": Editor was not found and is null. Params e, data", e, data);
@@ -628,7 +625,7 @@
                 }
             };
             this.onTinyMceFulllscreen = function (e, data) {
-                if (data.tinyMceId === Settings.tinyId) {
+                if (data.tinyMceId === appSettings.tinyId) {
                     _this.getTinymceDivId();
                     _this.fullScreen = e.state;
                     if (data.state) {
@@ -645,10 +642,10 @@
             };
             this.startWork = function () {
                 if (typeof (tinymce__default) !== 'undefined') {
-                    Settings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
+                    appSettings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
                 }
-                var tinyMceVer = Settings.tinyMceVersion;
-                Log.message(Settings.shortName + ': tinyMCE Version', tinyMceVer);
+                var tinyMceVer = appSettings.tinyMceVersion;
+                Log.message(appSettings.shortName + ': tinyMCE Version', tinyMceVer);
                 var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
                 var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
                 if (document.addEventListener) { 
@@ -724,13 +721,13 @@
                 }
             };
             this.onEditBtnAdded = function (e) {
-                Log.message(Settings.shortName + ': onEditBtnAdded event fired');
+                Log.message(appSettings.shortName + ': onEditBtnAdded event fired');
                 _this.addButtonClick();
             };
             this.addButtonClick = function () {
                 if ($('#gm-edit-btn').length) {
                     $('#gm-edit-btn').click(function () {
-                        var k = Settings.tinyId;
+                        var k = appSettings.tinyId;
                         var ed = tinymce__default.EditorManager.editors[k];
                         if (_this.fullScreen) {
                             ed.execCommand('mceFullScreen');
@@ -744,21 +741,21 @@
                         }, 300, 'linear');
                         $('.gmbackdrop, .gmbox').css('display', 'block');
                     });
-                    Log.message(Settings.shortName + ": Edit Button Click added");
+                    Log.message(appSettings.shortName + ": Edit Button Click added");
                 }
                 else {
-                    Log.error(Settings.shortName + ": addButtonClick: #gm-edit-btn was not found");
+                    Log.error(appSettings.shortName + ": addButtonClick: #gm-edit-btn was not found");
                 }
             };
             this.addToolbarButton = function () {
                 var gmCounter = 0;
                 var gmTimer = setInterval(function () {
                     gmCounter++;
-                    Log.message(Settings.shortName + ": try no. " + gmCounter + " to find element for button pacement");
+                    Log.message(appSettings.shortName + ": try no. " + gmCounter + " to find element for button pacement");
                     var objElement = $(document.body).xpath(_this.btnSelector);
                     if (objElement.length) {
                         clearInterval(gmTimer);
-                        Log.message(Settings.shortName + ": Found element for button placement on " + gmCounter + " try");
+                        Log.message(appSettings.shortName + ": Found element for button placement on " + gmCounter + " try");
                         objElement.append(_this.createToolbarHtml());
                         $(document).trigger('editBtnAdded', {
                             type: 'editBtnAdded',
@@ -783,12 +780,12 @@
                 return html;
             };
             this.getLightBoxHtml = function (id, title) {
-                id = typeof id !== 'undefined' ? id : Settings.tinyId;
+                id = typeof id !== 'undefined' ? id : appSettings.tinyId;
                 title = typeof title !== 'undefined' ? title : '';
                 var html = '<div class="gmbackdrop"></div>';
                 html += '<div id="tinybox" class="gmbox gmbox-window"><div class="gmclose"><i class="fi-x" style="color:black"></i></div>';
                 html += title;
-                html += "<div id=\"" + Settings.fullScreenRealId + "\">";
+                html += "<div id=\"" + appSettings.fullScreenRealId + "\">";
                 html += '<textarea id="' + id + '" rows="18" cols="68"></textarea>';
                 html += '</div>';
                 html += '</div></div>';
@@ -810,7 +807,7 @@
                 return confirm('Are you sure you want to close this editor?');
             };
             this.save = function () {
-                var k = Settings.tinyId;
+                var k = appSettings.tinyId;
                 var ed = tinymce__default.EditorManager.editors[k];
                 var e = ed.getContent();
                 $('.gmbackdrop, .gmbox').animate({
@@ -850,7 +847,7 @@
                 if (_this.tinymceDivId.length > 0) {
                     return _this.tinymceDivId;
                 }
-                var div = $("div#" + Settings.fullScreenRealId + " :first-child");
+                var div = $("div#" + appSettings.fullScreenRealId + " :first-child");
                 if (div.length > 0) {
                     _this.tinymceDivId = div.attr('id') + '';
                 }
@@ -865,8 +862,8 @@
         function GmConfig() {
             this.init = function () {
                 var initValues = {
-                    id: Settings.preKey + 'Config',
-                    title: Settings.menuName,
+                    id: appSettings.preKey + 'Config',
+                    title: appSettings.menuName,
                     fields: 
                     {
                         tinymcePluginFullscreen: {
@@ -988,22 +985,22 @@
         return window.top === window.self;
     };
     if (validateIfTop()) {
-        Log.message(Settings.shortName + ': Start loading...');
+        Log.message(appSettings.shortName + ': Start loading...');
         var en = new Evernote();
         en.init();
         var gConfig = new GmConfig();
         gConfig.init();
         if (typeof GM_registerMenuCommand === 'function') {
-            Log.message(Settings.shortName + ': Registering: Open ' + Settings.shortName + ' Options Menu');
-            GM_registerMenuCommand(Settings.menuName, function () {
+            Log.message(appSettings.shortName + ': Registering: Open ' + appSettings.shortName + ' Options Menu');
+            GM_registerMenuCommand(appSettings.menuName, function () {
                 GM_config.open();
-                Log.message(Settings.shortName + ': Registered: Open ' + Settings.shortName + ' Options Menu');
+                Log.message(appSettings.shortName + ': Registered: Open ' + appSettings.shortName + ' Options Menu');
             });
         }
         else {
-            Log.error(Settings.shortName + ': Unable to Register: Open ' + Settings.shortName + ' Options Menu');
+            Log.error(appSettings.shortName + ': Unable to Register: Open ' + appSettings.shortName + ' Options Menu');
         }
-        Log.message(Settings.shortName + ': End loading...');
+        Log.message(appSettings.shortName + ': End loading...');
     }
 
 }($, tinymce));

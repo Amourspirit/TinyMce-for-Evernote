@@ -3,7 +3,7 @@
 // import GM_config from 'GM_config';
 declare const GM_config: any;
 
-import { Settings as appSettings } from './class_Settings';
+import { appSettings } from './class_Settings';
 
 export class GmConfig {
   // tslint:disable-next-line:no-empty
