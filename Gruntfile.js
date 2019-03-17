@@ -95,7 +95,8 @@ module.exports = function (grunt) {
         pkg: packageData,
 
         clean: {
-            dirs: ['scratch', 'dist']
+            dirs: ['scratch', 'dist'],
+            compiled: ['scratch/compiled']
         },
 
         tslint: {
@@ -123,6 +124,19 @@ module.exports = function (grunt) {
                 src: '**/*.js',
                 expand: true,
                 dest: 'scratch/compiled/'
+            },
+            debug_nc: {
+                options: {
+                    multiline: true, // Whether to remove multi-line block comments
+                    singleline: true, // Whether to remove the comment of a single line.
+                    keepSpecialComments: false, // Whether to keep special comments, like: /*! !*/
+                    linein: true, // Whether to remove a line-in comment that exists in the line of code, it can be interpreted as a single-line comment in the line of code with /* or //.
+                    isCssLinein: true // Whether the file currently being processed is a CSS file
+                },
+                cwd: 'scratch/NoDebugComment/',
+                src: '**/*.js',
+                expand: true,
+                dest: 'scratch/debug_nc/'
             }
         },
 
@@ -195,10 +209,25 @@ module.exports = function (grunt) {
                     "scratch/compiled/<%= pkg._name %>.user.js": "scratch/compiled/<%= pkg._name %>.user.js"
                 }
             },
-
             no_debug: {
                 files: [{
                     cwd: 'scratch/rolled/',
+                    src: '<%= pkg._name %>.user.js',
+                    dest: 'scratch/compiled/',
+                    expand: true
+                }]
+            },
+            debug_nc: {
+                files: [{
+                    cwd: 'scratch/compiled/',
+                    src: '<%= pkg._name %>.user.js',
+                    dest: 'scratch/NoDebugComment/',
+                    expand: true
+                }]
+            },
+            debug_nc_clean: {
+                files: [{
+                    cwd: 'scratch/debug_nc/',
                     src: '<%= pkg._name %>.user.js',
                     dest: 'scratch/compiled/',
                     expand: true
@@ -220,6 +249,23 @@ module.exports = function (grunt) {
                 ],
                 //array of tasks to execute if any test fails
                 ifFalse: ['copy:no_debug']
+            },
+            debug_remove_comments: {
+                // Target-specific file lists and/or options go here.
+                options: {
+                    // execute test function(s)
+                    test: function () { return ((packageData._debuglevel === 0) && (packageData._debugRemoveComment === true)); },
+                },
+                //array of tasks to execute if all tests pass
+                ifTrue: [
+                    // copy from compiled, remove comments and copy back to compiled
+                    'copy:debug_nc',
+                    'clean:compiled',
+                    'remove_comments:debug_nc',
+                    'copy:debug_nc_clean',
+                ],
+                //array of tasks to execute if any test fails
+                ifFalse: []
             }
         },
 
@@ -270,11 +316,12 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', [
-        'clean',                // clean the folder out from any previous build
+        'clean:dirs',                // clean the folder out from any previous build
         'tslint',               // check the ts files for any lint issues
         'shell:tsc',            // run tsc
         'shell:rollup',         // run rollup to combine all the files into one js file.
         'if:debug',             // run if debug command to remove debug if _debug value of package.json is greater then 0 otherwise copy file to compiled and continue
+        'if:debug_remove_comments',
         'replace:header_build',   // replace the build number in the header text with current version from package.json
         'cssmin',               // minify css files to be later injected into the js file.
         'htmlmin',              // minify html files to be later injected into the js file.

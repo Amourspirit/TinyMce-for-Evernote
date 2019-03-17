@@ -1,7 +1,7 @@
 {
   "_name": "TinyMce_for_Evernote",
   "_debuglevel": 4,
-  "_debugRemoveComment": true,
+  "_debugRemoveComment": false,
   "_fullName": "TinyMce for Evernote",
   "name": "tinymce-for-evernote",
   "version": "3.0.3",
