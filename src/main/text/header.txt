@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name            TinyMce for Evernote
+// @name            @FULL_NAME@
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
 // @version         @BUILD_NUMBER@
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
-// @author          Paul Moss
+// @author          @AUTHOR@
 // @run-at          document-end
 // @include         /^https?:\/\/www\.evernote\.com\/home\.action.*n=.*$/
 // @include         /^https?:\/\/www\.evernote\.com\/u\/0/Home\.action.*n=.*$/
@@ -14,7 +14,7 @@
 // @match           https://app.yinxiang.com/Home.action*
 // @match           https://app.yinxiang.com/u/0/Home.action*
 // @noframes
-// @license         MIT
+// @license         @LICENSE@
 // @homepageURL     https://amourspirit.github.io/TinyMce-for-Evernote/
 // @update          https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/dist/TinyMce_for_Evernote.user.js
 // @downloadURL     https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/dist/TinyMce_for_Evernote.user.js

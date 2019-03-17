@@ -62,7 +62,7 @@ module.exports = function (grunt) {
             var re = /(?:(?:\/\/)|(?:<\!\-\-)|(?:\/\*))[ \t]*BUILD_INCLUDE\(['"](.*)['"]\)(?:\[(.*)\])?(?:(?:[ \t]*\-\->)|(?:[ \t]*\*\/))?/i,
                 match, file, fileIncludeOptions;
 
-                while ((match = re.exec(fileContent)) !== null) {
+            while ((match = re.exec(fileContent)) !== null) {
                 grunt.log.write(".");
                 grunt.verbose.writeln("    Match array: " + match);
                 file = grunt.template.process(match[1]);
@@ -109,7 +109,7 @@ module.exports = function (grunt) {
             tsc: 'tsc',
             rollup: 'npx rollup -c'
         },
-        
+
         remove_comments: {
             js: {
                 options: {
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
                 replacements: [{
                     // .net reges ^\s*//\s@debug\sstart[\s\S]*?//\s@debug\send
                     // see also: http://regexstorm.net/tester
-                    from: /^[\s]*\/\/\s@debug\sstart[.\s\S]*?\/\/\s@debug\send[\s]*$/gm, // see https://www.regexpal.com/?fam=108198
+                    from: /[\s]*\/\/\s@debug\sstart[.\s\S]*?\/\/\s@debug\send[\s]*$/gm, // see https://www.regexpal.com/?fam=108408
                     to: ''
                 }]
             },
@@ -159,7 +159,28 @@ module.exports = function (grunt) {
                 replacements: [{
                     from: '@BUILD_NUMBER@',                   // string replacement
                     to: packageData.version
-                }]
+                },
+                {
+                    from: '@FULL_NAME@',                   // string replacement
+                    to: packageData._fullName
+                },
+                {
+                    from: '@SCRIPT_NAME@',                   // string replacement
+                    to: packageData._name
+                },
+                {
+                    from: '@AUTHOR@',                   // string replacement
+                    to: packageData.author
+                },
+                {
+                    from: '@DESCRIPTION@',                   // string replacement
+                    to: packageData.description
+                },
+                {
+                    from: '@LICENSE@',                   // string replacement
+                    to: packageData.license
+                }
+                ]
             }
         },
 
@@ -184,7 +205,7 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        
+
         if: {  // https://github.com/bonesoul/grunt-if-next
             debug: {
                 // Target-specific file lists and/or options go here.

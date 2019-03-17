@@ -119,7 +119,6 @@
         function BigbyteLoader() {
         }
         BigbyteLoader.addJsNode = function (text, sUrl, funcToRun, runOnLoad) {
-
             var D = document;
             var scriptNode = D.createElement('script');
             if (runOnLoad) {
@@ -137,7 +136,6 @@
             }
             var targ = D.getElementsByTagName('head')[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-
         };
         BigbyteLoader.addJsNodeToBody = function (text, sUrl, funcToRun, runOnLoad) {
             var methodName = 'addJsNodeToBody';
@@ -169,7 +167,6 @@
             }
         };
         BigbyteLoader.addCssNode = function (text, element) {
-
             element = typeof element !== 'undefined' ? element : 'head';
             var D = document;
             var scriptNode = D.createElement('style');
@@ -177,10 +174,8 @@
             scriptNode.textContent = text;
             var targ = D.getElementsByTagName(element)[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-
         };
         BigbyteLoader.addLinkNode = function (href, type, rel) {
-
             type = typeof type !== 'undefined' ? type : 'text/css';
             rel = typeof rel !== 'undefined' ? rel : 'stylesheet';
             var D = document;
@@ -194,20 +189,16 @@
             }
             var targ = D.getElementsByTagName('head')[0] || D.body || D.documentElement;
             targ.appendChild(scriptNode);
-
         };
         BigbyteLoader.addHtmlNode = function (html) {
-
             var D = document;
             var targ = D.getElementsByTagName('body')[0] || D.body || D.documentElement;
             targ.insertAdjacentHTML('beforeend', html);
-
         };
         BigbyteLoader.loadScript = function (scriptItem) {
             if (scriptItem.timeout === 0) {
                 scriptItem.timeout = 30;
             }
-
             var bbScriptLoadedEvent = new CustomEvent('bbScriptLoaded', {
                 detail: {
                     message: 'Script Loaded',
@@ -217,18 +208,15 @@
                 bubbles: true,
                 cancelable: false
             });
-
             switch (scriptItem.type) {
                 case 'linkedjs':
                     var skipTest = false;
                     if (typeof (scriptItem.testMethod) === 'undefined' || (scriptItem.testMethod.length === 0)) {
                         skipTest = true;
                     }
-
                     if (skipTest) {
                         scriptItem.loaded = true;
                         BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
-
                         document.dispatchEvent(bbScriptLoadedEvent);
                         return;
                     }
@@ -248,40 +236,32 @@
                         Log.error(Settings.shortName + ": loadScript: Error running Eval:", e);
                     }
                     if (typeof (testmethod) === 'undefined') {
-
                         if (!scriptItem.loaded) {
                             scriptItem.loaded = true;
                             BigbyteLoader.addJsNode(scriptItem.text, scriptItem.src);
                         }
                         setTimeout(function () {
-
                             BigbyteLoader.loadScript(scriptItem);
                         }, 100);
                     }
                     else {
-
                         document.dispatchEvent(bbScriptLoadedEvent);
                     }
                     break;
                 case 'css':
-
                     if (typeof (scriptItem.tag) === 'undefined') {
                         scriptItem.tag = 'body'; 
                     }
                     BigbyteLoader.addCssNode(scriptItem.src, scriptItem.tag);
-
                     document.dispatchEvent(bbScriptLoadedEvent);
                     break;
                 case 'csslink':
-
                     BigbyteLoader.addLinkNode(scriptItem.src);
-
                     document.dispatchEvent(bbScriptLoadedEvent);
                     break;
                 default:
                     break;
             }
-
             return;
         };
         return BigbyteLoader;
@@ -354,79 +334,63 @@
             this.fullscreen = false;
             this.gmConfig = GM_config;
             this.init = function () {
-
                 var ver = Settings.tinyMceVersion;
                 var id = Settings.tinyId;
-
                 tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
                 var loadTable = _this.gmConfig.get('tinymcePluginTable');
                 if (loadTable) {
-
                     tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
                 }
                 var loadCharmap = _this.gmConfig.get('tinymcePluginCharmap');
                 if (loadCharmap) {
-
                     tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
                 }
                 var loadCode = _this.gmConfig.get('tinymcePluginCode');
                 if (loadCode) {
-
                     tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
                 }
                 var loadFullscreen = _this.gmConfig.get('tinymcePluginFullscreen');
                 if (loadFullscreen) {
-
                     tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
                 }
                 var loadEmoticons = _this.gmConfig.get('tinymcePluginEmoticons');
                 if (loadEmoticons) {
-
                     tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
                 }
                 var loadWordcount = _this.gmConfig.get('tinymcePluginWordcount');
                 if (loadEmoticons) {
-
                     tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
                 }
                 var loadPrint = _this.gmConfig.get('tinymcePluginPrint');
                 if (loadPrint) {
-
                     tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
                 }
                 var loadPreview = _this.gmConfig.get('tinymcePluginPreview');
                 if (loadPreview) {
-
                     tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
                 }
                 var loadInsertdatetime = _this.gmConfig.get('tinymcePluginInsertdatetime');
                 if (loadInsertdatetime) {
-
                     tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
                 }
                 var loadImage = _this.gmConfig.get('tinymcePluginImage');
                 if (loadImage) {
-
                     tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
                 }
                 var loadSearchreplace = _this.gmConfig.get('tinymcePluginSearchreplace');
                 if (loadSearchreplace) {
-
                     tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
                 }
                 var loadAdvlist = _this.gmConfig.get('tinymcePluginAdvlist');
                 if (loadAdvlist) {
-
                     tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
                 }
                 var loadBbcode = _this.gmConfig.get('tinymcePluginBbcode');
                 if (loadBbcode) {
-
                     tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
                 }
                 var loadVisualblocks = _this.gmConfig.get('tinymcePluginVisualblocks');
                 if (loadVisualblocks) {
-
                     tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
                 }
                 var loadVisualchars = _this.gmConfig.get('tinymcePluginVisualchars');
@@ -435,7 +399,6 @@
                 }
                 var loadHilite = _this.gmConfig.get('tinymcePluginHilite');
                 if (loadHilite) {
-
                     tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
                 }
                 var tinyMceExternalPlugins = {
@@ -465,7 +428,6 @@
                     init_instance_callback: function () {
                         $('.mce-i-mysave').addClass('fi-save');
                         $('.mce-i-myexit').addClass('fi-x');
-
                         $(document).trigger('tinymceInit', {
                             type: 'tinymceInit',
                             message: 'init',
@@ -569,9 +531,7 @@
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -hilite').trim();
                 }
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
-
                 tinymce.init(tinyMceInit);
-
             };
         }
         return TinymceWork;
@@ -603,7 +563,6 @@
                 }, 500);
             };
             this.onAllScriptsLoaded = function (e) {
-
                 Log.message(Settings.shortName + ': all scripts have been loaded.');
                 _this.btnSelector = '//*[@id="gwt-debug-NoteAttributesView-root"]/div[1]/div[1]';
                 if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
@@ -614,18 +573,14 @@
                     _this.iframeSelector = '.RichTextArea-entinymce';
                     _this.noteSelector = 'body';
                 }
-
                 _this.ensurePlugins();
-
                 _this.addToolbarButton();
-
                 $(document).on('editBtnAdded', _this.onEditBtnAdded);
                 $(document).on('tinymceInit', _this.onTinymceInit);
                 $(document).on('tinymceSave', _this.onTinymceSave);
                 $(document).on('tinymceCancel', _this.onTinymceCancel);
                 $(document).on('tinymceFullScreen', _this.onTinyMceFulllscreen);
                 _this.writeLightBox();
-
                 _this.TMCE.init();
                 var intGmboxPadLeft = parseInt($('.gmbox').css('padding-left'), 10);
                 var intGmboxPadRight = parseInt($('.gmbox').css('padding-right'), 10);
@@ -633,19 +588,16 @@
                 intTinymceWidth = intTinymceWidth - (intGmboxPadLeft + intGmboxPadRight);
                 $('.gmbox-window').width(intTinymceWidth);
                 $('.gmclose').click(function () {
-
                     $(document).trigger('tinymceCancel', {
                         message: 'cancel',
                         tinyMceId: Settings.tinyId
                     });
                 });
-
             };
             this.onTinymceInit = function (e) {
                 Log.message(Settings.shortName + ': Tiny Mce Init was triggered');
             };
             this.onTinymceSave = function (e, data) {
-
                 if (data.tinyMceId === Settings.tinyId) {
                     _this.save();
                     _this.lightBoxReset();
@@ -655,10 +607,8 @@
                     }
                     ed.setContent(''); 
                 }
-
             };
             this.onTinymceCancel = function (e, data) {
-
                 if (data.tinyMceId === Settings.tinyId) {
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
                     if (!ed) {
@@ -676,10 +626,8 @@
                         ed.setContent(''); 
                     }
                 }
-
             };
             this.onTinyMceFulllscreen = function (e, data) {
-
                 if (data.tinyMceId === Settings.tinyId) {
                     _this.getTinymceDivId();
                     _this.fullScreen = e.state;
@@ -694,10 +642,8 @@
                         }
                     }
                 }
-
             };
             this.startWork = function () {
-
                 if (typeof (tinymce__default) !== 'undefined') {
                     Settings.tinyMceVersion = tinymce__default.EditorManager.majorVersion + '.' + tinymce__default.EditorManager.minorVersion;
                 }
@@ -706,46 +652,32 @@
                 var pluginSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
                 var pluginXpathJq = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
                 if (document.addEventListener) { 
-
                     document.addEventListener('bbScriptLoaded', _this.onBbScriptLoaded);
-
                     document.addEventListener('allScriptsLoaded', _this.onAllScriptsLoaded);
                 }
                 else {
-
                 }
                 if (typeof (jQuery) === 'undefined') {
-
                     _this.addScript('jquery', pluginSrc, 'linkedjs', 'jQuery');
                 }
                 else {
-
                 }
                 if (typeof (jQuery().xpath) === 'undefined') {
-
                     _this.addScript('jqueryXpath', pluginXpathJq, 'linkedjs', 'jQuery().xpath');
                 }
                 else {
-
                 }
-
                 _this.addScript('icons-css', '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css', 'csslink');
                 if (typeof (tinymce__default) === 'undefined') {
-
                     _this.addScript('tinyMceJs', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/tinymce.min.js', 'linkedjs', 'tinyMCE');
                 }
                 else {
-
                 }
-
                 _this.addScript('tinyMceCss', '//cdnjs.cloudflare.com/ajax/libs/tinymce/' + tinyMceVer + '/skins/lightgray/skin.min.css', 'csslink');
-
                 _this.addScript('lightboxcss', _this.lightBoxCss, 'css', undefined, { tag: 'body' });
                 _this.loadScripts();
-
             };
             this.addScript = function (sName, sSrc, objType, objTestMethod, args) {
-
                 var newItm = {
                     name: sName,
                     src: sSrc,
@@ -758,16 +690,12 @@
                     count: 0
                 };
                 if (args) {
-
                     _this.scripts[sName] = newItm;
                 }
                 else {
-
                     var extended = UserScriptUtil.extend(newItm, args);
-
                     _this.scripts[sName] = extended;
                 }
-
             };
             this.isScriptsLoaded = function () {
                 for (var key in _this.scripts) {
@@ -789,19 +717,15 @@
                         bubbles: true,
                         cancelable: false
                     });
-
                     document.dispatchEvent(allScriptsLoaded);
                 }
                 else {
                     _this.loadScripts();
                 }
-
             };
             this.onEditBtnAdded = function (e) {
-
                 Log.message(Settings.shortName + ': onEditBtnAdded event fired');
                 _this.addButtonClick();
-
             };
             this.addButtonClick = function () {
                 if ($('#gm-edit-btn').length) {
@@ -825,10 +749,8 @@
                 else {
                     Log.error(Settings.shortName + ": addButtonClick: #gm-edit-btn was not found");
                 }
-
             };
             this.addToolbarButton = function () {
-
                 var gmCounter = 0;
                 var gmTimer = setInterval(function () {
                     gmCounter++;
@@ -848,7 +770,6 @@
                         clearInterval(gmTimer);
                     }
                 }, 500);
-
             };
             this.createToolbarHtml = function () {
                 var css = "background-clip:border-box;background-color:rgba(0,0,0,0);background-position-x:0;background-position-y:0;background-size:24px 24px;border-bottom-color:#333;border-bottom-style:none;border-bottom-width:0;border-image-outset:0;border-image-repeat:stretch;border-image-slice:100%;border-image-source:none;border-image-width:1;border-left-color:#333;border-left-style:none;border-left-width:0;border-right-color:#333;border-right-style:none;border-right-width:0;border-top-color:#333;border-top-style:none;border-top-width:0;box-sizing:border-box;color:#333;cursor:pointer;display:inline-block;height:24px;line-height:16px;margin:0;opacity:1;outline-color:#333;outline-style:none;outline-width:0;overflow-x:hidden;overflow-y:hidden;padding:0;text-size-adjust:100%;transition-delay:0s;transition-duration:.2s;transition-property:opacity;transition-timing-function:ease-in-out;-webkit-user-select:none;user-select:none;-o-user-select:none;-webkit-touch-callout:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;vertical-align:top;width:24px;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;z-index:200;";
@@ -889,7 +810,6 @@
                 return confirm('Are you sure you want to close this editor?');
             };
             this.save = function () {
-
                 var k = Settings.tinyId;
                 var ed = tinymce__default.EditorManager.editors[k];
                 var e = ed.getContent();
@@ -901,15 +821,12 @@
                 var content = $(_this.iframeSelector).contents().find(_this.noteSelector);
                 content.html(e);
                 $('textarea#gminput').val(''), ed.setContent('');
-
             };
             this.loadScripts = function () {
-
                 var count = 0;
                 for (var key in _this.scripts) {
                     if (_this.scripts.hasOwnProperty(key)) {
                         var script = _this.scripts[key];
-
                         count++;
                         if (count > 1) {
                             return;
@@ -917,7 +834,6 @@
                         BigbyteLoader.loadScript(script);
                     }
                 }
-
             };
             this.ensurePlugins = function () {
                 if (typeof ($.fn.tagName) === 'undefined') {
@@ -934,12 +850,10 @@
                 if (_this.tinymceDivId.length > 0) {
                     return _this.tinymceDivId;
                 }
-
                 var div = $("div#" + Settings.fullScreenRealId + " :first-child");
                 if (div.length > 0) {
                     _this.tinymceDivId = div.attr('id') + '';
                 }
-
                 return _this.tinymceDivId;
             };
             this.lightBoxCss = ".gmbackdrop,.gmbox{position:absolute;display:none}.gmbackdrop{top:0;left:0;width:100%;height:100%;background:#000;opacity:0;z-index:201}.gmbox{background:#fff;z-index:202;padding:10px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-moz-box-shadow:0 0 5px #444;-webkit-box-shadow:0 0 5px #444;box-shadow:0 0 5px #444}.gmclose{float:right;margin-right:6px;cursor:pointer}.mce-panel{border:none}div.gmbox .mce-panel{border:0 solid rgba(0,0,0,.2)}div.mce-tinymce.mce-container.mce-panel{margin-top:2em}div.mce-tinymce.mce-container.mce-panel.mce-fullscreen{margin-top:0}#gm-edit-btn{font-size:1.6em;color:#ababab;cursor:pointer}#gm-edit-btn:hover{color:#2dbe60}.gmbox-window{top:50%;left:50%;transform:translate(-50%,-50%);position:absolute}#gm-tb{display:inline-block;position:absolute}";
