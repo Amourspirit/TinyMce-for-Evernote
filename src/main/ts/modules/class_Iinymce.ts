@@ -24,7 +24,7 @@ export class TinymceWork {
     const methodName: string = 'TinymceWork.init';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }

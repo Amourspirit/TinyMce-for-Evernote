@@ -40,11 +40,11 @@
     })(PriorityLevel || (PriorityLevel = {}));
     var DebugLevel;
     (function (DebugLevel) {
-        DebugLevel[DebugLevel["None"] = 0] = "None";
-        DebugLevel[DebugLevel["Debug"] = 1] = "Debug";
-        DebugLevel[DebugLevel["Error"] = 2] = "Error";
-        DebugLevel[DebugLevel["Warn"] = 3] = "Warn";
-        DebugLevel[DebugLevel["Info"] = 4] = "Info";
+        DebugLevel[DebugLevel["none"] = 0] = "none";
+        DebugLevel[DebugLevel["debug"] = 1] = "debug";
+        DebugLevel[DebugLevel["error"] = 2] = "error";
+        DebugLevel[DebugLevel["warn"] = 3] = "warn";
+        DebugLevel[DebugLevel["info"] = 4] = "info";
     })(DebugLevel || (DebugLevel = {}));
 
     var Settings =  (function () {
@@ -53,7 +53,7 @@
         Settings.tinyId = 'gminput';
         Settings.shortName = 'TMCEE';
         Settings.preKey = 'tmceen_';
-        Settings.debugLevel = DebugLevel.Info;
+        Settings.debugLevel = DebugLevel.info;
         Settings.menuName = 'TinyMce Options';
         Settings.tinyMceVersion = '4.1.0';
         Settings.fullScreenRealId = 'tinymce-real-fs';
@@ -68,7 +68,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.Info) {
+            if (Settings.debugLevel > DebugLevel.info) {
                 return;
             }
             console.log.apply(console, [msg].concat(optionalParams));
@@ -78,7 +78,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.Warn) {
+            if (Settings.debugLevel > DebugLevel.warn) {
                 return;
             }
             console.warn.apply(console, [msg].concat(optionalParams));
@@ -88,7 +88,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.Error) {
+            if (Settings.debugLevel > DebugLevel.error) {
                 return;
             }
             console.error.apply(console, [msg].concat(optionalParams));
@@ -98,7 +98,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.Debug) {
+            if (Settings.debugLevel > DebugLevel.debug) {
                 return;
             }
             console.log.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
@@ -108,7 +108,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 optionalParams[_i - 1] = arguments[_i];
             }
-            if (Settings.debugLevel > DebugLevel.Debug) {
+            if (Settings.debugLevel > DebugLevel.debug) {
                 return;
             }
             console.warn.apply(console, [Settings.shortName + ": Debug: " + msg].concat(optionalParams));
@@ -140,7 +140,7 @@
         BigbyteLoader.addJsNodeToBody = function (text, sUrl, funcToRun, runOnLoad) {
             var methodName = 'addJsNodeToBody';
             var appDebugLevel = Settings.debugLevel;
-            var levelDebug = DebugLevel.Debug;
+            var levelDebug = DebugLevel.debug;
             if (appDebugLevel >= levelDebug) {
                 Log.debug(methodName + ": Entered.");
                 Log.debug(methodName + ": Working on .", text, sUrl);

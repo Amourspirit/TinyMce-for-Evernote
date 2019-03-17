@@ -72,7 +72,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       methodName = 'onAllScriptsLoaded';
       Log.debug(`${methodName}: Entered.`);
@@ -162,7 +162,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       methodName = 'onTinymceSave';
@@ -195,7 +195,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       methodName = 'onTinymceCancel';
@@ -235,7 +235,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       methodName = 'onTinyMceFulllscreen';
@@ -277,7 +277,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       methodName = 'Evernote.startWork';
@@ -377,7 +377,7 @@ export class Evernote {
     const methodName: string = 'addScript';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }
@@ -439,7 +439,7 @@ export class Evernote {
     const methodName: string = 'onBbScriptLoaded';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
       Log.debug(`${methodName}: Param e`, e);
@@ -480,7 +480,7 @@ export class Evernote {
     const methodName: string = 'onEditBtnAdded';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }
@@ -498,7 +498,7 @@ export class Evernote {
     const methodName: string = 'addButtonClick';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }
@@ -536,7 +536,7 @@ export class Evernote {
     const methodName: string = 'addToolbarButton';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }
@@ -617,7 +617,7 @@ export class Evernote {
     const methodName: string = 'save';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
     }
@@ -645,7 +645,7 @@ export class Evernote {
     let methodName: string = 'Evernote.loadScripts';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
     // @debug end
     let count: number = 0;
@@ -692,7 +692,7 @@ export class Evernote {
     let methodName: string = '';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       methodName = 'EvernoteTinymce.onTinymceCancel';

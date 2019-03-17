@@ -11,7 +11,7 @@ export class BigbyteLoader {
     const methodName: string = 'addJsNode';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
@@ -46,7 +46,7 @@ export class BigbyteLoader {
     const methodName: string = 'addJsNodeToBody';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
@@ -80,7 +80,7 @@ export class BigbyteLoader {
     const methodName: string = 'addCssNode';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
@@ -106,7 +106,7 @@ export class BigbyteLoader {
     const methodName: string = 'addLinkNode';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
@@ -138,7 +138,7 @@ export class BigbyteLoader {
     const methodName: string = 'addHtmlNode';
     // higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
 
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Entered.`);
@@ -160,7 +160,7 @@ export class BigbyteLoader {
     const methodName: string = 'BigbyteLoader.loadScript';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.Debug;
+    const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered in ${methodName}.`); }
     // @debug end
     /* if (!(BigbyteLoader.currentScritp) || (BigbyteLoader.currentScritp.isDisposed === true)) {

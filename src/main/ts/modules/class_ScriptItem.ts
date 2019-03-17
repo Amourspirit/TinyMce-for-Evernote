@@ -40,7 +40,7 @@ export class ScriptItem implements IScriptItem, IDisposable {
         const methodName: string = 'ScriptItem.dispose';
         // Higher price to check using enumes each time so capture the values here
         const appDebugLevel = appSettings.debugLevel;
-        const levelDebug = DebugLevel.Debug;
+        const levelDebug = DebugLevel.debug;
         if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
         // @debug end
         if (this._disposed === true) {
