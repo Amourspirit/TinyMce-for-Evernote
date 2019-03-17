@@ -33,10 +33,10 @@
 
     var PriorityLevel;
     (function (PriorityLevel) {
-        PriorityLevel[PriorityLevel["None"] = 0] = "None";
-        PriorityLevel[PriorityLevel["Low"] = 1] = "Low";
-        PriorityLevel[PriorityLevel["Med"] = 2] = "Med";
-        PriorityLevel[PriorityLevel["High"] = 3] = "High";
+        PriorityLevel[PriorityLevel["none"] = 0] = "none";
+        PriorityLevel[PriorityLevel["now"] = 1] = "now";
+        PriorityLevel[PriorityLevel["med"] = 2] = "med";
+        PriorityLevel[PriorityLevel["high"] = 3] = "high";
     })(PriorityLevel || (PriorityLevel = {}));
     var DebugLevel;
     (function (DebugLevel) {

@@ -1,8 +1,8 @@
 export enum PriorityLevel {
-  None,
-  Low,
-  Med,
-  High,
+  none,
+  now,
+  med,
+  high,
 }
 
 export enum DebugLevel {
