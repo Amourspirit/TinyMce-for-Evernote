@@ -153,7 +153,7 @@ module.exports = function (grunt) {
                     to: grunt.file.r
                 }]
             },
-            web_plugin: {
+            header_build: {
                 src: ['src/main/text/header.txt'],   // source files array (supports minimatch)
                 dest: 'scratch/text/header.txt',  // destination directory or file
                 replacements: [{
@@ -275,7 +275,7 @@ module.exports = function (grunt) {
         'shell:tsc',            // run tsc
         'shell:rollup',         // run rollup to combine all the files into one js file.
         'if:debug',             // run if debug command to remove debug if _debug value of package.json is greater then 0 otherwise copy file to compiled and continue
-        'replace:web_plugin',   // replace the build number in the header text with current version from package.json
+        'replace:header_build',   // replace the build number in the header text with current version from package.json
         'cssmin',               // minify css files to be later injected into the js file.
         'htmlmin',              // minify html files to be later injected into the js file.
         'replace:inner_css',    // extract the .button css from minified css and write it into a text file
