@@ -2,7 +2,7 @@ import {
     IScriptItem,
     IDisposable
 } from './Interfaces';
-import { appSettings } from './class_Settings';
+import { appSettings } from './appSettings';
 import { DebugLevel } from './enums';
 import { Log as Log } from './class_Log';
 

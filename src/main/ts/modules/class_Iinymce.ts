@@ -5,7 +5,7 @@ import $ from 'jquery';
 import * as tinymce from 'tinymce';
 // import tinymce from 'tinymce';
 import { Log } from './class_Log';
-import { appSettings } from './class_Settings';
+import { appSettings } from './appSettings';
 import { ITinyMceExternalPlugins } from './Interfaces';
 import { DebugLevel } from './enums';
 // import { Clock } from './class_clock';
