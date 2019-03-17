@@ -46,6 +46,12 @@
         DebugLevel[DebugLevel["warn"] = 3] = "warn";
         DebugLevel[DebugLevel["info"] = 4] = "info";
     })(DebugLevel || (DebugLevel = {}));
+    var ElementLocation;
+    (function (ElementLocation) {
+        ElementLocation[ElementLocation["head"] = 0] = "head";
+        ElementLocation[ElementLocation["body"] = 1] = "body";
+        ElementLocation[ElementLocation["other"] = 2] = "other";
+    })(ElementLocation || (ElementLocation = {}));
 
     var appSettings = {
         tinyId: 'gminput',

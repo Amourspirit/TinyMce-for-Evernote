@@ -1,7 +1,7 @@
 import {
     IScriptItem,
     IDisposable
-} from './Interfaces';
+} from './interfaces';
 import { appSettings } from './appSettings';
 import { DebugLevel } from './enums';
 import { Log as Log } from './class_Log';

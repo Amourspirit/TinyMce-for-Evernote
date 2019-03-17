@@ -6,7 +6,7 @@ import * as tinymce from 'tinymce';
 // import tinymce from 'tinymce';
 import { Log } from './class_Log';
 import { appSettings } from './appSettings';
-import { ITinyMceExternalPlugins } from './Interfaces';
+import { ITinyMceExternalPlugins } from './interfaces';
 import { DebugLevel } from './enums';
 // import { Clock } from './class_clock';
 // import GM_config from 'GM_config';

@@ -23,7 +23,7 @@ import tinymce from 'tinymce';
 import {
   IScriptItem,
   IKeyAny
-} from './Interfaces';
+} from './interfaces';
 import { DebugLevel } from './enums';
 
 export class Evernote {

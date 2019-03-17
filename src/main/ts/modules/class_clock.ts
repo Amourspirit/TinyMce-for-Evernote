@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   IEvent
 } from 'strongly-typed-events';
-import { IDisposable } from './Interfaces';
+import { IDisposable } from './interfaces';
 
 /*
  * This clock example shows how to use Strongly Typed Events

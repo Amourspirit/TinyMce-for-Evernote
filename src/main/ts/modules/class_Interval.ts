@@ -1,7 +1,7 @@
 // import { IScriptItem } from './interfaces';
 import { EventDispatcher, IEvent } from 'strongly-typed-events';
 import { IntervalEventArgs, IIntervalEventArgs } from './class_IntervalEventArgs';
-import { IDisposable } from './Interfaces';
+import { IDisposable } from './interfaces';
 
 /**
  * Inerface used with Interval class

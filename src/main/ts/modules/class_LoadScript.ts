@@ -1,4 +1,4 @@
-import { IScriptItem } from './Interfaces';
+import { IScriptItem } from './interfaces';
 // import { ScriptItem } from './class_ScriptItem';
 import { appSettings } from './appSettings';
 import { Log as Log } from './class_Log';

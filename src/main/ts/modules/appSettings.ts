@@ -1,5 +1,5 @@
 import { DebugLevel } from './enums';
-import { IKeyValueGeneric } from './Interfaces';
+import { IKeyValueGeneric } from './interfaces';
 
 export interface IappSettings {
   debugLevel: DebugLevel;
