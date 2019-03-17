@@ -175,24 +175,28 @@ module.exports = function (grunt) {
                     to: packageData.version
                 },
                 {
-                    from: '@FULL_NAME@',                   // string replacement
+                    from: '@FULL_NAME@',
                     to: packageData._fullName
                 },
                 {
-                    from: '@SCRIPT_NAME@',                   // string replacement
+                    from: '@SCRIPT_NAME@',
                     to: packageData._name
                 },
                 {
-                    from: '@AUTHOR@',                   // string replacement
+                    from: '@AUTHOR@',
                     to: packageData.author
                 },
                 {
-                    from: '@DESCRIPTION@',                   // string replacement
+                    from: '@DESCRIPTION@',
                     to: packageData.description
                 },
                 {
-                    from: '@LICENSE@',                   // string replacement
+                    from: '@LICENSE@',
                     to: packageData.license
+                },
+                {
+                    from: '@REPOSITORY_NAME@',
+                    to: packageData._repositoryName
                 }
                 ]
             }
