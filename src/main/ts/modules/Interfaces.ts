@@ -109,3 +109,26 @@ console.log(lst[7]);
 export interface IIndexValueGeneric<T> {
   [index: number]: T;
 }
+
+/**
+ * Elements creation arguments
+ * @param elementTag (required) The tag of the element such as div, script, style
+ * @param elementType (optional) The type of element such as text/javascript
+ * @param elementSrc (optional) The src for the Html Element
+ * @param elementText (optional) The text/html to add to the element content.
+ * @param elementAttributes (optional) Array of Attributes and values to add to the element.
+ */
+export interface IElementCreate {
+  /**
+   * The tag of the element such as div, script, style
+   */
+  elementTag: string;
+  /**
+   * text/html to add to the element content.
+   */
+  elementText?: string;
+  /**
+   * Any extra attributes to apply to element such as scrolling
+   */
+  elementAttributes?: IKeyValueGeneric<string>;
+}

@@ -12,3 +12,9 @@ export enum DebugLevel {
   warn,
   info,
 }
+
+export enum ElementLocation {
+  head,
+  body,
+  other
+}
