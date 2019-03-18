@@ -26,6 +26,12 @@ export interface IElementLoadArgs {
  */
 export class ElementLoad extends BaseElementLoad {
   private lArgs: IElementLoadArgs;
+  /**
+   * Creates a new instance of the class
+   * @param args The arguments to create a new instance of the claas
+   * @param args.scriptLocation {ElementLocation} The location to inject the script such as head or body.
+   * @param arg.elementCreate {IElementCreate} Elements creation arguments
+   */
   public constructor(args: IElementLoadArgs) {
     super(0, 1);
     this.lArgs = args;

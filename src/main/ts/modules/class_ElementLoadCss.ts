@@ -8,8 +8,8 @@ import { IElementCreate } from './interfaces';
 
 /**
  * Arguments for ElementsCssNode
- * @param scriptLocation (required)
- * @param textContent (required)
+ * @param scriptLocation {ElementLocation} (required) The location to inject the script such as head or body.
+ * @param textContent {string} (required) text/html to add to the element content.
  */
 export interface IElementLoadCssArgs {
   /**
@@ -26,6 +26,12 @@ export interface IElementLoadCssArgs {
  */
 export class ElementLoadCss extends BaseElementLoad {
   private lArgs: IElementLoadCssArgs;
+  /**
+   * Constructs a new instace of the class
+   * @param args {IElementLoadCssArgs} The arguments for to create a new instance of the class
+   * @param args.scriptLocation {ElementLocation} (required) The location to inject the script such as head or body.
+   * @param args.textContent {string} (required) text/html to add to the element content.
+   */
   public constructor(args: IElementLoadCssArgs) {
     super(0, 1);
     this.lArgs = args;

@@ -8,6 +8,14 @@ import {
   ElementLocation
 } from './enums';
 import { elementCreate, elementAddToDoc } from './ElementHelper';
+/**
+ * Arguments of instance of ElementJsLoad class
+ * @param scriptLocation {ElementLocation} (rquired) The location to inject the script such as head or body.
+ * @param functionToRun {string} (optional) The function to run after the script is loaded
+ * @param tyepName {string} (optional) Be the name of any object such as JQ, $, jQyery
+ * @param textContent {string} (optional) text/html to add to the element content.
+ * @param src {string} (optional) src for the Html Element like //cdn.jsdelivr.net/npm/jquery/@3.3.1/dist/jquery.min.js
+ */
 export interface IElementJsLoadArgs {
   /**
    * The location to inject the script such as head or body.
@@ -35,9 +43,22 @@ export interface IElementJsLoadArgs {
    */
   src?: string;
 }
-
-export class ElementJsLoad extends BaseElementLoad {
+/**
+ * Class for manageing adding of Javascript to document.
+ * Javascript can be added as script using ElementLocation.textContent
+ * or as linked js using ElementLocation.src in the constructor
+ */
+export class ElementLoadJs extends BaseElementLoad {
   private lTestFuncton: string;
+  /**
+   * Createns a new instance of the class
+   * @param args The arguments for the constructor
+   * @param args.scriptLocation {ElementLocation} (rquired) The location to inject the script such as head or body.
+   * @param args.functionToRun {string} (optional) The function to run after the script is loaded
+   * @param args.tyepName {string} (optional) Be the name of any object such as JQ, $, jQyery
+   * @param args.textContent {string} (optional) text/html to add to the element content.
+   * @param args.src {string} (optional) src for the Html Element like //cdn.jsdelivr.net/npm/jquery/@3.3.1/dist/jquery.min.js
+   */
   public constructor(args: IElementJsLoadArgs) {
     super();
     const textContent: string = args && args.textContent || '';

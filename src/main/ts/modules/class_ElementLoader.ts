@@ -6,12 +6,15 @@ import { Log } from './class_Log';
 import { appSettings } from './appSettings';
 import { DebugLevel } from './enums';
 import { ElementsLoadedArgs } from './class_ElementsLoadedArgs';
-
+import { IEventArgs, EventArgs } from './class_EventArgs';
+import { ElementsLoadFailArgs } from './class_ElementsLoadFailArgs';
 export class ElementLoader {
   private lTotalScripts: number = 0; // the total number of scritps added with addElement
   private lEvents: IKeyValueGeneric<BaseElementLoad>;
+  private lEventsFailed: Array<string> = [];
   private lOnElementLoaded = new EventDispatcher<ElementLoader, ElementLoaderEventArgs>();
   private lOnAllElementLoaded = new EventDispatcher<ElementLoader, ElementsLoadedArgs>();
+  private lOnElementLoadFail = new EventDispatcher <ElementLoader, ElementsLoadFailArgs>();
   private lOnTick = new EventDispatcher<ElementLoader, ElementLoaderEventArgs>();
   private lOnTickExpired = new EventDispatcher<ElementLoader, ElementLoaderEventArgs>();
   public constructor() {
@@ -60,6 +63,9 @@ export class ElementLoader {
   public onAllElementsLoaded(): IEvent<ElementLoader, ElementsLoadedArgs> {
     return this.lOnAllElementLoaded.asEvent();
   }
+  public onElementsLoadFail(): IEvent<ElementLoader, ElementsLoadFailArgs> {
+    return this.lOnElementLoadFail.asEvent();
+  }
   public onElementLoaded(): IEvent<ElementLoader, ElementLoaderEventArgs> {
     return this.lOnElementLoaded.asEvent();
   }
@@ -77,6 +83,14 @@ export class ElementLoader {
     const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
     // @debug end
+    const onBeforeStartEventArgs = new EventArgs();
+    this.onBeforeStart(onBeforeStartEventArgs);
+    if (onBeforeStartEventArgs.cancel === true) {
+      // @debug start
+      Log.debug(`${methodName}: Exiting due to event was canceled `);
+    // @debug end
+      return;
+    }
     for (const key in this.lEvents) {
       if (this.lEvents.hasOwnProperty(key)) {
         const element: BaseElementLoad = this.lEvents[key];
@@ -114,6 +128,13 @@ export class ElementLoader {
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
+    this.onAfterStart(new EventArgs());
+  }
+  protected onBeforeStart(args: IEventArgs): void {
+    return;
+  }
+  protected onAfterStart(args: IEventArgs): void {
+    return;
   }
   private elementLoaded(args: ElementLoaderEventArgs): void {
     // @debug start
@@ -133,10 +154,10 @@ export class ElementLoader {
       // delete the added script
       delete this.lEvents[args.key];
     }
-    const done: boolean = this.isScriptsLoaded();
+    const done: boolean = this.isElementsLoaded();
     if (done) {
       const eArgs = new ElementsLoadedArgs(this.lTotalScripts);
-      this.allScriptsLoaded(eArgs);
+      this.allElementsLoaded(eArgs);
       if (eArgs.cancel === false) {
         this.lOnAllElementLoaded.dispatch(this, eArgs);
       }
@@ -166,12 +187,24 @@ export class ElementLoader {
     const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
     // @debug end
+    // set the args loadFailed property
+    args.loadFailed = true;
+    // add faile event key to failed events array
+    this.lEventsFailed.push(args.key);
+    // event if the event failed we want to remove if from the list of events
+    if (this.lEvents.hasOwnProperty(args.key) === false) {
+      Log.error(`${appSettings.shortName}: tickExpired: key ${args.key} was not found to delete. This may be a serious error`);
+      return;
+    } else {
+      // delete the added script
+      delete this.lEvents[args.key];
+    }
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
     return;
   }
-  private allScriptsLoaded(args: ElementsLoadedArgs): void {
+  private allElementsLoaded(args: ElementsLoadedArgs): void {
     // @debug start
     const methodName: string = 'allScriptsLoaded';
     // Higher price to check using enumes each time so capture the values here
@@ -179,16 +212,24 @@ export class ElementLoader {
     const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
     // @debug end
+    if (this.lEventsFailed.length > 0) {
+      // @debug start
+      Log.debug(`${methodName}: Failed to load all elements. Dispatching onElementsLoadFail()`);
+      // @debug end
+      args.cancel = true;
+      const eArgs: ElementsLoadFailArgs = new ElementsLoadFailArgs(this.lTotalScripts, this.lEventsFailed);
+      this.lOnElementLoadFail.dispatch(this, eArgs);
+    }
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
     return;
   }
   /*
- * Function to check and see if there are any scripts left to be loaded
- * @returns boolean, true if all the scripts are loaded; Otherwise false
+ * Function to check and see if there are any element left to be loaded
+ * @returns boolean, true if all the elements are loaded; Otherwise false
  */
-  private isScriptsLoaded = (): boolean => {
+  private isElementsLoaded(): boolean {
     for (const key in this.lEvents) {
       if (this.lEvents[key]) {
         return false;

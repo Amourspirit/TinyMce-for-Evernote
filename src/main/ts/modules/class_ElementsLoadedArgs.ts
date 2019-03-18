@@ -1,14 +1,15 @@
+import { EventArgs } from './class_EventArgs';
 /**
  * Event args usded with all scripts are loaded
  */
-export class ElementsLoadedArgs {
-  public cancel: boolean = false;
+export class ElementsLoadedArgs extends EventArgs {
   private lTotalScripts: number = 0;
   /**
    * Constructs a new instance
    * @param numOfScripts The total number of scripts loaded
    */
   constructor(numOfScripts: number) {
+    super();
     this.lTotalScripts = numOfScripts;
   }
   /**

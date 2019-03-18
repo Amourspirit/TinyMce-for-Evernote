@@ -1,11 +1,12 @@
 import { IIntervalEventArgs } from './class_IntervalEventArgs';
-
-export class ElementLoaderEventArgs {
+import { EventArgs } from './class_EventArgs';
+export class ElementLoaderEventArgs extends EventArgs {
   public elementArgs: IIntervalEventArgs;
-  public cancel: boolean = false;
+  public loadFailed: boolean = false;
   private lkey: string;
 
   public constructor(key: string, elmArgs: IIntervalEventArgs) {
+    super();
     this.lkey = key;
     this.elementArgs = elmArgs;
   }

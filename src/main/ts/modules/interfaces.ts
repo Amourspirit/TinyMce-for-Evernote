@@ -114,8 +114,6 @@ export interface IIndexValueGeneric<T> {
 /**
  * Elements creation arguments
  * @param elementTag (required) The tag of the element such as div, script, style
- * @param elementType (optional) The type of element such as text/javascript
- * @param elementSrc (optional) The src for the Html Element
  * @param elementText (optional) The text/html to add to the element content.
  * @param elementAttributes (optional) Array of Attributes and values to add to the element.
  */
