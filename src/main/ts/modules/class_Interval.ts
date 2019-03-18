@@ -48,8 +48,8 @@ export class Interval implements IInterval, IDisposable {
   public constructor(interval: number, maxCount: number) {
     this.lMaxTick = maxCount;
     this.lIntervalTime = interval;
-    if (this.lIntervalTime < 1) {
-      throw new RangeError('interval arg must be greater than 0');
+    if (this.lIntervalTime < 0) {
+      throw new RangeError('interval arg must be 0 or greater');
     }
     if (this.lMaxTick < 1) {
       return;

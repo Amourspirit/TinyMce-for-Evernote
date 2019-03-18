@@ -98,7 +98,7 @@ export class ElementLoader {
           }
           this.lOnTickExpired.dispatch(this, eArgs);
         });
-        element.onScriptLoaded().subscribe((sender, args) => {
+        element.onElementLoaded().subscribe((sender, args) => {
           const eArgs: ElementLoaderEventArgs = new ElementLoaderEventArgs(key, args);
           // dispose the class now that the script is loaded.
           sender.dispose();

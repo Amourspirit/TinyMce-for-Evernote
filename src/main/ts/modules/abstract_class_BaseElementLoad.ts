@@ -9,7 +9,7 @@ import { utilFnAsStringExist } from './app_util';
  */
 export abstract class BaseElementLoad extends IntervalManual {
   protected ptIsLoaded: boolean = false;
-  protected edOnScriptAdded = new EventDispatcher<Interval, IIntervalEventArgs>();
+  protected elementLoaded = new EventDispatcher<Interval, IIntervalEventArgs>();
   // private lInterval: IntervalManual;
   /**
    * constructs a new instance of the class.
@@ -21,8 +21,8 @@ export abstract class BaseElementLoad extends IntervalManual {
     super(interval, maxCount);
     // this.lInterval = new IntervalManual(interval, maxCount);
   }
-  public onScriptLoaded(): IEvent<Interval, IIntervalEventArgs> {
-    return this.edOnScriptAdded.asEvent();
+  public onElementLoaded(): IEvent<Interval, IIntervalEventArgs> {
+    return this.elementLoaded.asEvent();
   }
 
   /**
