@@ -1,7 +1,7 @@
 import { IEvent, EventDispatcher } from 'strongly-typed-events';
 import { ElementLoaderEventArgs } from './class_ElementLoaderEventArgs';
 import { IKeyValueGeneric } from './interfaces';
-import { BaseElementLoad } from './abstract_class_BaseNodeLoad';
+import { BaseElementLoad } from './abstract_class_BaseElementLoad';
 import { Log } from './class_Log';
 import { appSettings } from './appSettings';
 import { DebugLevel } from './enums';
@@ -39,6 +39,24 @@ export class ElementLoader {
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
   }
+  public hasElement(key: string): boolean {
+    // @debug start
+    const methodName: string = 'methodName';
+    // Higher price to check using enumes each time so capture the values here
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
+    // @debug end
+    if (key.length === 0) {
+      Log.debugWarn(`${appSettings.shortName}: addElement: key is empty`);
+      return false;
+    }
+    const reslut: boolean = this.lEvents.hasOwnProperty(key);
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
+    return reslut;
+  }
   public onAllElementsLoaded(): IEvent<ElementLoader, ElementsLoadedArgs> {
     return this.lOnAllElementLoaded.asEvent();
   }
@@ -53,9 +71,15 @@ export class ElementLoader {
   }
 
   public start(): void {
+    // @debug start
+    const methodName: string = 'start';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    // @debug end
     for (const key in this.lEvents) {
       if (this.lEvents.hasOwnProperty(key)) {
-        const element = this.lEvents[key];
+        const element: BaseElementLoad = this.lEvents[key];
         element.onTick().subscribe((sender, args) => {
           const eArgs: ElementLoaderEventArgs = new ElementLoaderEventArgs(key, args);
           this.tick(eArgs);
@@ -66,6 +90,8 @@ export class ElementLoader {
         });
         element.onExpired().subscribe((sender, args) => {
           const eArgs: ElementLoaderEventArgs = new ElementLoaderEventArgs(key, args);
+          // dispose the class if time is up.
+          sender.dispose();
           this.tickExpired(eArgs);
           if (eArgs.cancel === true) {
             return;
@@ -74,6 +100,8 @@ export class ElementLoader {
         });
         element.onScriptLoaded().subscribe((sender, args) => {
           const eArgs: ElementLoaderEventArgs = new ElementLoaderEventArgs(key, args);
+          // dispose the class now that the script is loaded.
+          sender.dispose();
           this.elementLoaded(eArgs);
           if (eArgs.cancel === true) {
             return;
@@ -83,6 +111,9 @@ export class ElementLoader {
         element.start();
       }
     }
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
   }
   private elementLoaded(args: ElementLoaderEventArgs): void {
     // @debug start
