@@ -1,3 +1,4 @@
+import { IEvent } from 'strongly-typed-events';
 export interface IScriptItem {
   name: string;
   src: string;
@@ -131,4 +132,25 @@ export interface IElementCreate {
    * Any extra attributes to apply to element such as scrolling
    */
   elementAttributes?: IKeyValueGeneric<string>;
+}
+export interface IIntervalGeneric<TSender, TArgs> {
+  onExpired(): IEvent<TSender, TArgs>;
+  onTick(): IEvent<TSender, TArgs>;
+}
+export interface IIntervalManualGeneric<TSender, TArgs> extends IIntervalGeneric<TSender, TArgs> {
+  isStarted: boolean;
+  start(): void;
+}
+export interface IElementLoad<TSender, TArgs> extends IIntervalManualGeneric<TSender, TArgs> {
+  onScriptLoaded(): IEvent<TSender, TArgs>;
+}
+/**
+ * Interface that implements start() method
+ * @param start method
+ */
+export interface IStart {
+  isStarted: boolean;
+  start(): void;
+  dispose(): void;
+
 }

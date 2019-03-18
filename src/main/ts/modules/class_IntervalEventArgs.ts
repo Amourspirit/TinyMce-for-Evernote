@@ -2,6 +2,7 @@ export interface IIntervalEventArgs {
   cancel: boolean;
   count: number;
   interval: number;
+  // constructor(ticks: number, interval: number): void;
 }
 export class IntervalEventArgs implements IIntervalEventArgs {
   public cancel: boolean = false;
