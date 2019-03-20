@@ -114,7 +114,8 @@ export interface IIndexValueGeneric<T> {
 /**
  * Elements creation arguments
  * @param elementTag (required) The tag of the element such as div, script, style
- * @param elementText (optional) The text/html to add to the element content.
+ * @param elementText (optional) The text to add to the element content.
+ * @param elementHtml (optional) The html to add to the element content.
  * @param elementAttributes (optional) Array of Attributes and values to add to the element.
  */
 export interface IElementCreate {
@@ -123,13 +124,31 @@ export interface IElementCreate {
    */
   elementTag: string;
   /**
-   * text/html to add to the element content.
+   * text only to add to the element content.
    */
   elementText?: string;
+  /**
+   * html to add to the element content.
+   */
+  elementHtml?: string;
   /**
    * Any extra attributes to apply to element such as scrolling
    */
   elementAttributes?: IKeyValueGeneric<string>;
+  childElements?: IElementCreate[];
+}
+/**
+ * Elements creation arguments
+ * @param elementTag (required) The tag of the element such as div, script, style
+ * @param elementText (optional) The text/html to add to the element content.
+ * @param elementAttributes (optional) Array of Attributes and values to add to the element.
+ * @param childElements {IElementsCreate;} (optional) Child Elements to create of the parent.
+ */
+export interface IElementsCreate extends IElementCreate {
+  /**
+   * Child Elements to create of the parent.
+   */
+  childElements?: IElementCreate[];
 }
 export interface IIntervalGeneric<TSender, TArgs> {
   onExpired(): IEvent<TSender, TArgs>;

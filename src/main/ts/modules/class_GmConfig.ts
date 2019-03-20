@@ -16,8 +16,32 @@ export class GmConfig {
       title: appSettings.menuName, // Panel Title
       fields: // Fields object
       {
+         tinymceConfirmNoSaveExit:
+        {
+          section: ['TinyMce editor section'],
+          type: 'checkbox',
+          label: 'Ask for confirmation before closing without saving?',
+          default: true
+        },
+        tinymceWidth:
+        {
+          label: 'Width in pixels of editor when not full screen.', // Appears next to field
+          type: 'int', // Makes this setting a text input
+          min: 400, // Optional lower range limit
+          max: 4000, // Optional upper range limit
+          default: 660 // Default value if user doesnt change it
+        },
+        tinymceTheme:
+        {
+          section: ['TinyMce Themes', 'Choose Theme'],
+          label: 'Theme', // Appears next to field
+          type: 'select', // Makes this setting a dropdown
+          options: ['Defalut Theme', 'Modern White', 'Modern two', 'Charcoal', 'SS4'], // Possible choices
+          default: 'Modern White' // Default value if user doesn't change it
+        },
         tinymcePluginFullscreen:
         {
+          section: ['TinyMce plugins section', 'Plugin Options'],
           type: 'checkbox',
           label: 'Load Plugin Full Screen?',
           default: true
@@ -127,23 +151,9 @@ export class GmConfig {
           type: 'checkbox',
           label: 'Load Plugin Hilite?',
           default: true
-        },
-        tinymceConfirmNoSaveExit:
-        {
-          type: 'checkbox',
-          label: 'Ask for confirmation before closing without saving?',
-          default: true
-        },
-        tinymceWidth:
-        {
-          label: 'Width in pixels of editor when not full screen.', // Appears next to field
-          type: 'int', // Makes this setting a text input
-          min: 400, // Optional lower range limit
-          max: 4000, // Optional upper range limit
-          default: 660 // Default value if user doesnt change it
         }
       },
-      css: '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
+      // css: '#MyConfig_section_0 { display: none !important; }' // CSS that will hide the section
     };
     // tslint:disable-next-line
     GM_config.init(initValues);

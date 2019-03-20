@@ -22,7 +22,7 @@ export class ElementLoader {
   }
   public addElement(key: string, e: BaseElementLoad): void {
     // @debug start
-    const methodName: string = 'addElement';
+    const methodName: string = 'ElementLoader.addElement';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -44,7 +44,7 @@ export class ElementLoader {
   }
   public hasElement(key: string): boolean {
     // @debug start
-    const methodName: string = 'methodName';
+    const methodName: string = 'ElementLoader.methodName';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -78,7 +78,7 @@ export class ElementLoader {
 
   public start(): void {
     // @debug start
-    const methodName: string = 'start';
+    const methodName: string = 'ElementLoader.start';
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
@@ -88,7 +88,7 @@ export class ElementLoader {
     if (onBeforeStartEventArgs.cancel === true) {
       // @debug start
       Log.debug(`${methodName}: Exiting due to event was canceled `);
-    // @debug end
+      // @debug end
       return;
     }
     for (const key in this.lEvents) {
@@ -100,6 +100,9 @@ export class ElementLoader {
           if (eArgs.cancel === true) {
             return;
           }
+          // @debug start
+          Log.debug(`${methodName}: Dispatching onTick for key: ${eArgs.key}`);
+          // @debug end
           this.lOnTick.dispatch(this, eArgs);
         });
         element.onExpired().subscribe((sender, args) => {
@@ -110,6 +113,9 @@ export class ElementLoader {
           if (eArgs.cancel === true) {
             return;
           }
+          // @debug start
+          Log.debug(`${methodName}: Dispatching onTickExpired for key: ${eArgs.key}`);
+          // @debug end
           this.lOnTickExpired.dispatch(this, eArgs);
         });
         element.onElementLoaded().subscribe((sender, args) => {
@@ -120,6 +126,9 @@ export class ElementLoader {
           if (eArgs.cancel === true) {
             return;
           }
+          // @debug start
+          Log.debug(`${methodName}: Dispatching onElementLoaded for key: ${eArgs.key}`);
+          // @debug end
           this.lOnElementLoaded.dispatch(this, eArgs);
         });
         element.start();
@@ -138,7 +147,7 @@ export class ElementLoader {
   }
   private elementLoaded(args: ElementLoaderEventArgs): void {
     // @debug start
-    const methodName: string = 'elementLoaded';
+    const methodName: string = 'ElementLoader.elementLoaded';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -154,25 +163,21 @@ export class ElementLoader {
       // delete the added script
       delete this.lEvents[args.key];
     }
-    const done: boolean = this.isElementsLoaded();
-    if (done) {
-      const eArgs = new ElementsLoadedArgs(this.lTotalScripts);
-      this.allElementsLoaded(eArgs);
-      if (eArgs.cancel === false) {
-        this.lOnAllElementLoaded.dispatch(this, eArgs);
-      }
-    }
+    this.goForFinish();
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
   }
   private tick(args: ElementLoaderEventArgs): void {
     // @debug start
-    const methodName: string = 'tick';
+    const methodName: string = 'ElementLoader.tick';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
+    if (appDebugLevel >= levelDebug) {
+      Log.debug(`${methodName}: Entered.`);
+      Log.debug(`${methodName}: tick for key ${args.key}`);
+    }
     // @debug end
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
@@ -181,11 +186,14 @@ export class ElementLoader {
   }
   private tickExpired(args: ElementLoaderEventArgs): void {
     // @debug start
-    const methodName: string = 'tickExpired';
+    const methodName: string = 'ElementLoader.tickExpired';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered.`); }
+    if (appDebugLevel >= levelDebug) {
+      Log.debug(`${methodName}: Entered`);
+      Log.debug(`${methodName}: for key: ${args.key}`);
+    }
     // @debug end
     // set the args loadFailed property
     args.loadFailed = true;
@@ -199,6 +207,7 @@ export class ElementLoader {
       // delete the added script
       delete this.lEvents[args.key];
     }
+    this.goForFinish();
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
@@ -206,7 +215,7 @@ export class ElementLoader {
   }
   private allElementsLoaded(args: ElementsLoadedArgs): void {
     // @debug start
-    const methodName: string = 'allScriptsLoaded';
+    const methodName: string = 'ElementLoader.allScriptsLoaded';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -224,6 +233,32 @@ export class ElementLoader {
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
     return;
+  }
+  private goForFinish() {
+    // @debug start
+    const methodName: string = 'ElementLoader.goForFinish';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    // @debug end
+    const done: boolean = this.isElementsLoaded();
+    if (done) {
+      // @debug start
+      Log.debug(`${methodName}: All elemets are loaded dispatching onAllElementsLoaded`);
+      // @debug end
+      const eArgs = new ElementsLoadedArgs(this.lTotalScripts);
+      this.allElementsLoaded(eArgs);
+      if (eArgs.cancel === false) {
+        this.lOnAllElementLoaded.dispatch(this, eArgs);
+      }
+    } else {
+      // @debug start
+      Log.debug(`${methodName}: Not elemets are loaded yet`);
+      // @debug end
+    }
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
   }
   /*
  * Function to check and see if there are any element left to be loaded

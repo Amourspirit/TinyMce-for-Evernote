@@ -3,11 +3,11 @@ import { ElementLocation, DebugLevel } from './enums';
 import { appSettings } from './appSettings';
 import { Log } from './class_Log';
 import { IIntervalEventArgs } from './class_IntervalEventArgs';
-import { elementCreate, elementAddToDoc } from './ElementHelper';
+import { elementCreate, elementAddToDoc, elementsCreate } from './ElementHelper';
 import { IElementCreate } from './interfaces';
 
 /**
- * Arguments for ElementCreateNode
+ * Arguments for ElementLoad
  * @param scriptLocation (required) The location to inject the script such as head or body.
  * @param elementCreate (required) Elements creation arguments
  */
@@ -50,7 +50,7 @@ export class ElementLoad extends BaseElementLoad {
    */
   protected onTickTock(eventArgs: IIntervalEventArgs): void {
     // @debug start
-    const methodName: string = 'ElementCreateNode.onTickTock';
+    const methodName: string = 'ElementLoad.onTickTock';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -66,8 +66,13 @@ export class ElementLoad extends BaseElementLoad {
       eventArgs.cancel = true;
       return;
     }
-    const eHtml: HTMLElement = elementCreate(this.lArgs.elementCreate);
-    elementAddToDoc(eHtml, this.lArgs.scriptLocation);
+    if (this.lArgs.elementCreate.childElements) {
+      const multiHtml: HTMLElement = elementsCreate(this.lArgs.elementCreate);
+      elementAddToDoc(multiHtml, this.lArgs.scriptLocation);
+    } else {
+      const eHtml: HTMLElement = elementCreate(this.lArgs.elementCreate);
+      elementAddToDoc(eHtml, this.lArgs.scriptLocation);
+    }
     // now that thte element is added to the document dispatch on script loaded.
     this.elementLoaded.dispatch(this, eventArgs);
     this.dispose();
@@ -84,7 +89,7 @@ export class ElementLoad extends BaseElementLoad {
   */
   protected onTickExpired(eventArgs: IIntervalEventArgs): void {
     // @debug start
-    const methodName: string = 'ElementCreateNode.onExpired';
+    const methodName: string = 'ElementLoad.onExpired';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;

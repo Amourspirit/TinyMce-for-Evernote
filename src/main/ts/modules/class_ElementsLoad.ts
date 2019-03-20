@@ -3,36 +3,36 @@ import { ElementLocation, DebugLevel } from './enums';
 import { appSettings } from './appSettings';
 import { Log } from './class_Log';
 import { IIntervalEventArgs } from './class_IntervalEventArgs';
-import { elementCreate, elementAddToDoc } from './ElementHelper';
-import { IElementCreate } from './interfaces';
+import { elementsCreate, elementAddToDoc } from './ElementHelper';
+import { IElementsCreate } from './interfaces';
 
 /**
- * Arguments for ElementsCssNode
- * @param scriptLocation {ElementLocation} (required) The location to inject the script such as head or body.
- * @param textContent {string} (required) text/html to add to the element content.
+ * Arguments for ElementLoad
+ * @param scriptLocation (required) The location to inject the script such as head or body.
+ * @param elementCreate (required) Elements creation arguments
  */
-export interface IElementLoadCssArgs {
+export interface IElementsLoadArgs {
   /**
    * The location to inject the script such as head or body.
    */
   scriptLocation: ElementLocation;
   /**
-   * text/html to add to the element content.
+   * Elements creation arguments
    */
-  textContent: string;
+  elementsCreate: IElementsCreate;
 }
 /**
- * Adds css inline to document page
+ * Adds elements to document page
  */
-export class ElementLoadCss extends BaseElementLoad {
-  private lArgs: IElementLoadCssArgs;
+export class ElementsLoad extends BaseElementLoad {
+  private lArgs: IElementsLoadArgs;
   /**
-   * Constructs a new instace of the class
-   * @param args {IElementLoadCssArgs} The arguments for to create a new instance of the class
-   * @param args.scriptLocation {ElementLocation} (required) The location to inject the script such as head or body.
-   * @param args.textContent {string} (required) text/html to add to the element content.
+   * Creates a new instance of the class
+   * @param args The arguments to create a new instance of the claas
+   * @param args.scriptLocation {ElementLocation} The location to inject the script such as head or body.
+   * @param arg.elementCreate {IElementCreate} Elements creation arguments
    */
-  public constructor(args: IElementLoadCssArgs) {
+  public constructor(args: IElementsLoadArgs) {
     super(0, 1);
     this.lArgs = args;
   }
@@ -50,7 +50,7 @@ export class ElementLoadCss extends BaseElementLoad {
    */
   protected onTickTock(eventArgs: IIntervalEventArgs): void {
     // @debug start
-    const methodName: string = 'ElementCssNode.onTickTock';
+    const methodName: string = 'ElementLoad.onTickTock';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
@@ -66,18 +66,11 @@ export class ElementLoadCss extends BaseElementLoad {
       eventArgs.cancel = true;
       return;
     }
-    if (this.lArgs.textContent.length === 0) {
-      Log.warn(`ElementCssNode.onTickTock: Not content for css injection. Empty style element will be created.`);
-    }
-    const eArgs: IElementCreate = {
-      elementTag: 'style',
-      elementText: this.lArgs.textContent,
-      elementAttributes: {
-        type: 'text/css'
-      }
-    };
-    const eHtml: HTMLElement = elementCreate(eArgs);
+    const eHtml: HTMLElement = elementsCreate(this.lArgs.elementsCreate);
     elementAddToDoc(eHtml, this.lArgs.scriptLocation);
+    // now that thte element is added to the document dispatch on script loaded.
+    this.elementLoaded.dispatch(this, eventArgs);
+    this.dispose();
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
@@ -91,7 +84,7 @@ export class ElementLoadCss extends BaseElementLoad {
   */
   protected onTickExpired(eventArgs: IIntervalEventArgs): void {
     // @debug start
-    const methodName: string = 'ElementCssNode.onExpired';
+    const methodName: string = 'ElementLoad.onExpired';
     // Higher price to check using enumes each time so capture the values here
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;

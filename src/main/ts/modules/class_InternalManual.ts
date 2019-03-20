@@ -44,8 +44,17 @@ export class IntervalManual extends Interval implements IIntervalManual {
     // @debug end
   }
   public dispose(): void {
+    // @debug start
+    const methodName: string = 'IntervalManual.dispose';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    // @debug end
     this.lIsStarted = false;
     super.dispose();
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
   }
   /**
    * Readonly property that gets if the start method has been called.

@@ -1,5 +1,4 @@
 import { ElementLoader } from './class_ElementLoader';
-import { ElementLoadCss } from './class_ElementLoadCss';
 import { ElementLoadJs } from './class_ElementLoadJs';
 import { ElementLoad } from './class_ElementLoad';
 import { ElementLocation, DebugLevel } from './enums';
@@ -9,22 +8,36 @@ import tinymce from 'tinymce';
 import { IEventArgs } from './class_EventArgs';
 export class EvernoteElementLoader extends ElementLoader {
   protected onBeforeStart(args: IEventArgs): void {
+    // @debug start
+    const methodName: string = 'onBeforeStart';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    // @debug end
     if (args.cancel === true) {
       return;
     }
+    this.addLightbox();
     this.addTinyMce();
     this.addJQuery();
     this.addJqueryXpath();
     this.addLightBoxCss();
-    this.addIconCss();
+    // this.addIconCss();
     this.addTinyMceCss();
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
   }
 
   // region tinyMceCss
+  /**
+   * This is the default CSS for TinyMCE. If this style sheet is not included then tinyMCE will not work when another style
+   * is not applied. Such as using the tinyMCE skin_url option.
+   */
   private addTinyMceCss(): void {
     const srcLink: string = `//cdnjs.cloudflare.com/ajax/libs/tinymce/${appSettings.tinyMceVersion}/skins/lightgray/skin.min.css`;
     const key: string = 'tinyMceCss';
-    this.addCssLink(key, srcLink);
+    this.addStyleLink(key, srcLink, ElementLocation.head);
   }
   // end region tinyMceCss
   // #regon tinyMce
@@ -57,7 +70,7 @@ export class EvernoteElementLoader extends ElementLoader {
   }
   // #end region tinyMce
   // #region IconCSS
-  private addIconCss(): void {
+  /* private addIconCss(): void {
     // @debug start
     const methodName: string = 'addIconCss';
     const appDebugLevel = appSettings.debugLevel;
@@ -66,11 +79,11 @@ export class EvernoteElementLoader extends ElementLoader {
     // @debug end
     const pluginSrc: string = '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css';
     const key: string = 'icons-css';
-    this.addCssLink(key, pluginSrc);
+    this.addStyleLink(key, pluginSrc, ElementLocation.head);
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
-  }
+  } */
   // #end region IconCSS
   // #region jQuery
   private addJQuery(): void {
@@ -125,8 +138,8 @@ export class EvernoteElementLoader extends ElementLoader {
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery.Xpath already loaded`); }
       // @debug end
     } else {
-      // @debug start
       const pluginSrc: string = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
+      // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery link: ${pluginSrc}`); }
       // @debug end
       const elJs: ElementLoadJs = new ElementLoadJs({
@@ -143,31 +156,127 @@ export class EvernoteElementLoader extends ElementLoader {
   // #end region jQuery.Xpath
   // #region Lightbox
   private addLightBoxCss(): void {
-    const elCss = new ElementLoadCss({
-      scriptLocation: ElementLocation.head,
-      textContent: this.getLigthboxCss()
-    });
-    this.addElement('LigthboxCss', elCss);
+    // @debug start
+    const methodName: string = 'addLightBoxCss';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    // @debug end
+    this.addStyle('LigthboxCss', this.getLigthboxCss(), ElementLocation.body);
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
   }
   private getLigthboxCss(): string {
     const css = '// BUILD_INCLUDE("./scratch/css/lightbox.min.css")';
     return css;
   }
-  //  #end region Lightbox
-  private addCssLink(key: string, srcLink: string): void {
+  private addLightbox() {
     // @debug start
-    const methodName: string = 'addIconCss';
+    const methodName: string = 'EvernoteElementLoader.addStyleLink';
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
+    if (appDebugLevel >= levelDebug) {
+      Log.debug(`${methodName}: Entered`);
+    }
+    // @debug end
+    const elDivGmbackDrop = new ElementLoad({
+      scriptLocation: ElementLocation.body,
+      elementCreate: {
+        elementTag: 'div',
+        elementAttributes: {
+          class: 'gmbackdrop'
+        }
+      }
+    });
+    this.addElement('div.gmbackdrop', elDivGmbackDrop);
+    const elMulti: ElementLoad = new ElementLoad({
+      scriptLocation: ElementLocation.body,
+      elementCreate: {
+        elementTag: 'div',
+        elementAttributes: {
+          id: 'tinybox',
+          class: 'gmbox gmbox-window'
+        },
+        childElements: [{
+          elementTag: 'div',
+          elementAttributes: {
+            class: 'gmclose'
+          },
+          childElements: [{
+            elementTag: 'span',
+            elementAttributes: {
+              class: 'gm-close-tooltip'
+            },
+            elementHtml: 'Click to close this editor. <br /><br />Changes will not be saved.'
+          }]
+        },
+        {
+          elementTag: 'div',
+          elementAttributes: {
+            id: appSettings.fullScreenRealId,
+          },
+          childElements: [{
+            elementTag: 'textarea',
+            elementAttributes: {
+              id: appSettings.tinyId,
+              rows: '18',
+              cols: '66'
+            }
+          }]
+        }]
+      }
+    });
+    this.addElement('lightBoxHtml', elMulti);
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
+  }
+  //  #end region Lightbox
+  private addStyleLink(key: string, srcLink: string, elementLocation: ElementLocation = ElementLocation.head): void {
+    // @debug start
+    const methodName: string = 'EvernoteElementLoader.addStyleLink';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) {
+      Log.debug(`${methodName}: Entered`);
+      Log.debug(`${methodName}: Adding Csslink for key: ${key} and src ${srcLink}`);
+    }
     // @debug end
     const elCss = new ElementLoad({
-      scriptLocation: ElementLocation.head,
+      scriptLocation: elementLocation,
       elementCreate: {
-        elementTag: 'style',
+        elementTag: 'link',
         elementAttributes: {
           type: 'text/css',
-          src: srcLink
+          href: srcLink,
+          rel: 'stylesheet'
+        }
+      }
+    });
+    this.addElement(key, elCss);
+    // @debug start
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
+    // @debug end
+  }
+
+  private addStyle(key: string, styelcontent: string, elementLocation: ElementLocation = ElementLocation.head): void {
+    // @debug start
+    const methodName: string = 'EvernoteElementLoader.addStyle';
+    const appDebugLevel = appSettings.debugLevel;
+    const levelDebug = DebugLevel.debug;
+    if (appDebugLevel >= levelDebug) {
+      Log.debug(`${methodName}: Entered`);
+      Log.debug(`${methodName}: Adding Csslink for key: ${key}`);
+    }
+    // @debug end
+    const elCss = new ElementLoad({
+      scriptLocation: elementLocation,
+      elementCreate: {
+        elementTag: 'style',
+        elementText: styelcontent,
+        elementAttributes: {
+          type: 'text/css'
         }
       }
     });

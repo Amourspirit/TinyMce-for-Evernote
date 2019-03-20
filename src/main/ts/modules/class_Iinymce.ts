@@ -16,8 +16,6 @@ export class TinymceWork {
   public fullscreen: boolean = false;
   // tslint:disable-next-line
   private gmConfig: any = GM_config;
-  // tslint:disable-next-line:no-empty
-  public constructor() { }
 
   public init = (): void => {
     // @debug start
@@ -26,7 +24,7 @@ export class TinymceWork {
     const appDebugLevel = appSettings.debugLevel;
     const levelDebug = DebugLevel.debug;
     if (appDebugLevel >= levelDebug) {
-      Log.debug(`${methodName}: Entered.`);
+      Log.debug(`${methodName}: Entered`);
     }
     // @debug end
     const ver: string = appSettings.tinyMceVersion;
@@ -149,7 +147,6 @@ export class TinymceWork {
       // @debug end
       tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
     }
-
     const tinyMceExternalPlugins: ITinyMceExternalPlugins = {
       textcolor: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/textcolor/plugin.min.js',
       colorpicker: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/colorpicker/plugin.min.js',
@@ -178,9 +175,10 @@ export class TinymceWork {
       // entities: '160,nbsp',
       // init_instance_callback: "BIGBYTE.USERSCRIPT.STHL.TMCE.callback",
       init_instance_callback: () => {
-        $('.mce-i-mysave').addClass('fi-save');
+        $('.mce-i-mysave').addClass('save-s');
         // add x icon to button
-        $('.mce-i-myexit').addClass('fi-x');
+        // $('.mce-i-myexit').addClass('fi-x');
+        $('.mce-i-myexit').addClass('exit-x');
         // @debug start
         if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Triggering Event tinymceInit`); }
         // @debug end
@@ -192,14 +190,14 @@ export class TinymceWork {
         });
       },
       height: 260,
-      // extended_valid_elements : "span[!class]",
+      // skin_url: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.1.0/skins/lightgray/',
       inline: false,
       browser_spellcheck: true,
       plugins: '',
       menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
       toolbar: [toolbar1, toolbar2],
       // external_plugins: null,
-      content_css: 'https://www.evernote.com/js/tinymce/skins/lightgray/content.min.css',
+      content_css: '',
       // tslint:disable-next-line
       content_style: "// BUILD_INCLUDE('./scratch/css/tinymce-content.min.css')",
       // valid_elements: 'ol ul',
@@ -243,6 +241,24 @@ export class TinymceWork {
         });
       }
     };
+    const themeOpt: string = this.gmConfig.get('tinymceTheme') + '';
+    switch (themeOpt) {
+      case 'Modern White':
+        tinyMceInit.skin_url = 'https://cdn.jsdelivr.net/gh/rbecheras/tinymce-skin-modern-light-flat@dd311f2e26b2d23f15caeecca364bfcd1c40f500/light';
+        break;
+      case 'Modern two':
+        tinyMceInit.skin_url = 'https://cdn.jsdelivr.net/gh/Vodzo/tinymce_theme@b1f6cc5afd13d939cb81844b8cf2edde151de998';
+        break;
+      case 'Charcoal':
+        tinyMceInit.skin_url = 'https://cdn.jsdelivr.net/gh/Vodzo/tinymce_charcoal_theme@8d5f045120f09011d8d4c19dcebeed93932edb13';
+        break;
+      case 'SS4':
+        tinyMceInit.skin_url = 'https://cdn.jsdelivr.net/gh/DrMartinGonzo/tinymce-ss4-theme@5442568702bf1b03453e4f161d1bd5d4e79d45e0/client/dist/TinyMCE_ss4';
+        break;
+      default:
+        tinyMceInit.skin_url = '';
+        break;
+    }
     tinyMceInit.plugins = (tinyMceInit.plugins + ' -lists').trim();
     if (loadTable) {
       tinyMceInit.plugins = (tinyMceInit.plugins + ' -table').trim();
@@ -300,24 +316,6 @@ export class TinymceWork {
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: tinymce.init being called with param`, tinyMceInit); }
     // @debug end
     tinymce.init(tinyMceInit);
-    /*
-            let gmTinyMceTimerCounter: number = 0;
-            const gmTinyMceTimer = setInterval(() => {
-                gmTinyMceTimerCounter++;
-                Log.message(appSettings.shortName + ': try no. ' + gmTinyMceTimerCounter + ' looking for tinymce');
-                if (typeof (tinymce) !== 'undefined') {
-                    Log.message(appSettings.shortName + ': found tinymce library');
-                    // tinyMceTimer.dispose();
-                    clearInterval(gmTinyMceTimer);
-                }
-                // set a limit to how many time we check for tinymce
-                if (gmTinyMceTimerCounter >= 20) {
-                    Log.message(appSettings.shortName + ': reached max value for finding TinyMCE');
-                    // tinyMceTimer.dispose();
-                    clearInterval(gmTinyMceTimer);
-                }
-            }, 500);
-     */
     // @debug start
     if (appDebugLevel >= levelDebug) {
       Log.debug(`${methodName}: Leaving`);

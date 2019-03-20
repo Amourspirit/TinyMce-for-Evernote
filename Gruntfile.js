@@ -145,7 +145,7 @@ module.exports = function (grunt) {
                 src: ['scratch/rolled/<%= pkg._name %>.user.js'],
                 dest: 'scratch/nodebug/<%= pkg._name %>.user.js',  // destination directory or file
                 replacements: [{
-                    // .net reges ^\s*//\s@debug\sstart[\s\S]*?//\s@debug\send
+                    // .net reges \s*//\s@debug\sstart[\s\S]*?//\s@debug\send
                     // see also: http://regexstorm.net/tester
                     from: /[\s]*\/\/\s@debug\sstart[.\s\S]*?\/\/\s@debug\send[\s]*$/gm, // see https://www.regexpal.com/?fam=108408
                     to: ''
