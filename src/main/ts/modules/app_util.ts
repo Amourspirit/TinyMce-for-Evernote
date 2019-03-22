@@ -43,6 +43,24 @@ export const utilFnAsStringExist = (fnstring: string): boolean => {
     return false;
   }
 };
+/**
+ * Test if all functions in the fnArray exist in the global scope.
+ * @param fnArray An array of string function to test for existance
+ * @returns true if all function in the fnArray exist; Otherwise false.
+ */
+export const utilFnArrayExist = (fnArray: string[]): boolean => {
+  if (fnArray.length === 0) {
+    return true;
+  }
+  let result: boolean = true;
+  for (const fn in fnArray) {
+    if (fnArray.hasOwnProperty(fn)) {
+      const testFn = fnArray[fn];
+      result = result && utilFnAsStringExist(testFn);
+    }
+  }
+  return result;
+};
 export const utilCreateElement = <T extends HTMLElement>(tag: string): T => {
   const D: Document = document;
   // const val = ElementCreateTypes[eType];

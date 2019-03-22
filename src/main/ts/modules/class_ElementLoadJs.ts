@@ -30,7 +30,7 @@ export interface IElementJsLoadArgs {
    *
    * Be the name of any object such as JQ, $, jQyery
    */
-  tyepName?: string;
+  tyepName?: Array<string>;
   /**
    * text/html to add to the element content.
    */
@@ -49,7 +49,7 @@ export interface IElementJsLoadArgs {
  * or as linked js using ElementLocation.src in the constructor
  */
 export class ElementLoadJs extends BaseElementLoad {
-  private lTestFuncton: string;
+  private lTestFuncton: Array<string>;
   /**
    * Createns a new instance of the class
    * @param args The arguments for the constructor
@@ -63,7 +63,7 @@ export class ElementLoadJs extends BaseElementLoad {
     super();
     const textContent: string = args && args.textContent || '';
     const src: string = args && args.src || '';
-    this.lTestFuncton = args && args.tyepName || '';
+    this.lTestFuncton = args && args.tyepName || [];
     if (textContent.length + src.length === 0) {
       throw new Error('src or textContent muse included in the args');
     }
@@ -116,7 +116,7 @@ export class ElementLoadJs extends BaseElementLoad {
     Log.debug(`${methodName} try no ${this.count}`);
     // @debug end
     if (this.lTestFuncton.length > 0) {
-      if (this.fnAsStringExist(this.lTestFuncton) === true) {
+      if (this.fnArrayExist(this.lTestFuncton) === true) {
         this.elementLoaded.dispatch(this, eventArgs);
         this.dispose();
       } else {

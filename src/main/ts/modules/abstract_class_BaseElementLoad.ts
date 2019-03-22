@@ -2,7 +2,7 @@ import { IntervalManual } from './class_InternalManual';
 import { EventDispatcher, IEvent } from 'ste-events';
 import { Interval } from './class_Interval';
 import { IIntervalEventArgs } from './class_IntervalEventArgs';
-import { utilFnAsStringExist } from './app_util';
+import { utilFnAsStringExist, utilFnArrayExist } from './app_util';
 
 /**
  * abstract class used to build ScriptLoaders.
@@ -34,5 +34,13 @@ export abstract class BaseElementLoad extends IntervalManual {
    */
   protected fnAsStringExist(fnstring: string): boolean {
     return utilFnAsStringExist(fnstring);
+  }
+/**
+* Test if all functions in the fnArray exist in the global scope.
+* @param fnArray An array of string function to test for existance
+* @returns true if all function in the fnArray exist; Otherwise false.
+*/
+  protected fnArrayExist(fnArray: string[]): boolean {
+    return utilFnArrayExist(fnArray);
   }
 }

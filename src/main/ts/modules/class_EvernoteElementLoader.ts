@@ -55,7 +55,7 @@ export class EvernoteElementLoader extends ElementLoader {
       const pluginSrc: string = `//cdnjs.cloudflare.com/ajax/libs/tinymce/${appSettings.tinyMceVersion}/tinymce.min.js`;
       const elJs: ElementLoadJs = new ElementLoadJs({
         scriptLocation: ElementLocation.head,
-        tyepName: 'jQuery',
+        tyepName: ['jQuery'],
         src: pluginSrc
       });
       this.addElement('tinyMceJs', elJs);

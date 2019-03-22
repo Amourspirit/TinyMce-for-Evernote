@@ -1618,6 +1618,19 @@
             return false;
         }
     };
+    var utilFnArrayExist = function (fnArray) {
+        if (fnArray.length === 0) {
+            return true;
+        }
+        var result = true;
+        for (var fn in fnArray) {
+            if (fnArray.hasOwnProperty(fn)) {
+                var testFn = fnArray[fn];
+                result = result && utilFnAsStringExist(testFn);
+            }
+        }
+        return result;
+    };
     var utilCreateElement = function (tag) {
         var D = document;
         var node = D.createElement(tag);
@@ -1638,6 +1651,9 @@
         };
         BaseElementLoad.prototype.fnAsStringExist = function (fnstring) {
             return utilFnAsStringExist(fnstring);
+        };
+        BaseElementLoad.prototype.fnArrayExist = function (fnArray) {
+            return utilFnArrayExist(fnArray);
         };
         return BaseElementLoad;
     }(IntervalManual));
@@ -1701,7 +1717,7 @@
             var _this = _super.call(this) || this;
             var textContent = args && args.textContent || '';
             var src = args && args.src || '';
-            _this.lTestFuncton = args && args.tyepName || '';
+            _this.lTestFuncton = args && args.tyepName || [];
             if (textContent.length + src.length === 0) {
                 throw new Error('src or textContent muse included in the args');
             }
@@ -1732,7 +1748,7 @@
         }
         ElementLoadJs.prototype.onTickTock = function (eventArgs) {
             if (this.lTestFuncton.length > 0) {
-                if (this.fnAsStringExist(this.lTestFuncton) === true) {
+                if (this.fnArrayExist(this.lTestFuncton) === true) {
                     this.elementLoaded.dispatch(this, eventArgs);
                     this.dispose();
                 }
@@ -1804,7 +1820,7 @@
                 var pluginSrc = "//cdnjs.cloudflare.com/ajax/libs/tinymce/" + appSettings.tinyMceVersion + "/tinymce.min.js";
                 var elJs = new ElementLoadJs({
                     scriptLocation: ElementLocation.head,
-                    tyepName: 'jQuery',
+                    tyepName: ['jQuery'],
                     src: pluginSrc
                 });
                 this.addElement('tinyMceJs', elJs);
@@ -1907,10 +1923,6 @@
     var main = function () {
         var en = new Evernote();
         en.init();
-        Log.message("$ version = " + $.fn.jquery);
-        Log.message("jQuery version " + jQuery.fn.jquery);
-        Log.message("typeof(jQuery.fn.xpath)", typeof (jQuery.fn.xpath));
-        Log.message("typeof($.fn.xpath)", typeof ($.fn.xpath));
     };
     if (validateIfTop()) {
         Log.message(appSettings.shortName + ': Entry Script: Start loading...');
