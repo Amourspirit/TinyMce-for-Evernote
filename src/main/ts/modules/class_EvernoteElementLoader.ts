@@ -19,8 +19,8 @@ export class EvernoteElementLoader extends ElementLoader {
     }
     this.addLightbox();
     this.addTinyMce();
-    this.addJQuery();
-    this.addJqueryXpath();
+    // this.addJQuery();
+    // this.addJqueryXpath();
     this.addLightBoxCss();
     // this.addIconCss();
     this.addTinyMceCss();
@@ -86,7 +86,7 @@ export class EvernoteElementLoader extends ElementLoader {
   } */
   // #end region IconCSS
   // #region jQuery
-  private addJQuery(): void {
+  /* private addJQuery(): void {
     // @debug start
     const methodName: string = 'addJQuery';
     const appDebugLevel = appSettings.debugLevel;
@@ -113,10 +113,10 @@ export class EvernoteElementLoader extends ElementLoader {
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
-  }
+  } */
   // #end region jQuery
   // #region jQuery.Xpath
-  private addJqueryXpath(): void {
+  /* private addJqueryXpath(): void {
     // @debug start
     const methodName: string = 'addJqueryXpath';
     const appDebugLevel = appSettings.debugLevel;
@@ -152,7 +152,7 @@ export class EvernoteElementLoader extends ElementLoader {
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
-  }
+  } */
   // #end region jQuery.Xpath
   // #region Lightbox
   private addLightBoxCss(): void {

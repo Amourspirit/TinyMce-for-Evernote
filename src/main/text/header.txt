@@ -20,6 +20,8 @@
 // @downloadURL     https://github.com/Amourspirit/@REPOSITORY_NAME@/raw/master/dist/@SCRIPT_NAME@.user.js
 // @contributionURL https://amourspirit.github.io/@REPOSITORY_NAME@/#donate
 // @require         https://openuserjs.org/src/libs/sizzle/GM_config.min.js
+// @require         https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
+// @require         https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.js
 // @grant           GM_registerMenuCommand
 // @grant           GM_addStyle
 // @grant           GM_setValue

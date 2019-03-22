@@ -20,6 +20,8 @@
 // @downloadURL     https://github.com/Amourspirit/TinyMce-for-Evernote/raw/master/dist/TinyMce_for_Evernote.user.js
 // @contributionURL https://amourspirit.github.io/TinyMce-for-Evernote/#donate
 // @require         https://openuserjs.org/src/libs/sizzle/GM_config.min.js
+// @require         https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
+// @require         https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.js
 // @grant           GM_registerMenuCommand
 // @grant           GM_addStyle
 // @grant           GM_setValue
@@ -1789,8 +1791,6 @@
             }
             this.addLightbox();
             this.addTinyMce();
-            this.addJQuery();
-            this.addJqueryXpath();
             this.addLightBoxCss();
             this.addTinyMceCss();
         };
@@ -1810,39 +1810,6 @@
                 this.addElement('tinyMceJs', elJs);
             }
             else {
-            }
-        };
-        EvernoteElementLoader.prototype.addJQuery = function () {
-            if (typeof (jQuery) === 'undefined') {
-                var elJs = new ElementLoadJs({
-                    scriptLocation: ElementLocation.head,
-                    tyepName: 'jQuery',
-                    src: pluginSrc
-                });
-                this.addElement('jQuery', elJs);
-            }
-            else {
-            }
-        };
-        EvernoteElementLoader.prototype.addJqueryXpath = function () {
-            var xpathAlreadyExist = false;
-            try {
-                if (typeof (jQuery().xpath) === 'function') {
-                    xpathAlreadyExist = true;
-                }
-            }
-            catch (error) {
-            }
-            if (xpathAlreadyExist === true) {
-            }
-            else {
-                var pluginSrc = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
-                var elJs = new ElementLoadJs({
-                    scriptLocation: ElementLocation.head,
-                    tyepName: 'jQuery().xpath',
-                    src: pluginSrc
-                });
-                this.addElement('jQueryXpath', elJs);
             }
         };
         EvernoteElementLoader.prototype.addLightBoxCss = function () {
@@ -1940,6 +1907,10 @@
     var main = function () {
         var en = new Evernote();
         en.init();
+        Log.message("$ version = " + $.fn.jquery);
+        Log.message("jQuery version " + jQuery.fn.jquery);
+        Log.message("typeof(jQuery.fn.xpath)", typeof (jQuery.fn.xpath));
+        Log.message("typeof($.fn.xpath)", typeof ($.fn.xpath));
     };
     if (validateIfTop()) {
         Log.message(appSettings.shortName + ': Entry Script: Start loading...');
