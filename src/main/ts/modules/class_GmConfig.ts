@@ -2,6 +2,7 @@
 // <reference path="../../../types/gmconfig.d.ts" />
 // import GM_config from 'GM_config';
 declare const GM_config: any;
+declare const GM_info: any;
 
 import { appSettings } from './appSettings';
 
@@ -10,10 +11,14 @@ export class GmConfig {
   public constructor() { }
 
   public init = (): void => {
+    let strTitle = appSettings.menuName;
+    if (GM_info && GM_info.script && GM_info.script.version) {
+      strTitle = `${appSettings.menuName}: Version: ${GM_info.script.version}`;
+    }
     // const initValues: GM_config.IGMconfigInitValues = {
     const initValues = {
       id: appSettings.preKey + 'Config', // The id used for this instance of GM_config
-      title: appSettings.menuName, // Panel Title
+      title: strTitle, // Panel Title
       fields: // Fields object
       {
          tinymceConfirmNoSaveExit:

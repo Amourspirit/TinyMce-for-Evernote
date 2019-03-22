@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.2.1
+// @version         3.2.2
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -1275,9 +1275,13 @@
     var GmConfig =  (function () {
         function GmConfig() {
             this.init = function () {
+                var strTitle = appSettings.menuName;
+                if (GM_info && GM_info.script && GM_info.script.version) {
+                    strTitle = appSettings.menuName + ": Version: " + GM_info.script.version;
+                }
                 var initValues = {
                     id: appSettings.preKey + 'Config',
-                    title: appSettings.menuName,
+                    title: strTitle,
                     fields: 
                     {
                         tinymceConfirmNoSaveExit: {
