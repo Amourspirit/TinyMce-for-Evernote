@@ -14,8 +14,8 @@ export abstract class BaseElementLoad extends IntervalManual {
   /**
    * constructs a new instance of the class.
    * @constructor
-   * @param interval {number} the number of milli seconds to wait between attempts to load a script
-   * @param maxCount {number} the maximum number of trys to attempt adding script.
+   * @param interval {number} the number of milli seconds to wait between attempts to load a script. Default value 500
+   * @param maxCount {number} the maximum number of trys to attempt adding script. Default value 30
    */
   public constructor(interval: number = 500, maxCount: number = 30) {
     super(interval, maxCount);

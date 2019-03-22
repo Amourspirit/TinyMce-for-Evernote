@@ -1,12 +1,17 @@
 import { ElementLoader } from './class_ElementLoader';
 import { ElementLoadJs } from './class_ElementLoadJs';
 import { ElementLoad } from './class_ElementLoad';
+import { ResourceTest } from './class_ResourceTest';
 import { ElementLocation, DebugLevel } from './enums';
 import { Log } from './class_Log';
 import { appSettings } from './appSettings';
 import tinymce from 'tinymce';
 import { IEventArgs } from './class_EventArgs';
+import { exceptionMessages } from './appResourceString';
+import './ext';
+
 export class EvernoteElementLoader extends ElementLoader {
+
   protected onBeforeStart(args: IEventArgs): void {
     // @debug start
     const methodName: string = 'onBeforeStart';
@@ -17,6 +22,7 @@ export class EvernoteElementLoader extends ElementLoader {
     if (args.cancel === true) {
       return;
     }
+    this.testForResource('resTinyMce', 300, 30, 'tinymce');
     this.addLightbox();
     this.addTinyMce();
     // this.addJQuery();
@@ -28,7 +34,14 @@ export class EvernoteElementLoader extends ElementLoader {
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
   }
-
+  private testForResource(key: string, timing: number = 500, attempts: number = 30, ...globalRes: string[]) {
+    if (this.hasElement(key)) {
+      this.dispose();
+      throw new Error(String.Format(exceptionMessages.argKeyExist, 'key', key));
+    }
+    const lt: ResourceTest = new ResourceTest(timing, attempts, ...globalRes);
+    this.addElement(key, lt);
+  }
   // region tinyMceCss
   /**
    * This is the default CSS for TinyMCE. If this style sheet is not included then tinyMCE will not work when another style
@@ -69,91 +82,6 @@ export class EvernoteElementLoader extends ElementLoader {
     // @debug end
   }
   // #end region tinyMce
-  // #region IconCSS
-  /* private addIconCss(): void {
-    // @debug start
-    const methodName: string = 'addIconCss';
-    const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
-    // @debug end
-    const pluginSrc: string = '//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css';
-    const key: string = 'icons-css';
-    this.addStyleLink(key, pluginSrc, ElementLocation.head);
-    // @debug start
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
-    // @debug end
-  } */
-  // #end region IconCSS
-  // #region jQuery
-  /* private addJQuery(): void {
-    // @debug start
-    const methodName: string = 'addJQuery';
-    const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
-    // @debug end
-    if (typeof (jQuery) === 'undefined') {
-      // @debug start
-      const pluginSrc: string = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js';
-      if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery link: ${pluginSrc}`); }
-      // @debug end
-
-      const elJs: ElementLoadJs = new ElementLoadJs({
-        scriptLocation: ElementLocation.head,
-        tyepName: 'jQuery',
-        src: pluginSrc
-      });
-      this.addElement('jQuery', elJs);
-    } else {
-      // @debug start
-      if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery already loaded`); }
-      // @debug end
-    }
-    // @debug start
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
-    // @debug end
-  } */
-  // #end region jQuery
-  // #region jQuery.Xpath
-  /* private addJqueryXpath(): void {
-    // @debug start
-    const methodName: string = 'addJqueryXpath';
-    const appDebugLevel = appSettings.debugLevel;
-    const levelDebug = DebugLevel.debug;
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Entered`); }
-    // @debug end
-    let xpathAlreadyExist: boolean = false;
-    try {
-      if (typeof (jQuery().xpath) === 'function') {
-        xpathAlreadyExist = true;
-      }
-    } catch (error) {
-      // @debug start
-      Log.debug(`${methodName}: JQuery does not exist yet`);
-      // @debug end
-    }
-    if (xpathAlreadyExist === true) {
-      // @debug start
-      if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: No need to load jQuery.Xpath already loaded`); }
-      // @debug end
-    } else {
-      const pluginSrc: string = 'https://cdn.jsdelivr.net/npm/jquery-xpath@0.3.1/jquery.xpath.min.js';
-      // @debug start
-      if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Attempting to add jquery link: ${pluginSrc}`); }
-      // @debug end
-      const elJs: ElementLoadJs = new ElementLoadJs({
-        scriptLocation: ElementLocation.head,
-        tyepName: 'jQuery().xpath',
-        src: pluginSrc
-      });
-      this.addElement('jQueryXpath', elJs);
-    }
-    // @debug start
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
-    // @debug end
-  } */
-  // #end region jQuery.Xpath
   // #region Lightbox
   private addLightBoxCss(): void {
     // @debug start

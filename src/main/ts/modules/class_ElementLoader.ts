@@ -1,6 +1,6 @@
 import { IEvent, EventDispatcher } from 'strongly-typed-events';
 import { ElementLoaderEventArgs } from './class_ElementLoaderEventArgs';
-import { IKeyValueGeneric } from './interfaces';
+import { IKeyValueGeneric, IDisposable } from './interfaces';
 import { BaseElementLoad } from './abstract_class_BaseElementLoad';
 import { Log } from './class_Log';
 import { appSettings } from './appSettings';
@@ -8,7 +8,7 @@ import { DebugLevel } from './enums';
 import { ElementsLoadedArgs } from './class_ElementsLoadedArgs';
 import { IEventArgs, EventArgs } from './class_EventArgs';
 import { ElementsLoadFailArgs } from './class_ElementsLoadFailArgs';
-export class ElementLoader {
+export class ElementLoader implements IDisposable {
   private lTotalScripts: number = 0; // the total number of scritps added with addElement
   private lEvents: IKeyValueGeneric<BaseElementLoad>;
   private lEventsFailed: Array<string> = [];
@@ -138,6 +138,20 @@ export class ElementLoader {
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Leaving`); }
     // @debug end
     this.onAfterStart(new EventArgs());
+  }
+  /**
+   * Disposes all of the events
+   */
+  public dispose() {
+    for (const key in this.lEvents) {
+      if (this.lEvents.hasOwnProperty(key)) {
+        const el = this.lEvents[key];
+        if (el.isDisposed === false) {
+          el.dispose();
+        }
+      }
+   }
+    this.lEvents = {};
   }
   protected onBeforeStart(args: IEventArgs): void {
     return;

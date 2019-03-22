@@ -926,6 +926,23 @@
         });
         return IntervalEventArgs;
     }(EventArgs));
+    var exceptionMessages = {
+        argLessThenZero: 'Argument "{0}" must to be zero or greater',
+        argLessThenOne: 'Argument "{0}" must be one or greater',
+        argEmptyString: 'Argument "{0}" is not allowed to be an empty string',
+        argKeyExist: 'Argument "{0}" invalid key. Key "{1}" already exist.'
+    };
+
+    Number.prototype.thousandsSeperator = function () {
+        return Number(this).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
+    String.Format = function (str) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return str.replace(/{(\d+)}/g, function (match, index) { return args[index] || ''; });
+    };
     var Interval =  (function () {
         function Interval(interval, maxCount) {
             var _this = this;
@@ -939,7 +956,7 @@
             this.lMaxTick = maxCount;
             this.lIntervalTime = interval;
             if (this.lIntervalTime < 0) {
-                throw new RangeError('interval arg must be 0 or greater');
+                throw new RangeError(String.Format(exceptionMessages.argLessThenZero, 'interval'));
             }
             if (this.lMaxTick < 1) {
                 return;
@@ -1547,6 +1564,17 @@
             }
             this.onAfterStart(new EventArgs());
         };
+        ElementLoader.prototype.dispose = function () {
+            for (var key in this.lEvents) {
+                if (this.lEvents.hasOwnProperty(key)) {
+                    var el = this.lEvents[key];
+                    if (el.isDisposed === false) {
+                        el.dispose();
+                    }
+                }
+            }
+            this.lEvents = {};
+        };
         ElementLoader.prototype.onBeforeStart = function (args) {
             return;
         };
@@ -1796,6 +1824,51 @@
         return ElementLoad;
     }(BaseElementLoad));
 
+    var ResourceTest =  (function (_super) {
+        __extends(ResourceTest, _super);
+        function ResourceTest(timing, attempts) {
+            if (timing === void 0) { timing = 500; }
+            if (attempts === void 0) { attempts = 30; }
+            var globalRes = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                globalRes[_i - 2] = arguments[_i];
+            }
+            var _this = this;
+            if (globalRes.length === 0) {
+                throw new RangeError(String.Format(exceptionMessages.argEmptyString, 'globalRes'));
+            }
+            if (timing < 0) {
+                throw new RangeError(String.Format(exceptionMessages.argLessThenZero, 'timing'));
+            }
+            if (attempts < 1) {
+                throw new RangeError(String.Format(exceptionMessages.argLessThenOne, 'attempts'));
+            }
+            _this = _super.call(this, timing, attempts) || this;
+            _this.lTestFuncton = globalRes;
+            return _this;
+        }
+        ResourceTest.prototype.onTickTock = function (eventArgs) {
+            if (this.lTestFuncton.length > 0) {
+                if (this.fnArrayExist(this.lTestFuncton) === true) {
+                    this.elementLoaded.dispatch(this, eventArgs);
+                    this.dispose();
+                }
+                else {
+                    this.elementLoaded.dispatch(this, eventArgs);
+                    this.dispose();
+                }
+            }
+            else {
+                this.elementLoaded.dispatch(this, eventArgs);
+                this.dispose();
+            }
+        };
+        ResourceTest.prototype.onTickExpired = function (eventArgs) {
+            return;
+        };
+        return ResourceTest;
+    }(BaseElementLoad));
+
     var EvernoteElementLoader =  (function (_super) {
         __extends(EvernoteElementLoader, _super);
         function EvernoteElementLoader() {
@@ -1805,10 +1878,25 @@
             if (args.cancel === true) {
                 return;
             }
+            this.testForResource('resTinyMce', 300, 30, 'tinymce');
             this.addLightbox();
             this.addTinyMce();
             this.addLightBoxCss();
             this.addTinyMceCss();
+        };
+        EvernoteElementLoader.prototype.testForResource = function (key, timing, attempts) {
+            if (timing === void 0) { timing = 500; }
+            if (attempts === void 0) { attempts = 30; }
+            var globalRes = [];
+            for (var _i = 3; _i < arguments.length; _i++) {
+                globalRes[_i - 3] = arguments[_i];
+            }
+            if (this.hasElement(key)) {
+                this.dispose();
+                throw new Error(String.Format(exceptionMessages.argKeyExist, 'key', key));
+            }
+            var lt = new (ResourceTest.bind.apply(ResourceTest, [void 0, timing, attempts].concat(globalRes)))();
+            this.addElement(key, lt);
         };
         EvernoteElementLoader.prototype.addTinyMceCss = function () {
             var srcLink = "//cdnjs.cloudflare.com/ajax/libs/tinymce/" + appSettings.tinyMceVersion + "/skins/lightgray/skin.min.css";

@@ -2,6 +2,8 @@
 import { EventDispatcher, IEvent } from 'strongly-typed-events';
 import { IntervalEventArgs, IIntervalEventArgs } from './class_IntervalEventArgs';
 import { IDisposable } from './interfaces';
+import { exceptionMessages } from './appResourceString';
+import './ext';
 
 /**
  * Inerface used with Interval class
@@ -49,7 +51,7 @@ export class Interval implements IInterval, IDisposable {
     this.lMaxTick = maxCount;
     this.lIntervalTime = interval;
     if (this.lIntervalTime < 0) {
-      throw new RangeError('interval arg must be 0 or greater');
+      throw new RangeError(String.Format(exceptionMessages.argLessThenZero, 'interval'));
     }
     if (this.lMaxTick < 1) {
       return;
