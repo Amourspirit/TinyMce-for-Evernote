@@ -95,7 +95,7 @@ module.exports = function (grunt) {
         pkg: packageData,
 
         clean: {
-            dirs: ['scratch', 'dist'],
+            dirs: ['scratch', 'dist', 'lib'],
             compiled: ['scratch/compiled']
         },
 
