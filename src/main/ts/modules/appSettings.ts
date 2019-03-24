@@ -14,7 +14,7 @@ export const appSettings: IKeyValueGeneric<any> & IappSettings = {
   tinyId: 'gminput',
   shortName: 'TMCEE',
   preKey: 'tmceen_',
-  debugLevel: DebugLevel.info,
+  debugLevel: DebugLevel.none,
   menuName: 'TinyMce Options',
   tinyMceVersion: '4.1.0',
   fullScreenRealId: 'tinymce-real-fs'

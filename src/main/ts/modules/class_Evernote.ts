@@ -45,7 +45,7 @@ export class Evernote {
       if (!data) {
         Log.error(`${methodName}: data seems to be null`);
       } else if (data.tinyMceId !== appSettings.tinyId) {
-        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, [e, data]);
       }
     }
     // @debug end
@@ -54,7 +54,7 @@ export class Evernote {
       this.lightBoxReset();
       const ed: tinymce.Editor = tinymce.EditorManager.editors[data.tinyMceId];
       if (!ed) {
-        Log.error(`${methodName}: Editor was not found and is null. Param e, data`, e, data);
+        Log.error(`${methodName}: Editor was not found and is null. Param e, data`, [e, data]);
       }
       ed.setContent(''); // clean up tinyMCE
     }
@@ -77,14 +77,14 @@ export class Evernote {
       if (!data) {
         Log.error(`${methodName}: data seems to be null`);
       } else if (data.tinyMceId !== appSettings.tinyId) {
-        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, [e, data]);
       }
     }
     // @debug end
     if (data.tinyMceId === appSettings.tinyId) {
       const ed: tinymce.Editor = tinymce.EditorManager.editors[data.tinyMceId];
       if (!ed) {
-        Log.error(`${methodName}: Editor was not found and is null. Params e, data`, e, data);
+        Log.error(`${methodName}: Editor was not found and is null. Params e, data`, [e, data]);
       }
       const confirm: boolean = GM_config.get('tinymceConfirmNoSaveExit');
       if (confirm) {
@@ -116,7 +116,7 @@ export class Evernote {
       if (!data) {
         Log.error(`${methodName}: data seems to be null`);
       } else if (data.tinyMceId !== appSettings.tinyId) {
-        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, e, data);
+        Log.debugWarn(`${methodName}: data.tinyMcid Parameter does not match expected value of ${appSettings.tinyId}. e, data params`, [e, data]);
       } else {
         Log.debug(`${methodName}: param data`, data);
       }
@@ -210,14 +210,14 @@ export class Evernote {
     // assign the width to the style
     $('.gmbox-window').width(intTinymceWidth);
     // @debug start
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: .gmbox-window class width`, intTinymceWidth); }
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: .gmbox-window class width`, [intTinymceWidth]); }
     // @debug end
     // set the cancel function for TinyMce popup
     $('.gmclose').click(() => {
       // @debug start
       if (appDebugLevel >= levelDebug) {
         Log.debug(`${methodName}: .gmclose click function entered`);
-        Log.debug(`${methodName}: .gmclose click function tinyID`, appSettings.tinyId);
+        Log.debug(`${methodName}: .gmclose click function tinyID`, [appSettings.tinyId]);
         Log.debug(`${methodName}: .gmclose click triggering tinymceCancel custom eveent`);
       }
       // @debug end

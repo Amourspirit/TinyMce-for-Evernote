@@ -313,7 +313,7 @@ export class TinymceWork {
 
     tinyMceInit.external_plugins = tinyMceExternalPlugins;
     // @debug start
-    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: tinymce.init being called with param`, tinyMceInit); }
+    if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: tinymce.init being called with param`, [tinyMceInit]); }
     // @debug end
     tinymce.init(tinyMceInit);
     // @debug start

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.2.2
+// @version         3.3.0
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -42,11 +42,11 @@
     })(PriorityLevel || (PriorityLevel = {}));
     var DebugLevel;
     (function (DebugLevel) {
-        DebugLevel[DebugLevel["none"] = 0] = "none";
-        DebugLevel[DebugLevel["debug"] = 1] = "debug";
-        DebugLevel[DebugLevel["error"] = 2] = "error";
-        DebugLevel[DebugLevel["warn"] = 3] = "warn";
-        DebugLevel[DebugLevel["info"] = 4] = "info";
+        DebugLevel[DebugLevel["debug"] = 0] = "debug";
+        DebugLevel[DebugLevel["error"] = 1] = "error";
+        DebugLevel[DebugLevel["warn"] = 2] = "warn";
+        DebugLevel[DebugLevel["info"] = 3] = "info";
+        DebugLevel[DebugLevel["none"] = 4] = "none";
     })(DebugLevel || (DebugLevel = {}));
     var ElementLocation;
     (function (ElementLocation) {
@@ -59,7 +59,7 @@
         tinyId: 'gminput',
         shortName: 'TMCEE',
         preKey: 'tmceen_',
-        debugLevel: DebugLevel.info,
+        debugLevel: DebugLevel.none,
         menuName: 'TinyMce Options',
         tinyMceVersion: '4.1.0',
         fullScreenRealId: 'tinymce-real-fs'
@@ -73,55 +73,65 @@
     var Log =  (function () {
         function Log() {
         }
-        Log.message = function (msg) {
-            var optionalParams = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                optionalParams[_i - 1] = arguments[_i];
-            }
+        Log.message = function (msg, optionalParams) {
             if (appSettings.debugLevel > DebugLevel.info) {
                 return;
             }
-            console.log.apply(console, [msg].concat(optionalParams));
-        };
-        Log.warn = function (msg) {
-            var optionalParams = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                optionalParams[_i - 1] = arguments[_i];
+            var params = [];
+            if (optionalParams) {
+                for (var i = 0; i < optionalParams.length; i++) {
+                    params[i] = optionalParams[i];
+                }
             }
+            console.log.apply(console, [msg].concat(params));
+        };
+        Log.warn = function (msg, optionalParams) {
             if (appSettings.debugLevel > DebugLevel.warn) {
                 return;
             }
-            console.warn.apply(console, [msg].concat(optionalParams));
-        };
-        Log.error = function (msg) {
-            var optionalParams = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                optionalParams[_i - 1] = arguments[_i];
+            var params = [];
+            if (optionalParams) {
+                for (var i = 0; i < optionalParams.length; i++) {
+                    params[i] = optionalParams[i];
+                }
             }
+            console.warn.apply(console, [msg].concat(params));
+        };
+        Log.error = function (msg, optionalParams) {
             if (appSettings.debugLevel > DebugLevel.error) {
                 return;
             }
-            console.error.apply(console, [msg].concat(optionalParams));
-        };
-        Log.debug = function (msg) {
-            var optionalParams = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                optionalParams[_i - 1] = arguments[_i];
+            var params = [];
+            if (optionalParams) {
+                for (var i = 0; i < optionalParams.length; i++) {
+                    params[i] = optionalParams[i];
+                }
             }
+            console.error.apply(console, [msg].concat(params));
+        };
+        Log.debug = function (msg, optionalParams) {
             if (appSettings.debugLevel > DebugLevel.debug) {
                 return;
             }
-            console.log.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(optionalParams));
-        };
-        Log.debugWarn = function (msg) {
-            var optionalParams = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                optionalParams[_i - 1] = arguments[_i];
+            var params = [];
+            if (optionalParams) {
+                for (var i = 0; i < optionalParams.length; i++) {
+                    params[i] = optionalParams[i];
+                }
             }
+            console.log.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(params));
+        };
+        Log.debugWarn = function (msg, optionalParams) {
             if (appSettings.debugLevel > DebugLevel.debug) {
                 return;
             }
-            console.warn.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(optionalParams));
+            var params = [];
+            if (optionalParams) {
+                for (var i = 0; i < optionalParams.length; i++) {
+                    params[i] = optionalParams[i];
+                }
+            }
+            console.warn.apply(console, [appSettings.shortName + ": Debug: " + msg].concat(params));
         };
         return Log;
     }());
@@ -1097,7 +1107,7 @@
                     _this.lightBoxReset();
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
                     if (!ed) {
-                        Log.error(methodName + ": Editor was not found and is null. Param e, data", e, data);
+                        Log.error(methodName + ": Editor was not found and is null. Param e, data", [e, data]);
                     }
                     ed.setContent(''); 
                 }
@@ -1106,7 +1116,7 @@
                 if (data.tinyMceId === appSettings.tinyId) {
                     var ed = tinymce__default.EditorManager.editors[data.tinyMceId];
                     if (!ed) {
-                        Log.error(methodName + ": Editor was not found and is null. Params e, data", e, data);
+                        Log.error(methodName + ": Editor was not found and is null. Params e, data", [e, data]);
                     }
                     var confirm_1 = GM_config.get('tinymceConfirmNoSaveExit');
                     if (confirm_1) {
