@@ -5,7 +5,7 @@ import pkg from "./package.json";
 // import 'jquery';
 
 export default {
-    input: __dirname + `/lib/${pkg._name}.user.js`,
+    input: __dirname + `/lib/main.js`,
     output: {
         file: __dirname + `/scratch/rolled/${pkg._name}.user.js`,
         format: 'iife', // immediately-invoked function expression — suitable for <script> tags
