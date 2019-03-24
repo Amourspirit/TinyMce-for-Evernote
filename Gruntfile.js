@@ -96,7 +96,8 @@ module.exports = function (grunt) {
 
         clean: {
             dirs: ['scratch', 'dist', 'lib'],
-            compiled: ['scratch/compiled']
+            compiled: ['scratch/compiled'],
+            readme: ['./Readme.md']
         },
 
         tslint: {
@@ -193,6 +194,27 @@ module.exports = function (grunt) {
                 {
                     from: '@LICENSE@',
                     to: packageData.license
+                },
+                {
+                    from: '@REPOSITORY_NAME@',
+                    to: packageData._repositoryName
+                }
+                ]
+            },
+            readme_build: {
+                src: ['src/main/text/Readme.md'],   // source files array (supports minimatch)
+                dest: './Readme.md',  // destination directory or file
+                replacements: [{
+                    from: '@BUILD_NUMBER@',                   // string replacement
+                    to: packageData.version
+                },
+                {
+                    from: '@SCRIPT_NAME@',
+                    to: packageData._name
+                },
+                {
+                    from: '@AUTHOR@',
+                    to: packageData.author
                 },
                 {
                     from: '@REPOSITORY_NAME@',
@@ -320,17 +342,19 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', [
-        'clean:dirs',                // clean the folder out from any previous build
+        'clean:dirs',           // clean the folder out from any previous build
+        'clean:readme',         // remoe root Readme.md
         'tslint',               // check the ts files for any lint issues
         'shell:tsc',            // run tsc
         'shell:rollup',         // run rollup to combine all the files into one js file.
         'if:debug',             // run if debug command to remove debug if _debug value of package.json is greater then 0 otherwise copy file to compiled and continue
         'if:debug_remove_comments',
-        'replace:header_build',   // replace the build number in the header text with current version from package.json
+        'replace:header_build', // replace the build number in the header text with current version from package.json
         'cssmin',               // minify css files to be later injected into the js file.
         'htmlmin',              // minify html files to be later injected into the js file.
         'replace:inner_css',    // extract the .button css from minified css and write it into a text file
         'copy:build',           // run special function includeFile that is in this script to replace BUILD_INCLUDE vars in js.
         'concat',               // combine the header file with the javascript file.
+        'replace:readme_build'  // generate new Readme.md
     ]);
 };
