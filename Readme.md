@@ -23,8 +23,6 @@ Uses:
 * [Foundation Icons](http://zurb.com/playground/foundation-icon-fonts-3)
 * [tinyMCE](http://www.tinymce.com/)
 
-If you find that you need to post Code into Evernote then checkout
-[Syntax-Highlight-Style](http://amourspirit.github.io/Syntax-Highlight-Style/)
 
 ## Authors
 
