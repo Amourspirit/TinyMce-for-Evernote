@@ -157,7 +157,13 @@ export class TinymceWork {
       hr: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
       link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
     };
-    let toolbar1: string = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
+    const loadFont = gmSet.tinymceFontsDisplay;
+
+    let toolbar1: string = 'mysave myexit | ';
+    if (loadFont) {
+      toolbar1 += 'fontselect fontsizeselect | ';
+    }
+    toolbar1 += 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
     let toolbar2: string = (loadFullscreen ? 'fullscreen ' : '');
     toolbar2 += (loadPrint ? 'print ' : '');
     toolbar2 += (loadPreview ? 'preview ' : '');
@@ -251,6 +257,13 @@ export class TinymceWork {
         });
       }
     };
+    // Load the default fonts and sizes Used by Evernote
+    if (loadFont) {
+      tinyMceInit.font_formats = 'Gotham=gotham,helvetica,sans-serif;Georgia=georgia,palatina,serif;Helvetica=helvetica,arial,sans-serif;Courier New=courier new,courier,monospace;';
+      tinyMceInit.font_formats += 'Times New Roman=times new roman,times,serif;Trebuchet=trebuchet ms,geneva,sans-serif;Verdena=verdana,helvetica,sans-serif;';
+      tinyMceInit.fontsize_formats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+    }
+
     const themeOpt: string = this.gmConfig.get('tinymceTheme') + '';
     switch (themeOpt) {
       case 'Modern White':

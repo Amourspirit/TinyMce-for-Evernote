@@ -46,6 +46,13 @@ export class GmConfig {
     return this.gmConfig.get('tinymceToolbars');
   }
   /**
+   * Display fonts
+   * @readonly
+   */
+  public get tinymceFontsDisplay(): boolean {
+    return this.gmConfig.get('tinymceFontsDisplay');
+  }
+  /**
    * 'Load Plugin Table
    * @readonly
    */
@@ -203,6 +210,13 @@ export class GmConfig {
           type: 'select',
           options: ['one', 'two'],
           default: ['one']
+        },
+        tinymceFontsDisplay:
+        {
+          section: ['Font Display'],
+          type: 'checkbox',
+          label: 'Display Font List?',
+          default: true
         },
         tinymcePluginFullscreen:
         {

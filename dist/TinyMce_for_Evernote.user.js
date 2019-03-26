@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.3.2
+// @version         3.3.3
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -175,6 +175,13 @@
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GmConfig.prototype, "tinymceFontsDisplay", {
+            get: function () {
+                return this.gmConfig.get('tinymceFontsDisplay');
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(GmConfig.prototype, "tinymcePluginTable", {
             get: function () {
                 return this.gmConfig.get('tinymcePluginTable');
@@ -330,6 +337,12 @@
                         type: 'select',
                         options: ['one', 'two'],
                         default: ['one']
+                    },
+                    tinymceFontsDisplay: {
+                        section: ['Font Display'],
+                        type: 'checkbox',
+                        label: 'Display Font List?',
+                        default: true
                     },
                     tinymcePluginFullscreen: {
                         section: ['TinyMce plugins section', 'Plugin Options'],
@@ -513,7 +526,12 @@
                     hr: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
                     link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
                 };
-                var toolbar1 = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
+                var loadFont = gmSet.tinymceFontsDisplay;
+                var toolbar1 = 'mysave myexit | ';
+                if (loadFont) {
+                    toolbar1 += 'fontselect fontsizeselect | ';
+                }
+                toolbar1 += 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
                 var toolbar2 = (loadFullscreen ? 'fullscreen ' : '');
                 toolbar2 += (loadPrint ? 'print ' : '');
                 toolbar2 += (loadPreview ? 'preview ' : '');
@@ -592,6 +610,11 @@
                         });
                     }
                 };
+                if (loadFont) {
+                    tinyMceInit.font_formats = 'Gotham=gotham,helvetica,sans-serif;Georgia=georgia,palatina,serif;Helvetica=helvetica,arial,sans-serif;Courier New=courier new,courier,monospace;';
+                    tinyMceInit.font_formats += 'Times New Roman=times new roman,times,serif;Trebuchet=trebuchet ms,geneva,sans-serif;Verdena=verdana,helvetica,sans-serif;';
+                    tinyMceInit.fontsize_formats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
+                }
                 var themeOpt = _this.gmConfig.get('tinymceTheme') + '';
                 switch (themeOpt) {
                     case 'Modern White':
