@@ -6,7 +6,7 @@ import * as tinymce from 'tinymce';
 // import tinymce from 'tinymce';
 import { Log } from './class_Log';
 import { appSettings } from './appSettings';
-import { ITinyMceExternalPlugins } from './interfaces';
+import { ITinyMceExternalPlugins, IKeyAny } from './interfaces';
 import { DebugLevel } from './enums';
 // import { Clock } from './class_clock';
 // import GM_config from 'GM_config';
@@ -312,6 +312,10 @@ export class TinymceWork {
     }
 
     tinyMceInit.external_plugins = tinyMceExternalPlugins;
+    tinyMceInit.style_formats_merge = true;
+    tinyMceInit.style_formats = this.getStyleFormats();
+    // tinyMceInit.content_style = 'body {padding: 10px}';
+    // tinyMceInit.extended_valid_elements = 'div[*]';
     // @debug start
     if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: tinymce.init being called with param`, [tinyMceInit]); }
     // @debug end
@@ -321,5 +325,48 @@ export class TinymceWork {
       Log.debug(`${methodName}: Leaving`);
     }
     // @debug end
+  }
+  private getStyleFormats() {
+    const sFmt = [];
+    sFmt.push(this.getBlockContainers());
+    sFmt.push(this.getFormatBlocks());
+    return sFmt;
+  }
+  private getBlockContainers() {
+    const c =  { title: 'Containers', items: [
+      { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+      { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+      { title: 'blockquote', block: 'blockquote', wrapper: true },
+      { title: 'hgroup', block: 'hgroup', wrapper: true },
+      { title: 'aside', block: 'aside', wrapper: true },
+      { title: 'figure', block: 'figure', wrapper: true }
+    ] };
+    return c;
+  }
+  private getFormatBlocks(): {} {
+    const containers: IKeyAny = {
+      title: 'Formated Blocks'
+     };
+    containers.items = [];
+
+    containers.items.push(this.getFormatCodeBlock());
+    return containers;
+  }
+  private getFormatCodeBlock() {
+    const codeBlock = {
+      title: 'Code Block', block: 'div', wrapper: true, merge_siblings: true,
+      styles: {
+        'box-sizing': 'border-box',
+        'padding': '8px',
+        'font-family': 'Monaco, Menlo, Consolas, \'Courier New\', monospace',
+        'font-size': '12px',
+        'color': '#333333',
+        'border-radius': '4px',
+        'background-color': '#fbfaf8',
+        'border': '1px solid rgba(0, 0, 0, 0.15)',
+        '-en-codeblock': 'true' // this is removed by tinyMCE
+      }
+    };
+    return codeBlock;
   }
 }

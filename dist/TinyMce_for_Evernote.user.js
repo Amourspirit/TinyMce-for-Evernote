@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.3.0
+// @version         3.3.1
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -356,9 +356,53 @@
                     tinyMceInit.plugins = (tinyMceInit.plugins + ' -hilite').trim();
                 }
                 tinyMceInit.external_plugins = tinyMceExternalPlugins;
+                tinyMceInit.style_formats_merge = true;
+                tinyMceInit.style_formats = _this.getStyleFormats();
                 tinymce.init(tinyMceInit);
             };
         }
+        TinymceWork.prototype.getStyleFormats = function () {
+            var sFmt = [];
+            sFmt.push(this.getBlockContainers());
+            sFmt.push(this.getFormatBlocks());
+            return sFmt;
+        };
+        TinymceWork.prototype.getBlockContainers = function () {
+            var c = { title: 'Containers', items: [
+                    { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+                    { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+                    { title: 'blockquote', block: 'blockquote', wrapper: true },
+                    { title: 'hgroup', block: 'hgroup', wrapper: true },
+                    { title: 'aside', block: 'aside', wrapper: true },
+                    { title: 'figure', block: 'figure', wrapper: true }
+                ] };
+            return c;
+        };
+        TinymceWork.prototype.getFormatBlocks = function () {
+            var containers = {
+                title: 'Formated Blocks'
+            };
+            containers.items = [];
+            containers.items.push(this.getFormatCodeBlock());
+            return containers;
+        };
+        TinymceWork.prototype.getFormatCodeBlock = function () {
+            var codeBlock = {
+                title: 'Code Block', block: 'div', wrapper: true, merge_siblings: true,
+                styles: {
+                    'box-sizing': 'border-box',
+                    'padding': '8px',
+                    'font-family': 'Monaco, Menlo, Consolas, \'Courier New\', monospace',
+                    'font-size': '12px',
+                    'color': '#333333',
+                    'border-radius': '4px',
+                    'background-color': '#fbfaf8',
+                    'border': '1px solid rgba(0, 0, 0, 0.15)',
+                    '-en-codeblock': 'true' 
+                }
+            };
+            return codeBlock;
+        };
         return TinymceWork;
     }());
 
