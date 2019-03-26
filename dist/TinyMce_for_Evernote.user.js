@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            TinyMce for Evernote
 // @namespace       https://github.com/Amourspirit/TinyMce-for-Evernote
-// @version         3.3.1
+// @version         3.3.2
 // @description     Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.
 // @author          Paul Moss
 // @run-at          document-end
@@ -135,76 +135,374 @@
         };
         return Log;
     }());
+
+    var GmConfig =  (function () {
+        function GmConfig() {
+            this.gmConfig = GM_config;
+        }
+        Object.defineProperty(GmConfig.prototype, "tinymceConfirmNoSaveExit", {
+            get: function () {
+                return this.gmConfig.get('tinymceConfirmNoSaveExit');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymceWidth", {
+            get: function () {
+                return parseInt(this.gmConfig.get('tinymceWidth'), 10);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymceTheme", {
+            get: function () {
+                return this.gmConfig.get('tinymceTheme');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginFullscreen", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginFullscreen');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymceToolbars", {
+            get: function () {
+                return this.gmConfig.get('tinymceToolbars');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginTable", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginTable');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginCharmap", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginCharmap');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginCode", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginCode');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginCodeWidth", {
+            get: function () {
+                return parseInt(this.gmConfig.get('tinymcePluginCodeWidth'), 10);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginCodeHeight", {
+            get: function () {
+                return parseInt(this.gmConfig.get('tinymcePluginCodeHeight'), 10);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginPreview", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginPreview');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginPrint", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginPrint');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginInsertdatetime", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginInsertdatetime');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginImage", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginImage');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginSearchreplace", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginSearchreplace');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginEmoticons", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginEmoticons');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginAdvlist", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginAdvlist');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginVisualblocks", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginVisualblocks');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginVisualchars", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginVisualchars');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginBbcode", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginBbcode');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginWordcount", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginWordcount');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(GmConfig.prototype, "tinymcePluginHilite", {
+            get: function () {
+                return this.gmConfig.get('tinymcePluginHilite');
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GmConfig.prototype.init = function () {
+            var strTitle = appSettings.menuName;
+            if (GM_info && GM_info.script && GM_info.script.version) {
+                strTitle = appSettings.menuName + ": Version: " + GM_info.script.version;
+            }
+            var initValues = {
+                id: appSettings.preKey + 'Config',
+                title: strTitle,
+                fields: 
+                {
+                    tinymceConfirmNoSaveExit: {
+                        section: ['TinyMce editor section'],
+                        type: 'checkbox',
+                        label: 'Ask for confirmation before closing without saving?',
+                        default: true
+                    },
+                    tinymceWidth: {
+                        label: 'Width in pixels of editor when not full screen.',
+                        type: 'int',
+                        min: 400,
+                        max: 4000,
+                        default: 660 
+                    },
+                    tinymceTheme: {
+                        section: ['TinyMce Themes', 'Choose Theme'],
+                        label: 'Theme',
+                        type: 'select',
+                        options: ['Defalut Theme', 'Modern White', 'Modern two', 'Charcoal', 'SS4'],
+                        default: 'Modern White' 
+                    },
+                    tinymceToolbars: {
+                        section: ['Toolbar Options', 'Selecting one will combine all the toolbars'],
+                        label: 'Select Number of Toolbars',
+                        type: 'select',
+                        options: ['one', 'two'],
+                        default: ['one']
+                    },
+                    tinymcePluginFullscreen: {
+                        section: ['TinyMce plugins section', 'Plugin Options'],
+                        type: 'checkbox',
+                        label: 'Load Plugin Full Screen?',
+                        default: true
+                    },
+                    tinymcePluginTable: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Table?',
+                        default: true
+                    },
+                    tinymcePluginCharmap: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Special Characters?',
+                        default: true
+                    },
+                    tinymcePluginCode: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Html Code?',
+                        default: true
+                    },
+                    tinymcePluginCodeWidth: {
+                        label: 'Width in pixels of HTML code editor.',
+                        type: 'int',
+                        min: 200,
+                        max: 4000,
+                        default: 400
+                    },
+                    tinymcePluginCodeHeight: {
+                        label: 'Height in pixels of HTML code editor.',
+                        type: 'int',
+                        min: 200,
+                        max: 4000,
+                        default: 300
+                    },
+                    tinymcePluginPreview: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Preview?',
+                        default: true
+                    },
+                    tinymcePluginPrint: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Print?',
+                        default: true
+                    },
+                    tinymcePluginInsertdatetime: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Insert Date Time?',
+                        default: true
+                    },
+                    tinymcePluginImage: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Image?',
+                        default: true
+                    },
+                    tinymcePluginSearchreplace: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Find & Replace?',
+                        default: true
+                    },
+                    tinymcePluginEmoticons: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Emoticons?',
+                        default: true
+                    },
+                    tinymcePluginAdvlist: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Advanced List?',
+                        default: false
+                    },
+                    tinymcePluginVisualblocks: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Visual Blocks?',
+                        default: true
+                    },
+                    tinymcePluginVisualchars: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Visual Characters?',
+                        default: false
+                    },
+                    tinymcePluginBbcode: {
+                        type: 'checkbox',
+                        label: 'Load Plugin BBCode?',
+                        default: false
+                    },
+                    tinymcePluginWordcount: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Word Count?',
+                        default: true
+                    },
+                    tinymcePluginHilite: {
+                        type: 'checkbox',
+                        label: 'Load Plugin Hilite?',
+                        default: true
+                    }
+                },
+            };
+            GM_config.init(initValues);
+        };
+        return GmConfig;
+    }());
     var TinymceWork =  (function () {
         function TinymceWork() {
             var _this = this;
             this.fullscreen = false;
             this.gmConfig = GM_config;
             this.init = function () {
+                var gmSet = new GmConfig();
                 var ver = appSettings.tinyMceVersion;
                 var id = appSettings.tinyId;
                 tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
-                var loadTable = _this.gmConfig.get('tinymcePluginTable');
-                if (loadTable) {
+                var loadTable = gmSet.tinymcePluginTable;
+                if (gmSet.tinymcePluginTable) {
                     tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
                 }
-                var loadCharmap = _this.gmConfig.get('tinymcePluginCharmap');
+                var loadCharmap = gmSet.tinymcePluginCharmap;
                 if (loadCharmap) {
                     tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
                 }
-                var loadCode = _this.gmConfig.get('tinymcePluginCode');
+                var loadCode = gmSet.tinymcePluginCode;
                 if (loadCode) {
                     tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
                 }
-                var loadFullscreen = _this.gmConfig.get('tinymcePluginFullscreen');
+                var loadFullscreen = gmSet.tinymcePluginFullscreen;
                 if (loadFullscreen) {
                     tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
                 }
-                var loadEmoticons = _this.gmConfig.get('tinymcePluginEmoticons');
+                var loadEmoticons = gmSet.tinymcePluginEmoticons;
                 if (loadEmoticons) {
                     tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
                 }
-                var loadWordcount = _this.gmConfig.get('tinymcePluginWordcount');
+                var loadWordcount = gmSet.tinymcePluginWordcount;
                 if (loadEmoticons) {
                     tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
                 }
-                var loadPrint = _this.gmConfig.get('tinymcePluginPrint');
+                var loadPrint = gmSet.tinymcePluginPrint;
                 if (loadPrint) {
                     tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
                 }
-                var loadPreview = _this.gmConfig.get('tinymcePluginPreview');
+                var loadPreview = gmSet.tinymcePluginPreview;
                 if (loadPreview) {
                     tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
                 }
-                var loadInsertdatetime = _this.gmConfig.get('tinymcePluginInsertdatetime');
+                var loadInsertdatetime = gmSet.tinymcePluginInsertdatetime;
                 if (loadInsertdatetime) {
                     tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
                 }
-                var loadImage = _this.gmConfig.get('tinymcePluginImage');
+                var loadImage = gmSet.tinymcePluginImage;
                 if (loadImage) {
                     tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
                 }
-                var loadSearchreplace = _this.gmConfig.get('tinymcePluginSearchreplace');
+                var loadSearchreplace = gmSet.tinymcePluginSearchreplace;
                 if (loadSearchreplace) {
                     tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
                 }
-                var loadAdvlist = _this.gmConfig.get('tinymcePluginAdvlist');
+                var loadAdvlist = gmSet.tinymcePluginAdvlist;
                 if (loadAdvlist) {
                     tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
                 }
-                var loadBbcode = _this.gmConfig.get('tinymcePluginBbcode');
+                var loadBbcode = gmSet.tinymcePluginBbcode;
                 if (loadBbcode) {
                     tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
                 }
-                var loadVisualblocks = _this.gmConfig.get('tinymcePluginVisualblocks');
+                var loadVisualblocks = gmSet.tinymcePluginVisualblocks;
                 if (loadVisualblocks) {
                     tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
                 }
-                var loadVisualchars = _this.gmConfig.get('tinymcePluginVisualchars');
+                var loadVisualchars = gmSet.tinymcePluginVisualchars;
                 if (loadVisualchars) {
                     tinymce.PluginManager.load('visualchars', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/visualchars/plugin.min.js');
                 }
-                var loadHilite = _this.gmConfig.get('tinymcePluginHilite');
+                var loadHilite = gmSet.tinymcePluginHilite;
                 if (loadHilite) {
                     tinymce.PluginManager.load('hilite', 'https://cdn.jsdelivr.net/gh/Amourspirit/TinyMCE-Plugin-hilite@9b2a96752b5162187315e07047a7c0efd706145c/js/plugin.min.js');
                 }
@@ -230,6 +528,14 @@
                 toolbar2 += (loadVisualchars ? ' | visualchars' : '');
                 toolbar2 += (loadVisualblocks ? ' | visualblocks' : '');
                 toolbar2 += (loadHilite ? ' | hilite' : '');
+                var toolbars = [];
+                if (gmSet.tinymceToolbars === 'one') {
+                    toolbar1 += ' | ' + toolbar2;
+                    toolbars.push(toolbar1);
+                }
+                else {
+                    toolbars.push(toolbar1, toolbar2);
+                }
                 var tinyMceInit = {
                     selector: 'textarea#' + id,
                     init_instance_callback: function () {
@@ -247,7 +553,7 @@
                     browser_spellcheck: true,
                     plugins: '',
                     menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
-                    toolbar: [toolbar1, toolbar2],
+                    toolbar: toolbars,
                     content_css: '',
                     content_style: "a,blockquote,body,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,iframe,img,li,ol,p,pre,q,ul{border:0;padding:0;margin:0}a,abbr,acronym,address,area,b,bdo,big,blockquote,caption,center,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,font,h3,h4,h5,h6,hr,i,ins,kbd,li,map,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,u,ul{line-height:1.57143em}a,body{margin:0}body,h1,h2{font-family:gotham,helvetica,arial,sans-serif}a,img[name=en-crypt]{cursor:pointer}h3,p{margin-bottom:.714285em}del{text-decoration:line-through}dfn{font-style:italic}body{box-sizing:border-box;color:#383838;font-size:14px;padding-right:1px;word-wrap:break-word}a:link,a:visited{color:#047ac6}a:active,a:hover{color:#2596de}h1{font-size:1.5em;font-weight:700;line-height:1.04762em;margin-bottom:.4761em;margin-top:.9523em}h2{font-size:1.286em;font-weight:700;line-height:1.22222em;margin-bottom:.5556em;margin-top:1.111em}h3,h4,h5,h6{font-size:1em;font-weight:700;font-family:gotham,helvetica,arial,sans-serif}h3{margin-top:1.4285em}div{font-family:gotham,helvetica,arial,sans-serif;font-size:14px}img.en-media{height:auto;margin-bottom:1.286em;max-width:100%}img.en-media[height='1']{height:1px}p+div img,p+img{margin-top:.714285em}div+div img,div+img{margin-top:.857412em}div+div img+img,img+img,li ol,li ul{margin-top:0}ol,ul{list-style-position:outside;margin-bottom:.714285em;margin-left:2em;margin-top:.2857em;padding-left:0}li ol,li ul{margin-bottom:0}h1+ol,h1+ul,h2+ol,h2+ul,p+ol,p+ul{margin-top:-.428571em}blockquote{border-left:2px solid #bfbfbf;margin-bottom:1.4285em;margin-left:1.4285em;margin-top:1.4285em;padding-left:.714285em}code,pre{font-family:Monaco,Courier,monospace}cite{font-style:italic}table{font-size:1em}td,th{padding:.2em 2em .2em 0;text-align:left;vertical-align:top}button.en-ignore{margin-bottom:1em}.highlight{background:#c9f2d0;border:1px solid #62eb92}.Decrypted{background-color:#f7f7f7;padding:5px}.Decrypted .Header{color:#404040;font-family:gotham,helvetica,arial,sans-serif;font-size:11px;padding-bottom:5px}.Decrypted .Body{background-color:#fff;padding:5px}.canvas-container{background:url(/redesign/global/img/loading-spinner.gif) center center no-repeat #fff;border:1px solid #cacaca;margin-bottom:10px}",
                     keep_styles: false,
@@ -1287,13 +1593,6 @@
             });
             ivm.start();
         };
-        Evernote.prototype.createToolbarHtml = function () {
-            var css = ''; 
-            var btnHtml = "<div tabindex=\"0\" id=\"gm-edit-btn\" style=\"display:inline-block;\" name=\"gm-edit-btn\" class=\"gm-btn\"></div>";
-            var html = '';
-            html += "<div tabindex=\"0\" id=\"gm-tb\" title=\"Edit with TinyMCE\" style=\"" + css + "\">" + btnHtml + "</div>";
-            return html;
-        };
         Evernote.prototype.lightBoxReset = function () {
             $('.gmbackdrop, .gmbox').animate({
                 opacity: '0'
@@ -1313,6 +1612,13 @@
                 };
             }
         };
+        Evernote.prototype.createToolbarHtml = function () {
+            var css = ''; 
+            var btnHtml = "<div tabindex=\"0\" id=\"gm-edit-btn\" style=\"display:inline-block;\" name=\"gm-edit-btn\" class=\"gm-btn\"></div>";
+            var html = '';
+            html += "<div tabindex=\"0\" id=\"gm-tb\" title=\"Edit with TinyMCE\" style=\"" + css + "\">" + btnHtml + "</div>";
+            return html;
+        };
         Evernote.prototype.getTinymceDivId = function () {
             if (this.tinymceDivId.length > 0) {
                 return this.tinymceDivId;
@@ -1324,141 +1630,6 @@
             return this.tinymceDivId;
         };
         return Evernote;
-    }());
-
-    var GmConfig =  (function () {
-        function GmConfig() {
-            this.init = function () {
-                var strTitle = appSettings.menuName;
-                if (GM_info && GM_info.script && GM_info.script.version) {
-                    strTitle = appSettings.menuName + ": Version: " + GM_info.script.version;
-                }
-                var initValues = {
-                    id: appSettings.preKey + 'Config',
-                    title: strTitle,
-                    fields: 
-                    {
-                        tinymceConfirmNoSaveExit: {
-                            section: ['TinyMce editor section'],
-                            type: 'checkbox',
-                            label: 'Ask for confirmation before closing without saving?',
-                            default: true
-                        },
-                        tinymceWidth: {
-                            label: 'Width in pixels of editor when not full screen.',
-                            type: 'int',
-                            min: 400,
-                            max: 4000,
-                            default: 660 
-                        },
-                        tinymceTheme: {
-                            section: ['TinyMce Themes', 'Choose Theme'],
-                            label: 'Theme',
-                            type: 'select',
-                            options: ['Defalut Theme', 'Modern White', 'Modern two', 'Charcoal', 'SS4'],
-                            default: 'Modern White' 
-                        },
-                        tinymcePluginFullscreen: {
-                            section: ['TinyMce plugins section', 'Plugin Options'],
-                            type: 'checkbox',
-                            label: 'Load Plugin Full Screen?',
-                            default: true
-                        },
-                        tinymcePluginTable: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Table?',
-                            default: true
-                        },
-                        tinymcePluginCharmap: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Special Characters?',
-                            default: true
-                        },
-                        tinymcePluginCode: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Html Code?',
-                            default: true
-                        },
-                        tinymcePluginCodeWidth: {
-                            label: 'Width in pixels of HTML code editor.',
-                            type: 'int',
-                            min: 200,
-                            max: 4000,
-                            default: 400
-                        },
-                        tinymcePluginCodeHeight: {
-                            label: 'Height in pixels of HTML code editor.',
-                            type: 'int',
-                            min: 200,
-                            max: 4000,
-                            default: 300
-                        },
-                        tinymcePluginPreview: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Preview?',
-                            default: true
-                        },
-                        tinymcePluginPrint: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Print?',
-                            default: true
-                        },
-                        tinymcePluginInsertdatetime: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Insert Date Time?',
-                            default: true
-                        },
-                        tinymcePluginImage: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Image?',
-                            default: true
-                        },
-                        tinymcePluginSearchreplace: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Find & Replace?',
-                            default: true
-                        },
-                        tinymcePluginEmoticons: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Emoticons?',
-                            default: true
-                        },
-                        tinymcePluginAdvlist: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Advanced List?',
-                            default: false
-                        },
-                        tinymcePluginVisualblocks: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Visual Blocks?',
-                            default: true
-                        },
-                        tinymcePluginVisualchars: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Visual Characters?',
-                            default: false
-                        },
-                        tinymcePluginBbcode: {
-                            type: 'checkbox',
-                            label: 'Load Plugin BBCode?',
-                            default: false
-                        },
-                        tinymcePluginWordcount: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Word Count?',
-                            default: true
-                        },
-                        tinymcePluginHilite: {
-                            type: 'checkbox',
-                            label: 'Load Plugin Hilite?',
-                            default: true
-                        }
-                    },
-                };
-                GM_config.init(initValues);
-            };
-        }
-        return GmConfig;
     }());
 
     var ElementLoaderEventArgs =  (function (_super) {

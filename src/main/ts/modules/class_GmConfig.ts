@@ -7,10 +7,162 @@ declare const GM_info: any;
 import { appSettings } from './appSettings';
 
 export class GmConfig {
-  // tslint:disable-next-line:no-empty
-  public constructor() { }
+  private gmConfig: any = GM_config;
 
-  public init = (): void => {
+  // #region [publicGet]
+  /**
+   * Ask for confirmation before closing without saving
+   * @readonly
+   */
+  public get tinymceConfirmNoSaveExit(): boolean {
+    return this.gmConfig.get('tinymceConfirmNoSaveExit');
+  }
+  /**
+   * Width in pixels of editor when not full screen.
+   * @readonly
+   */
+  public get tinymceWidth(): number {
+    return parseInt(this.gmConfig.get('tinymceWidth'), 10);
+  }
+  /**
+   * Gets Timymce theme. Default 'Modern White'
+   * @readonly
+   */
+  public get tinymceTheme(): string {
+    return this.gmConfig.get('tinymceTheme');
+  }
+  /**
+   * Load Plugin Full Screen
+   * @readonly
+   */
+  public get tinymcePluginFullscreen(): boolean {
+    return this.gmConfig.get('tinymcePluginFullscreen');
+  }
+  /**
+   * Gets he  Number of toolbars selected
+   * @readonly
+   */
+  public get tinymceToolbars(): string {
+    return this.gmConfig.get('tinymceToolbars');
+  }
+  /**
+   * 'Load Plugin Table
+   * @readonly
+   */
+  public get tinymcePluginTable(): boolean {
+    return this.gmConfig.get('tinymcePluginTable');
+  }
+  /**
+   * Load Plugin Special Characters
+   * @readonly
+   */
+  public get tinymcePluginCharmap(): boolean {
+    return this.gmConfig.get('tinymcePluginCharmap');
+  }
+  /**
+   * Load Plugin Html Code
+   * @readonly
+   */
+  public get tinymcePluginCode(): boolean {
+    return this.gmConfig.get('tinymcePluginCode');
+  }
+  /**
+   * Width in pixels of HTML code editor
+   * @readonly
+   */
+  public get tinymcePluginCodeWidth(): number {
+    return parseInt(this.gmConfig.get('tinymcePluginCodeWidth'), 10);
+  }
+  /**
+   * Height in pixels of HTML code editor
+   * @readonly
+   */
+  public get tinymcePluginCodeHeight(): number {
+    return parseInt(this.gmConfig.get('tinymcePluginCodeHeight'), 10);
+  }
+  /**
+   * Load Plugin Preview
+   * @readonly
+   */
+  public get tinymcePluginPreview(): boolean {
+    return this.gmConfig.get('tinymcePluginPreview');
+  }
+  /**
+   * Load Plugin Print
+   * @readonly
+   */
+  public get tinymcePluginPrint(): boolean {
+    return this.gmConfig.get('tinymcePluginPrint');
+  }
+  /**
+   * Load Plugin Insert Date Time
+   * @readonly
+   */
+  public get tinymcePluginInsertdatetime(): boolean {
+    return this.gmConfig.get('tinymcePluginInsertdatetime');
+  }
+  /**
+   * Load Plugin Image
+   * @readonly
+   */
+  public get tinymcePluginImage(): boolean {
+    return this.gmConfig.get('tinymcePluginImage');
+  }
+  /**
+   * Load Plugin Find & Replace
+   * @readonly
+   */
+  public get tinymcePluginSearchreplace(): boolean {
+    return this.gmConfig.get('tinymcePluginSearchreplace');
+  }
+  /**
+   * Load Plugin Emoticons
+   * @readonly
+   */
+  public get tinymcePluginEmoticons(): boolean {
+    return this.gmConfig.get('tinymcePluginEmoticons');
+  }
+  /**
+   * Load Plugin Advanced List
+   * @readonly
+   */
+  public get tinymcePluginAdvlist(): boolean {
+    return this.gmConfig.get('tinymcePluginAdvlist');
+  }
+  /**
+   * Load Plugin Visual Blocks
+   * @readonly
+   */
+  public get tinymcePluginVisualblocks(): boolean {
+    return this.gmConfig.get('tinymcePluginVisualblocks');
+  }
+  /**
+   * Load Plugin Visual Characters
+   * @readonly
+   */
+  public get tinymcePluginVisualchars(): boolean {
+    return this.gmConfig.get('tinymcePluginVisualchars');
+  }
+  /**
+   * Load Plugin BBCode
+   * @readonly
+   */
+  public get tinymcePluginBbcode(): boolean {
+    return this.gmConfig.get('tinymcePluginBbcode');
+  }
+  /**
+   * Load Plugin Word Count
+   * @readonly
+   */
+  public get tinymcePluginWordcount(): boolean {
+    return this.gmConfig.get('tinymcePluginWordcount');
+  }
+  public get tinymcePluginHilite(): boolean {
+    return this.gmConfig.get('tinymcePluginHilite');
+  }
+  // #endregion
+
+  public init(): void {
     let strTitle = appSettings.menuName;
     if (GM_info && GM_info.script && GM_info.script.version) {
       strTitle = `${appSettings.menuName}: Version: ${GM_info.script.version}`;
@@ -43,6 +195,14 @@ export class GmConfig {
           type: 'select', // Makes this setting a dropdown
           options: ['Defalut Theme', 'Modern White', 'Modern two', 'Charcoal', 'SS4'], // Possible choices
           default: 'Modern White' // Default value if user doesn't change it
+        },
+        tinymceToolbars:
+        {
+          section: ['Toolbar Options', 'Selecting one will combine all the toolbars'],
+          label: 'Select Number of Toolbars',
+          type: 'select',
+          options: ['one', 'two'],
+          default: ['one']
         },
         tinymcePluginFullscreen:
         {

@@ -8,6 +8,7 @@ import { Log } from './class_Log';
 import { appSettings } from './appSettings';
 import { ITinyMceExternalPlugins, IKeyAny } from './interfaces';
 import { DebugLevel } from './enums';
+import { GmConfig } from './class_GmConfig';
 // import { Clock } from './class_clock';
 // import GM_config from 'GM_config';
 declare const GM_config: any;
@@ -16,7 +17,7 @@ export class TinymceWork {
   public fullscreen: boolean = false;
   // tslint:disable-next-line
   private gmConfig: any = GM_config;
-
+// #region [ publicPropArrow ]
   public init = (): void => {
     // @debug start
     const methodName: string = 'TinymceWork.init';
@@ -27,6 +28,8 @@ export class TinymceWork {
       Log.debug(`${methodName}: Entered`);
     }
     // @debug end
+    const gmSet: GmConfig = new GmConfig();
+
     const ver: string = appSettings.tinyMceVersion;
     const id: string = appSettings.tinyId;
     // @debug start
@@ -34,105 +37,105 @@ export class TinymceWork {
     // @debug end
     tinymce.PluginManager.load('lists', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/lists/plugin.min.js');
 
-    const loadTable: boolean = this.gmConfig.get('tinymcePluginTable');
-    if (loadTable) {
+    const loadTable: boolean = gmSet.tinymcePluginTable;
+    if (gmSet.tinymcePluginTable) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding table to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('table', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/table/plugin.min.js');
     }
-    const loadCharmap: boolean = this.gmConfig.get('tinymcePluginCharmap');
+    const loadCharmap: boolean = gmSet.tinymcePluginCharmap;
     if (loadCharmap) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding charmap to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('charmap', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/charmap/plugin.min.js');
     }
-    const loadCode: boolean = this.gmConfig.get('tinymcePluginCode');
+    const loadCode: boolean = gmSet.tinymcePluginCode;
     if (loadCode) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding code to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('code', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/code/plugin.min.js');
     }
-    const loadFullscreen: boolean = this.gmConfig.get('tinymcePluginFullscreen');
+    const loadFullscreen: boolean = gmSet.tinymcePluginFullscreen;
     if (loadFullscreen) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding fullscreen to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('fullscreen', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/fullscreen/plugin.min.js');
     }
-    const loadEmoticons: boolean = this.gmConfig.get('tinymcePluginEmoticons');
+    const loadEmoticons: boolean = gmSet.tinymcePluginEmoticons;
     if (loadEmoticons) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding emoticons to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('emoticons', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/emoticons/plugin.min.js');
     }
-    const loadWordcount: boolean = this.gmConfig.get('tinymcePluginWordcount');
+    const loadWordcount: boolean = gmSet.tinymcePluginWordcount;
     if (loadEmoticons) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding wordcount to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('wordcount', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/wordcount/plugin.min.js');
     }
-    const loadPrint: boolean = this.gmConfig.get('tinymcePluginPrint');
+    const loadPrint: boolean = gmSet.tinymcePluginPrint;
     if (loadPrint) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding print to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('print', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/print/plugin.min.js');
     }
-    const loadPreview: boolean = this.gmConfig.get('tinymcePluginPreview');
+    const loadPreview: boolean = gmSet.tinymcePluginPreview;
     if (loadPreview) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding preview to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('preview', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/preview/plugin.min.js');
     }
-    const loadInsertdatetime: boolean = this.gmConfig.get('tinymcePluginInsertdatetime');
+    const loadInsertdatetime: boolean = gmSet.tinymcePluginInsertdatetime;
     if (loadInsertdatetime) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding insertdatetime to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('insertdatetime', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/insertdatetime/plugin.min.js');
     }
-    const loadImage: boolean = this.gmConfig.get('tinymcePluginImage');
+    const loadImage: boolean = gmSet.tinymcePluginImage;
     if (loadImage) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding image to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('image', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/image/plugin.min.js');
     }
-    const loadSearchreplace: boolean = this.gmConfig.get('tinymcePluginSearchreplace');
+    const loadSearchreplace: boolean = gmSet.tinymcePluginSearchreplace;
     if (loadSearchreplace) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding searchreplace to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('searchreplace', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/searchreplace/plugin.min.js');
     }
-    const loadAdvlist: boolean = this.gmConfig.get('tinymcePluginAdvlist');
+    const loadAdvlist: boolean = gmSet.tinymcePluginAdvlist;
     if (loadAdvlist) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding advlist to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('advlist', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/advlist/plugin.min.js');
     }
-    const loadBbcode: boolean = this.gmConfig.get('tinymcePluginBbcode');
+    const loadBbcode: boolean = gmSet.tinymcePluginBbcode;
     if (loadBbcode) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding bbcode to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('bbcode', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/bbcode/plugin.min.js');
     }
-    const loadVisualblocks: boolean = this.gmConfig.get('tinymcePluginVisualblocks');
+    const loadVisualblocks: boolean = gmSet.tinymcePluginVisualblocks;
     if (loadVisualblocks) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding visualblocks to tinymce plugins`); }
       // @debug end
       tinymce.PluginManager.load('visualblocks', 'https://cdn.tinymce.com/4/plugins/visualblocks/plugin.min.js');
     }
-    const loadVisualchars: boolean = this.gmConfig.get('tinymcePluginVisualchars');
+    const loadVisualchars: boolean = gmSet.tinymcePluginVisualchars;
     if (loadVisualchars) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding visualchars to tinymce plugins`); }
@@ -140,7 +143,7 @@ export class TinymceWork {
       // tinyMCE.PluginManager.load('visualchars', 'https://cdn.tinymce.com/4/plugins/visualchars/plugin.min.js');
       tinymce.PluginManager.load('visualchars', 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/visualchars/plugin.min.js');
     }
-    const loadHilite: boolean = this.gmConfig.get('tinymcePluginHilite');
+    const loadHilite: boolean = gmSet.tinymcePluginHilite;
     if (loadHilite) {
       // @debug start
       if (appDebugLevel >= levelDebug) { Log.debug(`${methodName}: Adding hilite to tinymce plugins`); }
@@ -154,7 +157,7 @@ export class TinymceWork {
       hr: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/hr/plugin.min.js',
       link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/' + ver + '/plugins/link/plugin.min.js'
     };
-    const toolbar1: string = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
+    let toolbar1: string = 'mysave myexit insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent';
     let toolbar2: string = (loadFullscreen ? 'fullscreen ' : '');
     toolbar2 += (loadPrint ? 'print ' : '');
     toolbar2 += (loadPreview ? 'preview ' : '');
@@ -169,6 +172,13 @@ export class TinymceWork {
     toolbar2 += (loadVisualchars ? ' | visualchars' : '');
     toolbar2 += (loadVisualblocks ? ' | visualblocks' : '');
     toolbar2 += (loadHilite ? ' | hilite' : '');
+    const toolbars: Array<string> = [];
+    if (gmSet.tinymceToolbars === 'one') {
+      toolbar1 += ' | ' + toolbar2;
+      toolbars.push(toolbar1);
+    } else {
+      toolbars.push(toolbar1, toolbar2);
+    }
     const tinyMceInit: tinymce.Settings = {
       selector: 'textarea#' + id,
       // entity_encoding: 'named',
@@ -195,7 +205,7 @@ export class TinymceWork {
       browser_spellcheck: true,
       plugins: '',
       menubar: 'edit insert format view tools' + (loadTable ? ' table' : ''),
-      toolbar: [toolbar1, toolbar2],
+      toolbar: toolbars,
       // external_plugins: null,
       content_css: '',
       // tslint:disable-next-line
@@ -326,6 +336,7 @@ export class TinymceWork {
     }
     // @debug end
   }
+  // #endregion
   private getStyleFormats() {
     const sFmt = [];
     sFmt.push(this.getBlockContainers());

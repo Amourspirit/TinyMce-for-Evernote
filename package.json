@@ -5,7 +5,7 @@
   "_fullName": "TinyMce for Evernote",
   "_repositoryName": "TinyMce-for-Evernote",
   "name": "tinymce-for-evernote",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Adds TinyMce in Evernote with custom options including source code. A new button is added to Evernote top toolbar section.",
   "main": "TinyMce_for_Evernote.user.js",
   "scripts": {
@@ -64,5 +64,22 @@
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "typescript": "^3.1.6"
+  },
+  "coloredRegions": {
+    "namedColors": {
+      "publicProp": "rgba(21, 233, 190, 0.2)",
+      "publicPropArrow": "rgba(21, 156, 228, 0.12)",
+      "publicGet" : "rgba(21, 118, 228, 0.2)",
+      "publicFunc": "rgba(21, 233, 64, 0.15)",
+      "privateProp": "rgba(233, 21, 21, 0.12)",
+      "privateMethod": "rgba(233, 141, 21, 0.12)",
+      "privatePropArrow": "rgba(225, 228, 21, 0.12)",
+      "privateFunction": "rgba(120, 233, 21, 0.12)",
+      "constructor": "rgba(13, 206, 38, 0.25)",
+      "imports": "rgba(246, 123, 248, 0.17)",
+      "declares": "rgba(245, 65, 19, 0.12)",
+      "ref": "rgba(148, 81, 45, 0.18)",
+      "debug": "rgba(19, 36, 57, 0.29)"
+    }
   }
 }
