@@ -20,7 +20,6 @@ Emoji Icons and more.
 Uses:
 
 * [jQuery](https://jquery.com/)
-* [Foundation Icons](http://zurb.com/playground/foundation-icon-fonts-3)
 * [tinyMCE](http://www.tinymce.com/)
 
 
@@ -30,10 +29,10 @@ Uses:
 
 ## Donate
 
-**Making a donation is an act of generosity. Your support, however modest it might be, is necessary.
+**Making a donation is an act of generosity. Your support, however modest it might be, is necessary.**
 
-![Paypal](http://amourspirit.github.io/TinyMce-for-Evernote/images/paypal.png) [donate](http://bit.ly/1QIN2Cs)
+![paypal.png](https://i.postimg.cc/y6QZqvZW/paypal.png) [donate](https://bit.ly/1QIN2Cs)
 
 ### Related
 
-[![Evernote%20Fullscreen-View%20notes%20Fullscreen-blue](https://img.shields.io/badge/Evernote%20Fullscreen-View%20notes%20Fullscreen-blue.svg)](https://github.com/Amourspirit/Evernote-Fullscreen)
+[![Evernote%20Fullscreen-View%20notes%20Fullscreen-blue](https://img.shields.io/badge/Evernote%20Fullscreen-View%20notes%20Full%20Screen-blue.svg)](https://github.com/Amourspirit/Evernote-Fullscreen#evernote-fullscreen-user-script) [![Evernote%20Preview-blue](https://img.shields.io/badge/Evernote%20Preview-Preview%20Notes%20Full%20Screen-blue.svg)](https://github.com/Amourspirit/Evernote-Preview#evernote-preview-userscript)
