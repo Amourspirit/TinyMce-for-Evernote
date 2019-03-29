@@ -115,6 +115,16 @@ div.mce-tinymce.mce-container.mce-panel {
 div.mce-tinymce.mce-container.mce-panel.mce-fullscreen {
     margin-top: 0;
 }
+/* 
+ * Not sure why but  the default for fullscreen is height auto
+ * for soeme reason the fullscreen stopped working correctly as was not
+ * filling the entire screen height.
+ * by adding the following it worked again on all installed themes.
+ */
+div.mce-fullscreen {
+    width: 100vw !important;
+    height: auto !important;
+}
 #gm-edit-btn {
     display: inline-block;
     box-sizing: border-box;
